@@ -1,0 +1,545 @@
+/* Общие настройки */
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #e5e7eb;
+}
+
+/* Языковая панель */
+.lang-switch {
+    position: fixed;
+    top: 16px;
+    right: 20px;
+    background: rgba(15, 23, 42, 0.9);
+    border-radius: 999px;
+    padding: 4px 12px;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+}
+
+.lang-switch button {
+    background: none;
+    border: none;
+    color: #cbd5f5;
+    margin-left: 10px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: color .2s, transform .1s;
+}
+
+.lang-switch button:first-child {
+    margin-left: 0;
+}
+
+.lang-switch button:hover {
+    color: #facc15;
+    transform: translateY(-1px);
+}
+
+/* Геро-секция */
+.hero {
+    position: relative;
+    text-align: center;
+    padding: 90px 16px 70px;
+    /* фон у тебя уже на body, мы только затемняем верхнюю часть */
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top,
+                rgba(15, 23, 42, 0.1) 0%,
+                rgba(15, 23, 42, 0.85) 45%,
+                rgba(15, 23, 42, 0.96) 100%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.hero-content {
+    position: relative;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.hero h1 {
+    margin: 0 0 10px;
+    font-size: 32px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #facc15;
+    text-shadow: 0 0 22px rgba(0, 0, 0, 0.9);
+}
+
+.hero-subtitle {
+    margin: 0 0 24px;
+    font-size: 14px;
+    color: #e5e7eb;
+    text-shadow: 0 0 16px rgba(0, 0, 0, 0.9);
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.hero-btn {
+    border-radius: 999px;
+    border: 1px solid rgba(248, 250, 252, 0.4);
+    padding: 10px 20px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background .2s, color .2s, transform .1s, box-shadow .2s;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.hero-btn.primary {
+    background: linear-gradient(135deg, #facc15, #f97316);
+    color: #111827;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.65);
+    border: none;
+}
+
+.hero-btn.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.85);
+}
+
+.hero-btn.ghost {
+    background: rgba(15, 23, 42, 0.8);
+    color: #e5e7eb;
+}
+
+.hero-btn.ghost:hover {
+    background: rgba(15, 23, 42, 1);
+    transform: translateY(-1px);
+}
+
+/* Навигация */
+.main-nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 10px 20px 12px;
+    background: rgba(3, 7, 18, 0.96);
+    border-top: 1px solid rgba(31, 41, 55, 0.9);
+    border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+    box-shadow: 0 18px 30px rgba(0, 0, 0, 0.8);
+}
+
+.main-nav a {
+    color: #e5e7eb;
+    font-size: 14px;
+    text-decoration: none;
+    padding: 4px 6px;
+    position: relative;
+    white-space: nowrap;
+    transition: color .2s;
+}
+
+.main-nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 0;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #facc15, #38bdf8);
+    transition: width .2s;
+}
+
+.main-nav a:hover {
+    color: #facc15;
+}
+
+.main-nav a:hover::after {
+    width: 100%;
+}
+
+/* Основная часть */
+.landing-main {
+    padding: 26px 16px 40px;
+}
+
+/* Сетка разделов */
+.feature-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+.feature-card {
+    background: rgba(15, 23, 42, 0.92);
+    border-radius: 18px;
+    padding: 16px 18px 18px;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.85);
+    cursor: pointer;
+    transition: transform .15s ease-out, box-shadow .15s ease-out, border-color .15s;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left,
+                rgba(250, 204, 21, 0.12),
+                transparent 55%);
+    opacity: 0;
+    transition: opacity .2s;
+}
+
+.feature-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 22px 55px rgba(0, 0, 0, 0.95);
+    border-color: rgba(250, 204, 21, 0.7);
+}
+
+.feature-card:hover::before {
+    opacity: 1;
+}
+
+.feature-card h2 {
+    margin: 0 0 8px;
+    font-size: 17px;
+    color: #f9fafb;
+}
+
+.feature-card p {
+    margin: 0 0 14px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #cbd5f5;
+}
+
+.feature-tag {
+    display: inline-block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 1);
+    border: 1px solid rgba(148, 163, 184, 0.7);
+    color: #e5e7eb;
+}
+
+/* Подвал */
+.site-footer {
+    position: relative;
+    z-index: 9999;
+    max-width: 1200px;
+    margin: 50px auto 30px;
+    padding: 18px 24px;
+
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #e5e7eb;
+
+    background: radial-gradient(
+        circle at center,
+        rgba(30, 41, 59, 0.88) 0%,
+        rgba(3, 7, 18, 0.92) 100%
+    );
+
+    border-radius: 18px;
+
+    /* Двухцветное мягкое свечение */
+    box-shadow:
+        0 0 22px rgba(56, 189, 248, 0.25),    /* голубое свечение */
+        0 0 55px rgba(250, 204, 21, 0.12),    /* золотистое */
+        0 12px 40px rgba(0, 0, 0, 0.85);      /* глубина */
+    
+    backdrop-filter: blur(6px);
+}
+/* Полупрозрачный тёмный слой поверх фонового изображения,
+   чтобы текст на страницах типа "О книге" всегда читался */
+.page-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(
+        rgba(3, 7, 18, 0.78),
+        rgba(3, 7, 18, 0.85)
+    );
+    z-index: -1;
+}
+
+/* Шапка внутренних страниц */
+.subpage-header {
+    text-align: center;
+    padding: 90px 16px 24px;
+    text-shadow: 0 0 14px rgba(0, 0, 0, 0.9);
+}
+
+.subpage-header h1 {
+    margin: 0 0 10px;
+    font-size: 26px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #facc15;
+}
+
+.subpage-lead {
+    margin: 0;
+    font-size: 14px;
+    color: #e5e7eb;
+}
+
+/* Основная область текста */
+.about-main {
+    padding: 16px 16px 40px;
+}
+
+/* ===== СТЕКЛЯННЫЕ БОКСЫ С ПРОКРУТКОЙ ===== */
+.text-block {
+    max-width: 1000px;
+    margin: 0 auto 32px;
+    padding: 22px 28px 24px;
+    background: rgba(15, 23, 42, 0.78);
+    border-radius: 16px;
+    border: 1px solid rgba(148, 163, 184, 0.55);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(6px);
+
+    /* фиксированная высота бокса */
+    height: 170px;
+
+    /* прокрутка внутри */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Заголовки внутри бокса */
+.text-block h2 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    color: #f9fafb;
+}
+
+/* Текст внутри */
+.text-block p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #e5e7eb;
+}
+
+/* Блок цитаты — тоже в скролле */
+.quote-block {
+    text-align: center;
+}
+
+/* Цитата */
+.book-quote {
+    margin: 8px auto 18px;
+    font-size: 16px;
+    font-style: italic;
+    color: #e5e7eb;
+}
+
+/* Ссылка под цитатой */
+.quote-link {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 13px;
+    color: #facc15;
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(250, 204, 21, 0.7);
+    padding-bottom: 1px;
+}
+
+.quote-link:hover {
+    color: #fde68a;
+    border-bottom-style: solid;
+}
+
+/* Блок цитат */
+.quote-rotator {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 40px 40px;      /* больше воздуха */
+    min-height: 260px;       /* немного увеличили высоту */
+
+    background: rgba(15, 23, 42, 0.78);
+    border: 1px solid rgba(148, 163, 184, 0.45);
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+    text-align: left;        /* лучше для многострочного текста */
+}
+
+/* Текст цитаты */
+#quote-text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    white-space: pre-wrap;
+    font-size: 22px;
+    line-height: 1.6;
+}
+
+.quote-line {
+    opacity: 1;
+}
+/* Пульсация после печати */
+.pulse {
+    animation: pulse 2.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.55; }
+    100% { opacity: 1; }
+}
+
+/* ===== СТРАНИЦА ДОНАТОВ ===== */
+
+.donate-main {
+    padding: 16px 16px 50px;
+}
+
+/* сетка карточек донатов */
+.donate-grid {
+    max-width: 1100px;
+    margin: 0 auto 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+/* карточка способа поддержки */
+.donate-card {
+    background: rgba(15, 23, 42, 0.82);
+    border-radius: 18px;
+    padding: 18px 20px 20px;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.9);
+    position: relative;
+    overflow: hidden;
+}
+
+.donate-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left,
+        rgba(56, 189, 248, 0.15),
+        transparent 55%);
+    opacity: 0;
+    transition: opacity .2s;
+    pointer-events: none;
+}
+
+.donate-card:hover::before {
+    opacity: 1;
+}
+
+.donate-card h2 {
+    margin: 6px 0 10px;
+    font-size: 17px;
+    color: #f9fafb;
+}
+
+.donate-card p {
+    margin: 0 0 12px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #cbd5f5;
+}
+
+/* бейдж сверху (рекомендация) */
+.donate-badge {
+    display: inline-block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.96);
+    border: 1px solid rgba(250, 204, 21, 0.7);
+    color: #facc15;
+}
+
+/* список внутри карточки */
+.donate-list {
+    margin: 0 0 14px 14px;
+    padding-left: 10px;
+    font-size: 13px;
+    color: #e5e7eb;
+}
+
+.donate-list li {
+    margin-bottom: 4px;
+}
+
+/* кнопки доната (стили близки к hero-btn) */
+.donate-btn {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .2s, color .2s, box-shadow .2s, transform .1s;
+    border: 1px solid rgba(248, 250, 252, 0.4);
+}
+
+.donate-btn.primary {
+    background: linear-gradient(135deg, #facc15, #f97316);
+    color: #111827;
+    border: none;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.75);
+}
+
+.donate-btn.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.9);
+}
+
+.donate-btn.secondary {
+    background: rgba(15, 23, 42, 0.9);
+    color: #e5e7eb;
+}
+
+.donate-btn.secondary:hover {
+    background: rgba(15, 23, 42, 1);
+    transform: translateY(-1px);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.8);
+}
+
+.donate-btn.ghost {
+    background: transparent;
+    color: #e5e7eb;
+}
+
+.donate-btn.ghost:hover {
+    background: rgba(15, 23, 42, 0.9);
+    transform: translateY(-1px);
+}
+
+/* маленький текст-предупреждение */
+.donate-note {
+    margin-top: 10px;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #9ca3af;
+}
+
+/* чуть меньше скролла у нижнего блока безопасности */
+.donate-security {
+    height: 150px;
+}
+
