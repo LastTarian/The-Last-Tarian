@@ -1,0 +1,290 @@
+<!DOCTYPE html> 
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Контакты — Последний тарианец</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    .contacts-main {
+      padding: 16px 16px 40px;
+    }
+
+    .contacts-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      gap: 24px;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.6fr);
+      align-items: flex-start;
+    }
+
+    .contact-block {
+      position: relative;
+      padding: 18px 18px 20px;
+      border-radius: 20px;
+      background: radial-gradient(circle at top left,
+                  rgba(15, 23, 42, 0.96),
+                  rgba(3, 7, 18, 0.98));
+      box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.95),
+        0 0 24px rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .contact-block h2 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 18px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #facc15;
+    }
+
+    .contact-block p {
+      margin: 0 0 10px;
+    }
+
+    .contact-meta {
+      font-size: 12px;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+
+    .contact-list {
+      list-style: none;
+      padding: 0;
+      margin: 8px 0 0;
+      font-size: 14px;
+    }
+
+    .contact-list li + li {
+      margin-top: 4px;
+    }
+
+    .contact-label {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.75;
+    }
+
+    .contact-highlight {
+      font-size: 15px;
+      font-weight: 500;
+      color: #e5e7eb;
+    }
+
+    .contact-highlight a {
+      color: #facc15;
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(250, 204, 21, 0.7);
+    }
+
+    .contact-highlight a:hover {
+      border-bottom-style: solid;
+    }
+
+    @media (max-width: 900px) {
+      .contacts-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .contact-block {
+        font-size: 13px;
+        padding: 16px 14px 18px;
+      }
+
+      .contact-block h2 {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- затемняющий слой -->
+  <div class="page-overlay"></div>
+
+  <!-- языковая панель -->
+  <div class="lang-switch">
+    <button onclick="setLang('ru')">RU</button>
+    <button onclick="setLang('en')">EN</button>
+  </div>
+
+  <!-- шапка страницы -->
+  <header class="subpage-header">
+    <h1 data-ru="Контакты"
+        data-en="Contacts">
+      Контакты
+    </h1>
+    <p class="subpage-lead"
+       data-ru="Если вы хотите задать вопрос об истории, героях или мире «Последний тарианец», написать отзыв или обсудить сотрудничество — здесь собраны все основные каналы связи."
+       data-en="If you’d like to ask about the story, characters or world of “The Last Tarian”, share your thoughts or discuss collaboration, this page lists the main ways to get in touch.">
+      Если вы хотите задать вопрос об истории, героях или мире «Последний тарианец», написать отзыв или обсудить сотрудничество — здесь собраны все основные каналы связи.
+    </p>
+  </header>
+
+  <!-- ГЛАВНОЕ МЕНЮ (такое же, как на главной) -->
+  <nav class="main-nav">
+    <a href="index.html"
+       data-ru="Главная" data-en="Home">Главная</a>
+
+    <a href="about.html"
+       data-ru="О книге" data-en="About">О книге</a>
+
+    <a href="characters.html"
+       data-ru="Герои" data-en="Characters">Герои</a>
+
+    <a href="locations.html"
+       data-ru="Локации" data-en="Locations">Локации</a>
+
+    <a href="artifacts.html"
+       data-ru="Артефакты" data-en="Artifacts">Артефакты</a>
+
+    <a href="rydorian.html"
+       data-ru="Гонка 'Райдориан'" data-en="'Rydorian' Race">Гонка 'Райдориан'</a>
+
+    <a href="equipment.html"
+       data-ru="Экипировка"
+       data-en="Equipment">
+      Экипировка
+    </a>
+
+    <a href="media.html"
+       data-ru="Медиа" data-en="Media">Медиа</a>
+
+    <a href="fragments.html"
+       data-ru="Обрывки текстов" data-en="Text fragments">
+      Обрывки текстов
+    </a>
+
+    <a href="contacts.html"
+       data-ru="Контакты" data-en="Contacts">Контакты</a>
+
+    <a href="donate.html"
+       data-ru="Поддержать автора" data-en="Donate">Поддержать автора</a>
+  </nav>
+
+  <main class="about-main contacts-main">
+
+    <section class="contacts-grid">
+
+      <!-- Блок для читателей -->
+      <article class="contact-block">
+        <h2 data-ru="Для читателей" data-en="For readers">
+          Для читателей
+        </h2>
+        <p data-ru="Любите вселенную «Последний тарианец», нашли пасхалку или хотите поделиться теорией о происхождении Глеба? Пишите. Такие сообщения вдохновляют продолжать работу над историей."
+           data-en="Enjoy the world of “The Last Tarian”, found an Easter egg or want to share a theory about Gleb’s origin? Feel free to write. Messages like that help fuel the work on the story.">
+          Любите вселенную «Последний тарианец», нашли пасхалку или хотите поделиться теорией о происхождении Глеба? Пишите. Такие сообщения вдохновляют продолжать работу над историей.
+        </p>
+
+        <ul class="contact-list">
+          <li>
+            <div class="contact-label"
+                 data-ru="Электронная почта" data-en="Email">
+              Электронная почта
+            </div>
+            <div class="contact-highlight">
+              <a href="mailto:last.tarian@yahoo.com"
+                 data-ru="last.tarian@yahoo.com"
+                 data-en="last.tarian@yahoo.com">
+                last.tarian@yahoo.com
+              </a>
+            </div>
+          </li>
+        </ul>
+      </article>
+
+      <!-- Блок для сотрудничества -->
+      <article class="contact-block">
+        <h2 data-ru="Сотрудничество" data-en="Collaboration">
+          Сотрудничество
+        </h2>
+        <p data-ru="Если вы представляете издательство, платформу для публикаций, иллюстратора или музыканта — укажите слово «Сотрудничество» в теме письма."
+           data-en="If you represent a publisher, a platform, an illustrator or a musician — include “Collaboration” in the subject line.">
+          Если вы представляете издательство, платформу для публикаций, иллюстратора или музыканта — укажите слово «Сотрудничество» в теме письма.
+        </p>
+
+        <ul class="contact-list">
+          <li>
+            <div class="contact-label"
+                 data-ru="Для издателей и партнёров"
+                 data-en="For publishers & partners">
+              Для издателей и партнёров
+            </div>
+            <div class="contact-highlight">
+             
+              <a href="last.tarian@yahoo.com"
+                 data-ru="last.tarian@yahoo.com"
+                 data-en="last.tarian@yahoo.com">
+                last.tarian@yahoo.com
+              </a>
+            </div>
+            
+          </li>
+
+          <li>
+  <div class="contact-label"
+       data-ru="Социальные сети" data-en="Social media">
+    Социальные сети
+  </div>
+
+  <div class="contact-meta"
+       data-ru="Telegram-канал , Instagram "
+       data-en="Telegram channel, Instagram ">
+    Telegram-канал, Instagram.
+  </div>
+
+  <div class="contact-highlight">
+        <a href="https://instagram.com/author_last_tarian"
+     target="_blank"
+     data-ru="Instagram" data-en="Instagram">
+     Instagram
+  </a>
+    </a><br>
+
+    <a href="https://t.me/last_tarian"
+       target="_blank"
+       rel="noopener"
+       data-ru="Telegram-канал"
+       data-en="Telegram channel">
+      Telegram-канал
+    </a>
+  </div>
+</li>
+
+          <li>
+            <div class="contact-label"
+                 data-ru="Технические вопросы" data-en="Technical questions">
+              Технические вопросы
+            </div>
+            <p class="contact-meta"
+               data-ru="Если вы нашли баг на сайте, странно работающий пасхальный бонус или визуальный глюк — можно прислать скриншот и краткое описание проблемы."
+               data-en="If you notice a bug on the site, a misbehaving Easter egg or a visual glitch feel free to send a screenshot and a short description.">
+              Если вы нашли баг на сайте, странно работающий пасхальный бонус или визуальный глюк, то можно прислать скриншот и краткое описание проблемы.
+            </p>
+          </li>
+        </ul>
+      </article>
+
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p data-ru="© 2025 «Последний тарианец». Если вы дочитали до этого блока, значит, вы настоящий исследователь Ковчега."
+       data-en="© 2025 “The Last Tarian”. If you’ve scrolled this far, you’re a true Ark researcher.">
+      © 2025 «Последний тарианец». Если вы дочитали до этого блока, значит, вы настоящий исследователь Ковчега.
+    </p>
+  </footer>
+
+  <script src="lang.js"></script>
+</body>
+</html>
