@@ -1,0 +1,209 @@
+/* ======== КАРТОЧКИ ГЕРОЕВ ======== */
+
+.character-card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    background: rgba(15, 23, 42, 0.65);
+    border-radius: 20px;
+    padding: 20px 22px;
+    margin: 26px auto;
+    max-width: 950px;
+
+    border: 1px solid rgba(51, 65, 85, 0.8);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.85);
+
+    /* для свечения ::before */
+    position: relative;
+}
+
+/* Фото героя */
+.character-card img.hero-photo {
+    width: 240px;
+    max-width: 100%;
+    border-radius: 14px;
+    object-fit: cover;
+    border: 2px solid rgba(248, 250, 252, 0.1);
+    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.85);
+
+    /* цикл проявления / исчезновения */
+    opacity: 0;
+    animation: heroPhotoCycle 65s ease-in-out infinite;
+}
+
+/* Блок текста справа */
+.hero-info {
+    flex: 1;
+    min-width: 250px;
+}
+
+/* Имя героя + руны */
+.hero-name {
+    display: inline-flex;      /* имя + руны = один блок */
+    align-items: center;       /* выравнивание по вертикали */
+    gap: 28px;                 /* расстояние между именем и рунами */
+    white-space: nowrap;       /* ничего не переносить */
+
+    font-size: 26px;
+    color: #facc15;
+    margin-bottom: 6px;
+}
+
+.hero-runes {
+    /* если нужно что-то отдельное для блока рун — можно добавить сюда */
+}
+
+/* Краткие данные */
+.hero-profile {
+    list-style: none;
+    padding-left: 0;
+    margin: 0 0 12px;
+    font-size: 15px;
+    color: #cbd5f5;
+}
+
+.hero-profile li {
+    margin-bottom: 4px;
+}
+
+/* Описание героя */
+.hero-desc {
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #e5e7eb;
+}
+
+/* ======== СЕЛАРИТСКИЕ РУНЫ ======== */
+
+.selarit {
+    direction: ltr;
+    unicode-bidi: bidi-override;
+    display: inline-block;
+
+    /* размер рун примерно как у имени */
+    font-size: 24px;
+    margin-left: 10px;         /* чтобы не липли к имени */
+    letter-spacing: 0.25em;
+
+    color: #f7d670;
+
+    text-shadow:
+        0 0 4px rgba(250, 204, 21, 0.55),
+        0 0 8px rgba(250, 204, 21, 0.35),
+        0 0 12px rgba(250, 204, 21, 0.2);
+
+    transition: 0.25s ease-out;
+}
+
+/* Дополнительный яркий эффект при наведении (поверх анимации) */
+.selarit:hover {
+    text-shadow:
+        0 0 6px rgba(255, 230, 140, 0.95),
+        0 0 14px rgba(255, 200, 0, 0.8),
+        0 0 22px rgba(255, 180, 0, 0.75),
+        0 0 28px rgba(255, 150, 0, 0.6);
+    color: #ffe9a6;
+    transform: translateY(-1px);
+}
+
+/* Пульсация золотого свечения — включается классом .runes-glow из JS */
+.runes-glow {
+    animation: runeGlow 1.8s ease-in-out infinite;
+}
+
+@keyframes runeGlow {
+    0% {
+        opacity: 0.85;
+        text-shadow:
+            0 0 4px rgba(250, 204, 21, 0.4),
+            0 0 8px rgba(250, 204, 21, 0.25),
+            0 0 12px rgba(250, 204, 21, 0.15);
+    }
+    50% {
+        opacity: 1;
+        text-shadow:
+            0 0 6px rgba(255, 230, 140, 0.95),
+            0 0 16px rgba(255, 210, 80, 0.85),
+            0 0 26px rgba(255, 190, 40, 0.7);
+    }
+    100% {
+        opacity: 0.88;
+        text-shadow:
+            0 0 4px rgba(250, 204, 21, 0.4),
+            0 0 8px rgba(250, 204, 21, 0.25),
+            0 0 12px rgba(250, 204, 21, 0.15);
+    }
+}
+
+@keyframes heroPhotoCycle {
+    /* старт — невидимо, чуть увеличено */
+    0% {
+        opacity: 0;
+        transform: scale(1.02);
+    }
+
+    /* за 7% времени проявляемся */
+    7% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* держим почти всю минуту */
+    87% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* под конец плавно гасим */
+    100% {
+        opacity: 0;
+        transform: scale(1.01);
+    }
+}
+
+/* ======== ССЫЛКА КО’МАРИС ВНУТРИ ПРОФИЛЯ РУАЙЛЫ ======== */
+
+.egg-komaris-link {
+    color: inherit;          /* наследует цвет текста */
+    text-decoration: none;   /* убирает подчёркивание */
+    cursor: default;
+}
+
+.egg-komaris-link:hover,
+.egg-komaris-link:active,
+.egg-komaris-link:visited {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* ======== ЖИВОЕ СВЕЧЕНИЕ ВОКРУГ КАРТОЧЕК ГЕРОЕВ ======== */
+
+.character-card::before {
+    content: "";
+    position: absolute;
+    inset: -6px;               /* немного шире карточки */
+    border-radius: 24px;       /* чуть больше, чем у самой карточки */
+    pointer-events: none;
+
+    border: 1px solid rgba(56,189,248,0.85); /* голубоватый контур */
+    box-shadow:
+        0 0 24px rgba(56,189,248,0.85),
+        0 0 60px rgba(15,23,42,0.9);
+
+    opacity: 1;
+    animation: cardGlowPulse 3.2s ease-in-out infinite;
+}
+
+/* лёгкая пульсация света */
+@keyframes cardGlowPulse {
+    0%, 100% {
+        transform: translateY(0);
+        filter: brightness(1);
+    }
+    50% {
+        transform: translateY(-2px);
+        filter: brightness(1.05);
+    }
+}
