@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Обрывки текстов — Последний тарианец</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* Блоки без внутренней прокрутки */
+    .text-block-auto {
+      height: auto;
+      max-height: none;
+      overflow-y: visible;
+      overflow-x: visible;
+    }
+
+    .fragments-main {
+      padding: 16px 16px 40px;
+    }
+
+    .fragments-grid-section {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .fragments-grid-section h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #facc15;
+    }
+
+    .fragments-grid-section p.section-lead {
+      margin: 0 0 18px;
+      font-size: 14px;
+      color: #e5e7eb;
+      max-width: 780px;
+    }
+
+    /* Сетка карточек */
+    .fragments-container {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .fragment-card {
+      position: relative;
+      padding: 16px 14px 18px;
+      border-radius: 16px;
+      cursor: pointer;
+      min-height: 140px;
+      overflow: hidden;
+      transition:
+        transform .22s ease-out,
+        box-shadow .22s ease-out,
+        border-color .22s ease-out,
+        background .22s ease-out;
+      border: 1px solid rgba(15, 23, 42, 0.9);
+      box-shadow:
+        0 18px 32px rgba(0, 0, 0, 0.85),
+        0 0 18px rgba(15, 23, 42, 0.9);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .fragment-card:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 24px 40px rgba(0, 0, 0, 0.95),
+        0 0 20px rgba(250, 204, 21, 0.28);
+      border-color: rgba(250, 204, 21, 0.8);
+    }
+
+    .fragment-preview {
+      opacity: 0.96;
+    }
+
+    .fragment-full {
+      display: none;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed rgba(15, 23, 42, 0.6);
+      opacity: 0.96;
+    }
+
+    .fragment-card.open .fragment-preview {
+      opacity: 0.45;
+    }
+
+    .fragment-card.open .fragment-full {
+      display: block;
+    }
+
+    /* Подпись типа носителя */
+    .fragment-tag {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    /* Варианты карточек — визуальные типы артефактов */
+
+    /* Обожжённая бумага */
+    .fragment-card.burned {
+      background: radial-gradient(circle at top left,
+                 #fef3c7,
+                 #fed7aa,
+                 #b45309);
+      color: #1f2933;
+      box-shadow:
+        0 18px 32px rgba(0, 0, 0, 0.9),
+        0 0 28px rgba(248, 171, 81, 0.45);
+    }
+    .fragment-card.burned .fragment-full {
+      border-top-color: rgba(88, 28, 15, 0.6);
+    }
+    .fragment-card.burned .fragment-tag {
+      color: #78350f;
+    }
+
+    /* Свиток */
+    .fragment-card.scroll {
+      background: radial-gradient(circle at top,
+                 #fef3c7,
+                 #e5dec5,
+                 #a16207);
+      color: #1f2937;
+      box-shadow:
+        0 18px 32px rgba(0, 0, 0, 0.9),
+        0 0 26px rgba(217, 119, 6, 0.4);
+    }
+    .fragment-card.scroll .fragment-tag {
+      color: #92400e;
+    }
+
+    /* Инопланетный кристалл */
+    .fragment-card.crystal {
+      background: radial-gradient(circle at top left,
+                 rgba(56, 189, 248, 0.2),
+                 rgba(15, 23, 42, 0.95),
+                 rgba(15, 23, 42, 1));
+      color: #e5f2ff;
+      text-shadow: 0 0 6px rgba(15, 23, 42, 0.9);
+      border-color: rgba(56, 189, 248, 0.7);
+      box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.95),
+        0 0 30px rgba(56, 189, 248, 0.42);
+    }
+    .fragment-card.crystal .fragment-tag {
+      color: #7dd3fc;
+    }
+    .fragment-card.crystal .fragment-full {
+      border-top-color: rgba(59, 130, 246, 0.8);
+    }
+
+    /* Селаритский "жёсткий диск" / осколок */
+    .fragment-card.shard {
+      background: linear-gradient(135deg,
+                 #020617,
+                 #0f172a,
+                 #111827,
+                 #020617);
+      color: #e5e7eb;
+      border-color: rgba(148, 163, 184, 0.8);
+      box-shadow:
+        0 20px 38px rgba(0, 0, 0, 0.95),
+        0 0 26px rgba(129, 140, 248, 0.32);
+    }
+    .fragment-card.shard .fragment-tag {
+      color: #a5b4fc;
+    }
+    .fragment-card.shard .fragment-full {
+      border-top-color: rgba(156, 163, 175, 0.9);
+    }
+
+    /* Металлическая табличка / предупреждение */
+    .fragment-card.metal {
+      background: linear-gradient(145deg,
+                 #111827,
+                 #030712,
+                 #111827);
+      color: #e5e7eb;
+      border-color: rgba(249, 115, 22, 0.85);
+      box-shadow:
+        0 22px 40px rgba(0, 0, 0, 0.98),
+        0 0 26px rgba(248, 113, 113, 0.36);
+    }
+    .fragment-card.metal .fragment-tag {
+      color: #f97316;
+    }
+    .fragment-card.metal .fragment-full {
+      border-top-color: rgba(248, 113, 113, 0.9);
+    }
+
+    @media (max-width: 600px) {
+      .fragment-card {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  
+  <div class="page-overlay"></div>
+
+  
+  <div class="lang-switch">
+    <button onclick="setLang('ru')">RU</button>
+    <button onclick="setLang('en')">EN</button>
+  </div>
+
+  <!-- ШАПКА СТРАНИЦЫ -->
+  <header class="subpage-header">
+    <h1 data-ru="Обрывки текстов «Последний тарианец»"
+        data-en="Text fragments from “The Last Tarian”">
+      Обрывки текстов «Последний тарианец»
+    </h1>
+    <p class="subpage-lead"
+       data-ru="Фрагменты хроник, хранящиеся в архивах Ковчега «Конкорд». Разрозненные кусочки истории, которые складываются в один мир."
+       data-en="Fragments of chronicles preserved in the archives of the Ark “Concord.” Scattered pieces of history that come together to form a single world.">
+      Фрагменты хроник, хранящиеся в архивах Ковчега «Конкорд». Разрозненные кусочки истории, которые складываются в один мир.
+    </p>
+  </header>
+
+   <!-- ГЛАВНОЕ МЕНЮ (такое же, как на главной) -->
+  <nav class="main-nav">
+    <a href="index.html"
+       data-ru="Главная" data-en="Home">Главная</a>
+
+    <a href="about.html"
+       data-ru="О книге" data-en="About">О книге</a>
+
+    <a href="characters.html"
+       data-ru="Герои" data-en="Characters">Герои</a>
+
+    <a href="locations.html"
+       data-ru="Локации" data-en="Locations">Локации</a>
+
+    <a href="artifacts.html"
+       data-ru="Артефакты" data-en="Artifacts">Артефакты</a>
+
+    <a href="rydorian.html"
+       data-ru="Гонка 'Райдориан'" data-en="'Rydorian' Race">Гонка 'Райдориан'</a>
+
+    <a href="equipment.html"
+       data-ru="Экипировка"
+       data-en="Equipment">
+      Экипировка
+    </a>
+
+    <a href="media.html"
+       data-ru="Медиа" data-en="Media">Медиа</a>
+
+     <a href="fragments.html"
+       data-ru="Обрывки текстов" data-en="Text fragments">
+      Обрывки текстов
+    </a>
+
+    <a href="contacts.html"
+       data-ru="Контакты" data-en="Contacts">Контакты</a>
+<a href="donate.html"
+       data-ru="Поддержать автора" data-en="Donate">Поддержать автора</a>
+
+  </nav>
+
+
+
+  <main class="about-main fragments-main">
+
+    <!-- Вступительный текст -->
+    <section class="text-block text-block-auto">
+      <h2 data-ru="Хранилище обрывков" data-en="Fragment archive">
+        Хранилище обрывков
+      </h2>
+      <p data-ru="Эти фрагменты собраны из разных источников: отчётов дальних экспедиций, записей Академии Ко’Марис, шифров Хранителей истории и повреждённых носителей, собранных в разных уголках необъятного космического пространства. Каждый обрывок показывает лишь кусочек картины, оставляя место воображению."
+         data-en="These fragments are gathered from many sources:
+the reports of distant expeditions, the records of the Ko’Maris Academy,
+the ciphers of the Keepers of History,
+and damaged data-carriers recovered from remote corners of the vast cosmic expanse.
+Each fragment reveals only a part of the whole, leaving space for imagination.">
+        Эти фрагменты собраны из разных источников: отчётов дальних экспедиций, записей Академии Ко’Марис, шифров Хранителей истории и повреждённых носителей, собранных в разных уголках необъятного космического пространства. Каждый обрывок показывает лишь кусочек картины, оставляя место воображению.
+      </p>
+      <p data-ru="Нажмите на любой носитель — и он откроет полный текст, который удалось восстановить."
+         data-en="Click any carrier to reveal the full recovered text.">
+        Нажмите на любой носитель — и он откроет полный текст, который удалось восстановить.
+      </p>
+    </section>
+
+    <!-- Сетка обрывков -->
+    <section class="fragments-grid-section">
+      <h2 data-ru="Обрывки архива" data-en="Archive fragments">
+        Обрывки архива
+      </h2>
+      <p class="section-lead"
+         data-ru="Некоторые из этих текстов могут оказаться знакомыми, другие лишь намёк на будущие главы. Но ни один из них не раскрывает всей картины."
+         data-en="Some of these texts may feel familiar, others are hints of future chapters. None of them, however, shows the full picture.">
+        Некоторые из этих текстов могут оказаться знакомыми, другие лишь намёк на будущие главы. Но ни один из них не раскрывает всей картины.
+      </p>
+
+      <div class="fragments-container">
+
+        <!-- 1. Обожжённая бумага -->
+        <article class="fragment-card burned">
+          <div class="fragment-tag"
+               data-ru="бумага" data-en="paper">бумага</div>
+          <div class="fragment-preview"
+               data-ru="…он увидел слабое мерцание артефакта и понял, что это не просто музейный экспонат…"
+               data-en="…he noticed a faint flicker from the artifact and realized it was not just a museum exhibit…">
+            …он увидел слабое мерцание артефакта и понял, что это не просто музейный экспонат…
+          </div>
+          <div class="fragment-full"
+               data-ru="…он увидел слабое мерцание артефакта и понял, что это не просто музейный экспонат. Свет как будто откликался на его дыхание, затухая и вспыхивая в такт сердцу. Лишь одно слово вспыхноло в голове — «ключ»."
+               data-en="…he noticed a faint flicker from the artifact and realized it was not just a museum exhibit. The light seemed to echo his breathing, dimming and flaring in rhythm with his heartbeat. One word surfaced in his mind — “key”.">
+            …он увидел слабое мерцание артефакта и понял, что это не просто музейный экспонат. Свет как будто откликался на его дыхание, затухая и вспыхивая в такт сердцу. Лишь одно слово вспыхнуло в голове — «ключ».
+          </div>
+        </article>
+
+        <!-- 2. Свиток -->
+        <article class="fragment-card scroll">
+          <div class="fragment-tag"
+               data-ru="свиток" data-en="scroll">свиток</div>
+          <div class="fragment-preview"
+               data-ru="…Старейшины говорили, что некоторые двери открываются только тем, кто ещё не знает, что ищет…"
+               data-en="…the Elders said that some doors only open to those who still don’t know what they are looking for…">
+            …Старейшины говорили, что некоторые двери открываются только тем, кто ещё не знает, что ищет…
+          </div>
+          <div class="fragment-full"
+               data-ru="…Старейшины говорили, что некоторые двери открываются только тем, кто ещё не знает, что ищет. Но эта дверь реагировала только на Глеба: руны вспыхивали холодным светом, едва он приближался. Даже Аркан не смог бы объяснить, почему."
+               data-en="…the Elders said that some doors only open to those who still don’t know what they are looking for. Yet this door responded only to Gleb: the runes lit up with a cold glow whenever he approached. Not even Arkan could have explained why.">
+            …Старейшины говорили, что некоторые двери открываются только тем, кто ещё не знает, что ищет. Но эта дверь реагировала только на Глеба: руны вспыхивали холодным светом, едва он приближался. Даже Аркан не смог бы объяснить, почему.
+          </div>
+        </article>
+
+        <!-- 3. Кристалл -->
+        <article class="fragment-card crystal">
+          <div class="fragment-tag"
+               data-ru="кристалл" data-en="crystal">кристалл</div>
+          <div class="fragment-preview"
+               data-ru="…фрагмент памяти: объект Г-01. Наблюдение №214 зафиксировало аномальный отклик на артефакт Тариан…"
+               data-en="…memory fragment: subject G-01. Observation #214 recorded an anomalous response to the Tarian artifact…">
+            …фрагмент памяти: объект Г-01. Наблюдение №214 зафиксировало аномальный отклик на артефакт Тариан…
+          </div>
+          <div class="fragment-full"
+               data-ru="…фрагмент памяти: объект Г-01. Наблюдение №214 зафиксировало аномальный отклик на артефакт Тариан. При контакте со Стратумом испытуемого наблюдалось кратковременное совпадение энергетического рисунка. Дальнейший анализ запрещён распоряжением Хранителей."
+               data-en="…memory fragment: subject G-01. Observation #214 recorded an anomalous response to the Tarian artifact. Upon contact with the subject’s Stratum, a brief alignment of the energy pattern was detected. Further analysis is prohibited by order of the Keepers.">
+           …фрагмент памяти: объект Г-01. Наблюдение №214 зафиксировало аномальный отклик на артефакт Тариан. При контакте со Стратумом испытуемого наблюдалось кратковременное совпадение энергетического рисунка. Дальнейший анализ запрещён распоряжением Хранителей.
+          </div>
+        </article>
+
+        <!-- 4. Жёсткий диск / осколок -->
+        <article class="fragment-card shard">
+          <div class="fragment-tag"
+               data-ru="носитель" data-en="carrier">носитель</div>
+          <div class="fragment-preview"
+               data-ru="…запись повреждена. Доступ к сектору К-7 ограничен для всех уровней ниже «Страж»…"
+               data-en="…record corrupted. Access to sector K-7 is restricted for all clearance levels below “Guardian”…">
+            …запись повреждена. Доступ к сектору К-7 ограничен для всех уровней ниже «Страж»…
+          </div>
+          <div class="fragment-full"
+               data-ru="…запись повреждена. Доступ к сектору К-7 ограничен для всех уровней ниже «Страж». Восстановленный фрагмент: «Если он узнает правду до времени, пророчество перестанет быть линией и станет…» — далее следы данных полностью обрываются."
+               data-en="…record corrupted. Access to sector K-7 is restricted for all clearance levels below “Guardian”. Restored excerpt: “If he learns the truth too soon, the prophecy will stop being a line and will become…” — the data ends abruptly here.">
+            …запись повреждена. Доступ к сектору К-7 ограничен для всех уровней ниже «Страж». Восстановленный фрагмент: «Если он узнает правду до времени, пророчество перестанет быть линией и станет…» — далее следы данных полностью обрываются.
+          </div>
+        </article>
+
+        <!-- 5. Металлическая табличка -->
+        <article class="fragment-card metal">
+          <div class="fragment-tag"
+               data-ru="табличка" data-en="plate">табличка</div>
+          <div class="fragment-preview"
+               data-ru="…предупреждение: никто не должен знать, что произошло во время первой активации куба…"
+               data-en="…warning: no one must know what happened during the first activation of the Cube…">
+            …предупреждение: никто не должен знать, что произошло во время первой активации куба…
+          </div>
+          <div class="fragment-full"
+               data-ru="…предупреждение: никто не должен знать, что произошло во время первой активации куба. Запись заседания была стерта, а свидетели распределены по разным секторам Ковчега. Оставили только легенду — для тех, кто захочет её проверить."
+               data-en="…warning: no one must know what happened during the first activation of the Cube. The council recording was erased and the witnesses reassigned to distant sectors of the Ark. Only a legend was left — for those who might try to test it.">
+            …предупреждение: никто не должен знать, что произошло во время первой активации куба. Запись заседания была стерта, а свидетели распределены по разным секторам Ковчега. Оставили только легенду — для тех, кто захочет её проверить.
+          </div>
+        </article>
+
+        <!-- 6. Обожжённая бумага -->
+        <article class="fragment-card burned">
+          <div class="fragment-tag"
+               data-ru="дневник" data-en="diary">дневник</div>
+          <div class="fragment-preview"
+               data-ru="…иногда мне кажется, что лес помнит о нём больше, чем люди. Следы у кострища до сих пор…"
+               data-en="…sometimes it feels like the forest remembers him better than people do. The tracks near the campfire still…">
+            …иногда мне кажется, что лес помнит о нём больше, чем люди. Следы у кострища до сих пор…
+          </div>
+          <div class="fragment-full"
+               data-ru="…иногда мне кажется, что лес помнит о нём больше, чем люди. Следы у кострища до сих пор лежат слишком ровно, словно кто-то тщательно стирал всё лишнее. Но один отпечаток остался...не детский и не человеческий."
+               data-en="…sometimes it feels like the forest remembers him better than people do. The tracks by the campfire still look too neat, as if someone carefully erased everything unnecessary. But one footprint remained...neither a child’s nor a human’s.">
+            …иногда мне кажется, что лес помнит о нём больше, чем люди. Следы у кострища до сих пор лежат слишком ровно, словно кто-то тщательно стирал всё лишнее. Но один отпечаток остался...не детский и не человеческий.
+          </div>
+        </article>
+
+        <!-- 7. Свиток -->
+        <article class="fragment-card scroll">
+          <div class="fragment-tag"
+               data-ru="летопись" data-en="chronicle">летопись</div>
+          <div class="fragment-preview"
+               data-ru="…в год седьмой Кронума на Ковчег доставили ребёнка, которого считали лишь легендой…"
+               data-en="…in the seventh year of the Kronum, a child thought to be only a legend was brought aboard the Ark…">
+            …в год седьмой Кронума на Ковчег доставили ребёнка, которого считали лишь легендой…
+          </div>
+          <div class="fragment-full"
+               data-ru="…в год седьмой Кронума на Ковчег доставили ребёнка, которого считали лишь легендой. Его появление нарушило все расчёты Хранителей: пророчество предполагало выбор, а не случайность. Но случайность ли это, если её ждали?"
+               data-en="…in the seventh year of the Kronum, a child thought to be only a legend was brought aboard the Ark. His arrival broke all the Keepers’ charts: the prophecy spoke of a choice, not a coincidence. But is it really a coincidence if it is expected?">
+            …в год седьмой Кронума на Ковчег доставили ребёнка, которого считали лишь легендой. Его появление нарушило все расчёты Хранителей: пророчество предполагало выбор, а не случайность. Но случайность ли это, если её ждали?
+          </div>
+        </article>
+
+        <!-- 8. Кристалл -->
+        <article class="fragment-card crystal">
+          <div class="fragment-tag"
+               data-ru="память" data-en="memory">память</div>
+          <div class="fragment-preview"
+               data-ru="…при перегрузке в 8g объект Г-01 не потерял сознание, а наоборот, впервые заговорил на…"
+               data-en="…at 8g overload, subject G-01 did not black out; instead, for the first time he spoke in…">
+            …при перегрузке в 8g объект Г-01 не потерял сознание, а наоборот, впервые заговорил на…
+          </div>
+          <div class="fragment-full"
+               data-ru="…при перегрузке в 8g объект Г-01 не потерял сознание, а наоборот, впервые заговорил на неизвестном языке. Запись зафиксировала лишь обрывки фраз, несовпадающие с известными языками. Стратум в этот момент показал зашкаливающий уровень активности мозга."
+               data-en="…at a load of 8g, subject G-01 did not lose consciousness;
+on the contrary, he spoke for the first time in an unknown language. The recording captured only fragmented phrases that match none of the documented tongues.
+At that moment, the Stratum registered an extreme spike in neural activity.">
+           …при перегрузке в 8g объект Г-01 не потерял сознание, а наоборот, впервые заговорил на неизвестном языке. Запись зафиксировала лишь обрывки фраз, несовпадающие с известными языками. Стратум в этот момент показал зашкаливающий уровень активности мозга.
+          </div>
+        </article>
+
+        <!-- 9. Осколок диска -->
+        <article class="fragment-card shard">
+          <div class="fragment-tag"
+               data-ru="лог" data-en="log">лог</div>
+          <div class="fragment-preview"
+               data-ru="…гонка Райдориана: сектор «Тёмная дуга». Незапланированное вмешательство дронов безопасности…"
+               data-en="…Rydorian race: “Dark Arc” sector. Unplanned intervention from security drones…">
+            …гонка Райдориана: сектор «Тёмная дуга». Незапланированное вмешательство дронов безопасности…
+          </div>
+          <div class="fragment-full"
+               data-ru="…гонка Райдориана: сектор «Тёмная дуга». Незапланированное вмешательство дронов безопасности. Причина: зафиксирован неизвестный источник излучения рядом с болидом Глеба. Официальный протокол называет это сбоем. Неофициальные записи — предупреждением."
+               data-en="…Rydorian race: “Dark Arc” sector. Unplanned intervention from security drones. Reason: an unknown energy source was detected near Gleb’s craft. The official protocol calls it a malfunction. Unofficial notes call it a warning.">
+            …гонка Райдориана: сектор «Тёмная дуга». Незапланированное вмешательство дронов безопасности. Причина: зафиксирован неизвестный источник излучения рядом с болидом Глеба. Официальный протокол называет это сбоем. Неофициальные записи — предупреждением.
+          </div>
+        </article>
+
+        <!-- 10. Металл -->
+        <article class="fragment-card metal">
+          <div class="fragment-tag"
+               data-ru="метка" data-en="mark">метка</div>
+          <div class="fragment-preview"
+               data-ru="…на запястье у него светилась метка, которой не должно было существовать ни в одном из известных…"
+               data-en="…on his wrist glowed a mark that was not supposed to exist in any of the known…">
+            …на запястье у него светилась метка, которой не должно было существовать ни в одном из известных…
+          </div>
+          <div class="fragment-full"
+               data-ru="…на запястье у него ярко засветился стратум, почти обжигая руку. Глеб вскинул руку, но когда она протянулась к артефакту, стратум и куб засияли одинаковым светом."
+               data-en="…the Stratum on his wrist flared with a sharp, burning light, almost scorching his skin. Gleb jerked his hand up, but the moment it reached toward the artifact, the Stratum and the cube began to glow with the same radiant hue.">
+           …на запястье у него ярко засветился стратум, почти обжигая руку. Глеб вскинул руку, но когда она протянулась к артефакту, стратум и куб засияли одинаковым светом.
+          </div>
+        </article>
+
+        <!-- 11. Обожжённая бумага -->
+        <article class="fragment-card burned">
+          <div class="fragment-tag"
+               data-ru="отчёт" data-en="report">отчёт</div>
+          <div class="fragment-preview"
+               data-ru="…детский дом сообщил о пропаже одного воспитанника. Официальная версия — побег, неофициально…"
+               data-en="…the orphanage reported one missing child. Official version — runaway, unofficially…">
+            …детский дом сообщил о пропаже одного воспитанника. Официальная версия — побег, неофициально…
+          </div>
+          <div class="fragment-full"
+               data-ru="…детский дом сообщил о пропаже одного воспитанника. Официальная версия — побег, неофициально — «лес забрал своё». Через три дня следы на поляне исчезли, но в небе над деревней фиксировали аномальное свечение."
+               data-en="…the orphanage reported one missing child. Official version — runaway, unofficially — “the forest took what was his”. Three days later the tracks in the clearing vanished, but anomalous lights were seen above the village.">
+            …детский дом сообщил о пропаже одного воспитанника. Официальная версия — побег, неофициально — «лес забрал своё». Через три дня следы на поляне исчезли, но в небе над деревней фиксировали аномальное свечение.
+          </div>
+        </article>
+
+        <!-- 12. Свиток -->
+        <article class="fragment-card scroll">
+          <div class="fragment-tag"
+               data-ru="заметка" data-en="note">заметка</div>
+          <div class="fragment-preview"
+               data-ru="…курсанты Академии Ко’Марис спорят, существует ли на самом деле тот самый «последний тарианец»…"
+               data-en="…Ko’Maris cadets argue whether the so-called “the last tarian” really exists…">
+            …курсанты Академии Ко’Марис спорят, существует ли на самом деле тот самый «последний тарианец»…
+          </div>
+          <div class="fragment-full"
+               data-ru="…курсанты Академии Ко’Марис спорят, существует ли на самом деле тот самый «последний тарианец». Кто-то считает его выдумкой Старейшин, чтобы удерживать порядок. Другие клянутся, что видели, как неизвестный подросток входил в закрытый сектор без пропуска."
+               data-en="…Ko’Maris cadets argue whether the so-called “the last tarian” really exists. Some believe he is a story invented by the Elders to keep order. Others swear they saw an unknown teenager entering a restricted sector without clearance.">
+            …курсанты Академии Ко’Марис спорят, существует ли на самом деле тот самый «последний тарианец». Кто-то считает его выдумкой Старейшин, чтобы удерживать порядок. Другие клянутся, что видели, как неизвестный подросток входил в закрытый сектор без пропуска.
+          </div>
+        </article>
+
+        <!-- 13. Кристалл -->
+        <article class="fragment-card crystal">
+          <div class="fragment-tag"
+               data-ru="эхо" data-en="echo">эхо</div>
+          <div class="fragment-preview"
+               data-ru="…когда он остался один в ксеносадах, Стратум показал всплеск сигнала, направленный не наружу, а куда-то…"
+               data-en="…when he was alone in the xenogardens, the Stratum showed a spike aimed not outward but somewhere…">
+            …когда он остался один в ксеносадах, Стратум показал всплеск сигнала, направленный не наружу, а куда-то…
+          </div>
+          <div class="fragment-full"
+               data-ru="…когда он остался один в ксеносадах, Стратум показал всплеск сигнала, направленный не наружу, а куда-то «внутрь». Датчики зафиксировали, что на несколько секунд его собственная энергетическая подпись раздвоилась, будто вместе с ним там стоял ещё кто-то."
+               data-en="…when he was alone in the xenogardens, the Stratum showed a spike aimed not outward but “inwards”. Sensors recorded that for several seconds his own energy signature split, as if someone else was standing there with him.">
+            …когда он остался один в ксеносадах, Стратум показал всплеск сигнала, направленный не наружу, а куда-то «внутрь». Датчики зафиксировали, что на несколько секунд его собственная энергетическая подпись раздвоилась, будто вместе с ним там стоял ещё кто-то.
+          </div>
+        </article>
+
+        <!-- 14. Осколок диска -->
+        <article class="fragment-card shard">
+          <div class="fragment-tag"
+               data-ru="протокол" data-en="protocol">протокол</div>
+          <div class="fragment-preview"
+               data-ru="…после инцидента в секторе все записи о родителях объекта Г-01 были перенесены в…"
+               data-en="…after the incident in the sector, all records of subject G-01’s parents were moved to…">
+            …после инцидента в секторе все записи о родителях объекта Г-01 были перенесены в…
+          </div>
+          <div class="fragment-full"
+               data-ru="…после инцидента в секторе все записи о родителях объекта Г-01 были перенесены в офлайн-хранилище. Доступ предоставляется только по личному решению Совета. Официальная причина — «несогласованность данных». Неофициально — «слишком много совпадений»."
+               data-en="…after the incident in the sector, all records of subject G-01’s parents were moved to offline storage. Access is granted only by personal decision of the Council. Official reason — “data inconsistency”. Unofficial — “too many coincidences”.">
+            …после инцидента в секторе все записи о родителях объекта Г-01 были перенесены в офлайн-хранилище. Доступ предоставляется только по личному решению Совета. Официальная причина — «несогласованность данных». Неофициально — «слишком много совпадений».
+          </div>
+        </article>
+
+        <!-- 15. Металлическая табличка -->
+        <article class="fragment-card metal">
+          <div class="fragment-tag"
+               data-ru="предостережение" data-en="warning">предостережение</div>
+          <div class="fragment-preview"
+               data-ru="…если он выберет свет, тьма найдёт другой путь. Если он выберет тьму, свет перестанет быть…"
+               data-en="…if he chooses light, darkness will find another way. If he chooses darkness, light will stop being…">
+            …если он выберет свет, тьма найдёт другой путь. Если он выберет тьму, свет перестанет быть…
+          </div>
+          <div class="fragment-full"
+               data-ru="…если он выберет свет, тьма найдёт другой путь. Если он выберет тьму, свет перестанет быть выбором, а станет наказанием. В обоих случаях цену заплатит не он один, а все те, кто поверит в легенду."
+               data-en="…if he chooses light, darkness will find another way. If he chooses darkness, light will stop being a choice and turn into punishment. In both cases, the price will not be his alone, but also of those who believe in the legend.">
+            …если он выберет свет, тьма найдёт другой путь. Если он выберет тьму, свет перестанет быть выбором, а станет наказанием. В обоих случаях цену заплатит не он один, а все те, кто поверит в легенду.
+          </div>
+        </article>
+
+        <!-- 16. Обожжённая бумага -->
+        <article class="fragment-card burned">
+          <div class="fragment-tag"
+               data-ru="письмо" data-en="letter">письмо</div>
+          <div class="fragment-preview"
+               data-ru="…если ты читаешь это, значит, мы не успели вернуться с последней миссии. Не верь тем, кто скажет, что…"
+               data-en="…if you’re reading this, it means we never returned from the last mission. Don’t believe those who say that…">
+            …если ты читаешь это, значит, мы не успели вернуться с последней миссии. Не верь тем, кто скажет, что…
+          </div>
+          <div class="fragment-full"
+               data-ru="…если ты читаешь это, значит, мы не успели вернуться с последней миссии. Не верь тем, кто скажет, что всё было случайностью. Мы знали, на что идём, и знали, кого пытаемся защитить. Тебя. Даже если ты никогда об этом не узнаешь."
+               data-en="…if you’re reading this, it means we never returned from the last mission. Don’t believe those who say it was all an accident. We knew what we were walking into, and we knew who we were trying to protect. You. Even if you never find out.">
+            …если ты читаешь это, значит, мы не успели вернуться с последней миссии. Не верь тем, кто скажет, что всё было случайностью. Мы знали, на что идём, и знали, кого пытаемся защитить. Тебя. Даже если ты никогда об этом не узнаешь.
+          </div>
+        </article>
+
+        <!-- 17. Свиток -->
+        <article class="fragment-card scroll">
+          <div class="fragment-tag"
+               data-ru="запись" data-en="entry">запись</div>
+          <div class="fragment-preview"
+               data-ru="…в Академии есть правило: не задавать лишних вопросов тем, кто приходит на Ковчег…"
+               data-en="…there is a rule at the Academy: never ask too many questions to those who arrive to the Ark…">
+            …в Академии есть правило: не задавать лишних вопросов тем, кто приходит на Ковчег…
+          </div>
+          <div class="fragment-full"
+               data-ru="…в Академии есть правило: не задавать лишних вопросов тем, кто приходит на Ковчег. Официально: чтобы не травмировать адаптацию. Неофициально: потому что не все истории допускают простое объяснение, особенно если в них замешаны Старейшины."
+               data-en="…there is a rule at the Academy: never ask too many questions to those who arrive to the Ark. Officially — to avoid hindering adaptation. Unofficially — because not all stories can be safely explained, especially when the Elders are involved.">
+            …в Академии есть правило: не задавать лишних вопросов тем, кто приходит на Ковчег. Официально: чтобы не травмировать адаптацию. Неофициально: потому что не все истории допускают простое объяснение, особенно если в них замешаны Старейшины.
+          </div>
+        </article>
+
+        <!-- 18. Кристалл -->
+        <article class="fragment-card crystal">
+          <div class="fragment-tag"
+               data-ru="код" data-en="code">код</div>
+          <div class="fragment-preview"
+               data-ru="…последовательность рун, которую он увидел во сне, полностью совпала с аварийным кодом доступа к…"
+               data-en="…the rune sequence he saw in his dream perfectly matched the emergency access code to…">
+            …последовательность рун, которую он увидел во сне, полностью совпала с аварийным кодом доступа к…
+          </div>
+          <div class="fragment-full"
+               data-ru="…последовательность рун, которую он увидел во сне, полностью совпала с аварийным кодом доступа к техническому отсеку К-3. Никто не признаётся, кто впервые ввёл этот код в систему. В списке авторов числится только слово «неизвестно»."
+               data-en="…the rune sequence he saw in his dream perfectly matched the emergency access code to technical bay K-3. No one will admit who first entered that code into the system. The authorship field contains only one word: “unknown”.">
+            …последовательность рун, которую он увидел во сне, полностью совпала с аварийным кодом доступа к техническому отсеку К-3. Никто не признаётся, кто впервые ввёл этот код в систему. В списке авторов числится только слово «неизвестно».
+          </div>
+        </article>
+
+        <!-- 19. Осколок диска -->
+        <article class="fragment-card shard">
+          <div class="fragment-tag"
+               data-ru="сеанс" data-en="session">сеанс</div>
+          <div class="fragment-preview"
+               data-ru="…машинный тест памяти показал, что Глеб помнит больше деталей о Ковчеге, чем должен помнить ребёнок…"
+               data-en="…the machine memory test revealed that Gleb remembers more details about the Ark than any child possibly should…">
+            …машинный тест памяти показал, что Глеб помнит больше деталей о Ковчеге, чем должен помнить ребёнок…
+          </div>
+          <div class="fragment-full"
+               data-ru="…машинный тест памяти показал, что Глеб помнит больше деталей о Ковчеге, чем должен помнить ребёнок, выросший на Земле. Некоторые описания отсеков совпали с планами, которые никогда не публиковались. Заключение: память может быть «привита» задолго до посадки."
+               data-en="…psychological session showed that Gleb recalls more details about the Ark than a child raised on Earth should. Some descriptions of the sections matched schematics that were never made public. Conclusion: memories may have been “grafted” long before boarding.">
+           …машинный тест памяти показал, что Глеб помнит больше деталей о Ковчеге, чем должен помнить ребёнок, выросший на Земле. Некоторые описания отсеков совпали с планами, которые никогда не публиковались. Заключение: память может быть «привита» задолго до посадки.
+          </div>
+        </article>
+
+        <!-- 20. Металлическая табличка -->
+        <article class="fragment-card metal">
+          <div class="fragment-tag"
+               data-ru="архив" data-en="archive">архив</div>
+          <div class="fragment-preview"
+               data-ru="…если кто-то найдёт все обрывки и сложит их вместе, он поймёт, почему Первые ушли…"
+               data-en="…if someone were to find all the fragments and piece them together, they would understand why the First Ones left…">
+           …если кто-то найдёт все обрывки и сложит их вместе, он поймёт, почему Первые ушли…
+          </div>
+          <div class="fragment-full"
+               data-ru="…если кто-то найдёт все обрывки и сложит их вместе, он поймёт, почему Первые ушли, а не боролись до конца. И тогда придётся ответить на главный вопрос: готов ли он повторить их выбор или рискнёт изменить историю."
+               data-en="…if someone were to find all the fragments and piece them together, they would understand why the First Ones left rather than fight to the end. And then they would face the ultimate question: are they prepared to repeat that choice — or dare to change the course of history.">
+           …если кто-то найдёт все обрывки и сложит их вместе, он поймёт, почему Первые ушли, а не боролись до конца. И тогда придётся ответить на главный вопрос: готов ли он повторить их выбор или рискнёт изменить историю.
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p data-ru="© 2025 «Последний тарианец» — обрывки текстов, найденные в архивах Ковчега"
+       data-en="© 2025 “The Last Tarian” — text fragments recovered from the Ark archives">
+      © 2025 «Последний тарианец» — обрывки текстов, найденные в архивах Ковчега
+    </p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.fragment-card');
+      cards.forEach(card => {
+        card.addEventListener('click', () => {
+          card.classList.toggle('open');
+        });
+      });
+    });
+  </script>
+
+  <script src="lang.js"></script>
+</body>
+</html>
