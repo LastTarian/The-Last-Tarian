@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Локации — Последний тарианец</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    .locations-main {
+      padding: 16px 16px 40px;
+    }
+
+    .text-block-auto {
+      height: auto;
+      max-height: none;
+      overflow-y: visible;
+      overflow-x: visible;
+    }
+
+    .locations-intro {
+      max-width: 1000px;
+      margin: 0 auto 26px;
+    }
+
+    .locations-section {
+      max-width: 1100px;
+      margin: 0 auto 30px;
+    }
+
+    .locations-section h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #facc15;
+    }
+
+    .locations-section p.section-lead {
+      margin: 0 0 16px;
+      font-size: 14px;
+      color: #e5e7eb;
+      max-width: 780px;
+    }
+
+    .location-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .location-card {
+      position: relative;
+      border-radius: 20px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background:
+        radial-gradient(circle at top left,
+          rgba(56, 189, 248, 0.22),
+          rgba(15, 23, 42, 0.98));
+      box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.95),
+        0 0 24px rgba(15, 23, 42, 0.9);
+      padding: 12px 12px 14px;
+      cursor: pointer;
+      transition:
+        transform .2s ease-out,
+        box-shadow .2s ease-out,
+        border-color .2s ease-out,
+        background .2s ease-out;
+      font-size: 13px;
+      line-height: 1.55;
+      overflow: hidden;
+    }
+
+    .location-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 0 0,
+          rgba(56, 189, 248, 0.3),
+          transparent 55%),
+        radial-gradient(circle at 100% 100%,
+          rgba(250, 204, 21, 0.26),
+          transparent 55%);
+      mix-blend-mode: screen;
+      opacity: 0.9;
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
+    .location-card:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 22px 44px rgba(0, 0, 0, 0.98),
+        0 0 28px rgba(56, 189, 248, 0.4);
+      border-color: rgba(250, 204, 21, 0.9);
+      background:
+        radial-gradient(circle at top,
+          rgba(56, 189, 248, 0.28),
+          rgba(15, 23, 42, 0.98));
+    }
+
+    .location-card.highlight {
+      border-color: rgba(250, 204, 21, 0.95);
+      background:
+        radial-gradient(circle at top left,
+          rgba(250, 204, 21, 0.38),
+          rgba(15, 23, 42, 0.98));
+    }
+
+    .location-card-inner {
+      position: relative;
+      z-index: 2;
+    }
+
+    .location-image {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background:
+        radial-gradient(circle at 30% 0,
+          rgba(148, 163, 184, 0.4),
+          rgba(15, 23, 42, 0.98));
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #e5e7eb;
+      text-align: center;
+      padding: 6px;
+    }
+
+    .location-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .location-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .location-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: #f9fafb;
+    }
+
+    .location-tag {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      color: #a5b4fc;
+      white-space: nowrap;
+    }
+
+    .location-summary {
+      margin: 0 0 4px;
+      color: #e5e7eb;
+    }
+
+    .location-toggle-hint {
+      font-size: 11px;
+      opacity: 0.75;
+      margin-bottom: 4px;
+    }
+
+    .location-body {
+      display: none;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.8);
+      font-size: 12.5px;
+    }
+
+    .location-card.open .location-body {
+      display: block;
+    }
+
+    .location-card.open .location-toggle-hint {
+      opacity: 0.55;
+    }
+
+    .location-list {
+      padding-left: 18px;
+      margin: 4px 0 0;
+    }
+
+    .location-list li + li {
+      margin-top: 2px;
+    }
+
+    .location-meta {
+      font-size: 11px;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+
+    /* Небольшие цветовые различия по категориям */
+    .location-card.type-ark .location-tag {
+      color: #7dd3fc;
+    }
+
+    .location-card.type-city .location-tag {
+      color: #a5b4fc;
+    }
+
+    .location-card.type-study .location-tag {
+      color: #bef264;
+    }
+
+    .location-card.type-nature .location-tag {
+      color: #6ee7b7;
+    }
+
+    .location-card.type-race .location-tag {
+      color: #facc15;
+    }
+
+    .location-card.type-secret .location-tag {
+      color: #f97316;
+    }
+
+    .location-card.type-orbit .location-tag {
+      color: #c4b5fd;
+    }
+
+    .location-card.type-earth .location-tag {
+      color: #fda4af;
+    }
+
+    @media (max-width: 600px) {
+      .location-card {
+        font-size: 12px;
+        padding: 10px 10px 12px;
+      }
+      .location-title {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-overlay"></div>
+
+  <div class="lang-switch">
+    <button onclick="setLang('ru')">RU</button>
+    <button onclick="setLang('en')">EN</button>
+  </div>
+
+  <header class="subpage-header">
+    <h1 data-ru="Локации"
+        data-en="Locations">
+      Локации
+    </h1>
+    <p class="subpage-lead"
+       data-ru="Места, в которых разворачивается история: от земного приюта до сложных секторов Ковчега и трассы гонок «Райдориан»."
+       data-en="Places where the story unfolds: from an Earth orphanage to the Ark’s complex sectors and the Rydorian race track.">
+      Места, в которых разворачивается история: от земного приюта до сложных секторов Ковчега и трассы гонок «Райдориан».
+    </p>
+  </header>
+
+   <!-- ГЛАВНОЕ МЕНЮ (такое же, как на главной) -->
+  <nav class="main-nav">
+    <a href="index.html"
+       data-ru="Главная" data-en="Home">Главная</a>
+
+    <a href="about.html"
+       data-ru="О книге" data-en="About">О книге</a>
+
+    <a href="characters.html"
+       data-ru="Герои" data-en="Characters">Герои</a>
+
+    <a href="locations.html"
+       data-ru="Локации" data-en="Locations">Локации</a>
+
+    <a href="artifacts.html"
+       data-ru="Артефакты" data-en="Artifacts">Артефакты</a>
+
+    <a href="rydorian.html"
+       data-ru="Гонка 'Райдориан'" data-en="'Rydorian' Race">Гонка 'Райдориан'</a>
+
+    <a href="equipment.html"
+       data-ru="Экипировка"
+       data-en="Equipment">
+      Экипировка
+    </a>
+
+    <a href="media.html"
+       data-ru="Медиа" data-en="Media">Медиа</a>
+
+     <a href="fragments.html"
+       data-ru="Обрывки текстов" data-en="Text fragments">
+      Обрывки текстов
+    </a>
+
+    <a href="contacts.html"
+       data-ru="Контакты" data-en="Contacts">Контакты</a>
+<a href="donate.html"
+       data-ru="Поддержать автора" data-en="DONATE">Поддержать автора</a>
+
+  </nav>
+
+
+
+  <main class="about-main locations-main">
+
+    <!-- Вступление -->
+    <section class="text-block text-block-auto locations-intro">
+      <h2 data-ru="Карта мира"
+          data-en="World map">
+        Карта мира
+      </h2>
+      <p
+        data-ru="Эта страница собирает ключевые локации, которые появляются в книгах цикла «Последний тарианец». 
+        data-en="This page brings together the key locations that appear in the “The Last Tarian” cycle. ">
+        Эта страница собирает ключевые локации, которые появляются в книгах цикла «Последний тарианец». 
+      </p>
+      <p
+        data-ru="Нажмите на карточку, чтобы раскрыть расширенное описание локации."
+        data-en="Click a card to reveal the extended description of the location.">
+        Нажмите на карточку, чтобы раскрыть расширенное описание локации. 
+      </p>
+    </section>
+
+    <!-- Локации Ковчега -->
+    <section class="locations-section">
+      <h2
+        data-ru="Ковчег и его внутренние секторы"
+        data-en="The Ark and its inner sectors">
+        Ковчег и его внутренние секторы
+      </h2>
+      <p class="section-lead"
+         data-ru="Главные площадки, где Глеб учится жить среди звёзд: от центральных залов до забытых аварийных секторов."
+         data-en="The main areas where Gleb learns to live among the stars: from central halls to forgotten emergency sectors.">
+        Главные площадки, где Глеб учится жить среди звёзд: от центральных залов до забытых аварийных секторов.
+      </p>
+
+      <div class="location-grid">
+
+        <!-- Ковчег Конкорд Атрона -->
+        <article class="location-card type-ark">
+          <div class="location-card-inner">
+            <div class="location-image">
+              <img src="Images/locations/ark-concord-atron.jpg"
+                   alt="Ковчег «Конкорд»"
+                   loading="lazy">
+            </div>
+            <div class="location-header">
+              <div class="location-title"
+                   data-ru="Ковчег «Конкорд»"
+                   data-en="Ark “Concord”">
+                Ковчег «Конкорд»
+              </div>
+              <div class="location-tag"
+                   data-ru="главный ковчег"
+                   data-en="main ark">
+                главный ковчег
+              </div>
+            </div>
+            <p class="location-summary"
+               data-ru="Гигантский межзвёздный ковчег, на борту которого пересекаются судьбы десятков рас и культур."
+               data-en="A colossal interstellar ark where the destinies of dozens of species and cultures intersect.">
+              Гигантский межзвёздный ковчег, на борту которого пересекаются судьбы десятков рас и культур.
+            </p>
+            <p class="location-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть планировку и атмосферу."
+               data-en="Click to see layout and atmosphere.">
+              Нажмите, чтобы раскрыть планировку и атмосферу.
+            </p>
+            <div class="location-body">
+              <p
+                data-ru="Ковчег представляет собой многоуровневую конструкцию с секторами разного назначения: жилые купола, учебные комплексы, биодома, технические и секретные отсеки. Внутренний «звёздный купол» создаёт иллюзию открытого космоса даже глубоко внутри корпуса."
+                data-en="The Ark is a multi-level structure with sectors for different purposes: residential domes, training complexes, biodomes, technical bays and hidden compartments. An inner “star dome” creates the illusion of open space even deep inside the hull.">
+                Ковчег представляет собой многоуровневую конструкцию с секторами разного назначения: жилые купола, учебные комплексы, биодома, технические и секретные отсеки. Внутренний «звёздный купол» создаёт иллюзию открытого космоса даже глубоко внутри корпуса.
+              </p>
+              
+            </div>
+          </div>
+        </article>
+
+        <!-- Каледон -->
+        <article class="location-card type-city">
+          <div class="location-card-inner">
+            <div class="location-image">
+              <img src="Images/locations/kaledon-city.jpg"
+                   alt="Городской сектор Каледон"
+                   loading="lazy">
+            </div>
+            <div class="location-header">
+              <div class="location-title"
+                   data-ru="Каледон"
+                   data-en="Kaledon">
+                Каледон
+              </div>
+              <div class="location-tag"
+                   data-ru="городской сектор"
+                   data-en="city sector">
+                городской сектор
+              </div>
+            </div>
+            <p class="location-summary"
+               data-ru="Городской сектор ковчега, где Глеб впервые сталкивается с многообразием разумных рас."
+               data-en="The Ark’s city sector where Gleb first encounters the diversity of intelligent species.">
+              Городской сектор ковчега, где Глеб впервые сталкивается с многообразием разумных рас.
+            </p>
+            <p class="location-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть подробности."
+               data-en="Click to see details.">
+              Нажмите, чтобы раскрыть подробности.
+            </p>
+            <div class="location-body">
+              <p
+                data-ru="Узкие мостики и широкие проспекты, многоуровневые площадки, витрины, голографические вывески и обзорные платформы, с которых видны другие купола. Каледон наполнен звуками, запахами и языками сразу нескольких миров."
+                data-en="Narrow walkways and wide avenues, multi-level plazas, shopfronts, holographic signs and viewing decks overlooking other domes. Kaledon is filled with sounds, scents and languages from many worlds at once.">
+                Узкие мостики и широкие проспекты, многоуровневые площадки, витрины, голографические вывески и обзорные платформы, с которых видны другие купола. Каледон наполнен звуками, запахами и языками сразу нескольких миров.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Музей истории Каледона -->
+        <article class="location-card type-city">
+          <div class="location-card-inner">
+            <div class="location-image">
+              <img src="Images/locations/kaledon-museum.jpg"
+                   alt="Музей истории Каледона"
+                   loading="lazy">
+            </div>
+            <div class="location-header">
+              <div class="location-title"
+                   data-ru="Музей истории Каледона"
+                   data-en="Kaledon History Museum">
+                Музей истории Каледона
+              </div>
+              <div class="location-tag"
+                   data-ru="зал артефактов"
+                   data-en="artifact hall">
+                зал артефактов
+              </div>
+            </div>
+            <p class="location-summary"
+               data-ru="Огромный купол из прозрачного материала, где Глеб впервые видит артефакты, меняющие его представление о Вселенной."
+               data-en="A huge transparent dome where Gleb first sees the artifacts that will change his perception of the universe.">
+              Огромный купол из прозрачного материала, где Глеб впервые видит артефакты, меняющие его представление о Вселенной.
+            </p>
+            <p class="location-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть атмосферу."
+               data-en="Click to expand atmosphere.">
+              Нажмите, чтобы раскрыть атмосферу.
+            </p>
+            <div class="location-body">
+              <p
+                data-ru="Пол мерцает, как звёздное небо под ногами, колонны украшены древними картами, а голографические полотна показывают забытые миры. В центре возвышается статуя, объединяющая черты разных гуманоидных видов — символ единства жизни."
+                data-en="The floor shimmers like a starry sky underfoot, columns are adorned with ancient maps, and holographic tapestries show forgotten worlds. In the center stands a statue blending features of many humanoid species—a symbol of unity.">
+                Пол мерцает, как звёздное небо под ногами, колонны украшены древними картами, а голографические полотна показывают забытые миры. В центре возвышается статуя, объединяющая черты разных гуманоидных видов — символ единства жизни.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Академия Ко'Марис -->
+        <article class="location-card type-study">
+          <div class="location-card-inner">
+            <div class="location-image">
+              <img src="Images/locations/academy-komaris.jpg"
+                   alt="Академия Ко'Марис"
+                   loading="lazy">
+            </div>
+            <div class="location-header">
+              <div class="location-title"
+                   data-ru="Академия Ко’Марис"
+                   data-en="Academy Ko’Maris">
+                Академия Ко’Марис
+              </div>
+              <div class="location-tag"
+                   data-ru="школа на ковчеге"
+                   data-en="school on the Ark">
+                школа на ковчеге
+              </div>
+            </div>
+            <p class="location-summary"
+               data-ru="Учебный комплекс, где дети разных рас учатся понимать не только науки, но и друг друга."
+               data-en="An education complex where children from many species learn not only science, but also how to understand each other.">
+              Учебный комплекс, где дети разных рас учатся понимать не только науки, но и друг друга.
+            </p>
+            <p class="location-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to see details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="location-body">
+              <p
+                data-ru="Академия соединяет классы, лаборатории, тренировочные залы и зоны отдыха. Здесь Глеб сталкивается с другим форматом обучения, где важны не оценки, а развитие способностей и ответственности."
+                data-en="The Academy combines classrooms, labs, training halls and rest zones. Here Gleb faces a different education system where grades matter less than growth and responsibility.">
+                Академия соединяет классы, лаборатории, тренировочные залы и зоны отдыха. Здесь Глеб сталкивается с другим форматом обучения, где важны не оценки, а развитие способностей и ответственности.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Остров Вечного Лета -->
+        <article class="location-card type-nature">
+          <div class="location-card-inner">
+            <div class="location-image">
+              <img src="Images/locations/island-eternal-summer.jpg"
+                   alt="Остров Вечного Лета"
+                   loading="lazy">
+            </div>
+            <div class="location-header">
+              <div class="location-title"
+                   data-ru="Остров Вечного Лета"
+                   data-en="Island of Eternal Summer">
+                Остров Вечного Лета
+              </div>
+              <div class="location-tag"
+                   data-ru="биодом земного типа"
+                   data-en="Earth-type biodome">
+                биодом земного типа
+              </div>
+            </div>
+            <p class="location-summary"
+               data-ru="Сектор биодома, воссоздающий мягкий климат и растения родной планеты."
+               data-en="A biodome sector recreating the mild climate and plant life of Earth.">
+              Сектор биодома, воссоздающий мягкий климат и растения родной планеты.
+            </p>
+            <p class="location-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to see details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="location-body">
+              <p
+                data-ru="Тёплый ветер, запах травы, солнечные «лучи» под куполом и шум условного моря — место, где жители могут ненадолго забыть, что они на борту ковчега."
+                data-en="Warm wind, the scent of grass, artificial sunlight under the dome and the noise of a synthetic sea—here residents can briefly forget they’re on an Ark.">
+                Тёплый ветер, запах травы, солнечные «лучи» под куполом и шум условного моря — место, где жители могут ненадолго забыть, что они на борту ковчега.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Сады Ка'лиар -->
+        <article class="location-card type-nature">
+          <div class="location-card-inner">
+            <div class="location-image">
+              <img src="Images/locations/gardens-kaliar.jpg"
+                   alt="Сады Ка’лиар"
+                   loading="lazy">
+            </div>
+            <div class="location-header">
+              <div class="location-title"
+                   data-ru="Сады Ка’лиар"
+                   data-en="Gardens of Ka’liar">
+                Сады Ка’лиар
+              </div>
+              <div class="location-tag"
+                   data-ru="ксенофлорный сектор"
+                   data-en="xenoflora sector">
+                ксенофлорный сектор
+              </div>
+            </div>
+            <p class="location-summary"
+               data-ru="Сектор с инопланетной флорой, где растения ведут себя не так, как привыкли люди."
+               data-en="A sector of alien flora, where plants behave in ways humans are not used to.">
+              Сектор с инопланетной флорой, где растения ведут себя не так, как привыкли люди.
+            </p>
+            <p class="location-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to see details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="location-body">
+              <p
+                data-ru="Светящиеся лианы, хищно любопытные цветы, деревья, реагирующие на голос. Сады Ка’лиар одновременно прекрасны и немного пугающи, особенно в полумраке."
+                data-en="Glowing vines, curiously predatory flowers and trees that react to voices. The Gardens of Ka’liar are both beautiful and slightly unsettling, especially in dim light.">
+                Светящиеся лианы, хищно любопытные цветы, деревья, реагирующие на голос. Сады Ка’лиар одновременно прекрасны и немного пугающи, особенно в полумраке.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Затерянный Сектор -->
+        <article class="location-card type-ark">
+          <div class="location-card-inner">
+            <div class="location-image">
+              <img src="Images/locations/lost-sector.jpg"
+                   alt="Затерянный Сектор"
+                   loading="lazy">
+            </div>
+            <div class="location-header">
+              <div class="location-title"
+                   data-ru="Затерянный Сектор"
+                   data-en="Lost Sector">
+                Затерянный Сектор
+              </div>
+              <div class="location-tag"
+                   data-ru="технический сектор"
+                   data-en="technical sector">
+                технический сектор
+              </div>
+            </div>
+            <p class="location-summary"
+               data-ru="Зона, где проходят учения, техобслуживание и иногда — несанкционированные эксперименты."
+               data-en="An area used for drills, maintenance and sometimes unsanctioned experiments.">
+              Зона, где проходят учения, техобслуживание и иногда — несанкционированные эксперименты.
+            </p>
+            <p class="location-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to see details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="location-body">
+              <p
+                data-ru="Коридоры с открытыми магистралями кабелей, шум реакторов, платформы с тренажёрами. Именно здесь можно почувствовать, что ковчег — не только дом, но и сложнейшая машина."
+                data-en="Corridors with exposed cable trunks, the hum of reactors, platforms full of simulators. Here it’s clear the Ark is not just a home but an intricate machine.">
+                Коридоры с открытыми магистралями кабелей, шум реакторов, платформы с тренажёрами. Именно здесь можно почувствовать, что ковчег — не только дом, но и сложнейшая машина.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Сектор D-12 -->
+        <article class="location-card type-secret">
+          <div class="location-card-inner">
+            <div class="location-image">
+              <img src="Images/locations/sector-d12.jpg"
+                   alt="Сектор Д-12"
+                   loading="lazy">
+            </div>
+            <div class="location-header">
+              <div class="location-title"
+                   data-ru="Сектор D-12"
+                   data-en="Sector D-12">
+                Сектор D-12
+              </div>
+              <div class="location-tag"
+                   data-ru="забытая база"
+                   data-en="abandoned base">
+                забытая база
+              </div>
+            </div>
+            <p class="location-summary"
+               data-ru="Разрушенный сектор, считавшийся давно законсервированным и опасным для посещения."
+               data-en="A ruined sector long considered sealed off and too dangerous to enter.">
+              Разрушенный сектор, считавшийся давно законсервированным и опасным для посещения.
+            </p>
+            <p class="location-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть без спойлеров."
+               data-en="Click to expand (no heavy spoilers).">
+              Нажмите, чтобы раскрыть без спойлеров.
+            </p>
+            <div class="location-body">
+              <p
+                data-ru="Среди обрушенных конструкций и погасших терминалов скрывается система, которая слишком долго ждала, пока кто-нибудь заговорит с ней снова. Именно здесь произойдет очередной поворот в жизни Глеба."
+                data-en="Amid the collapsed structures and darkened terminals lies a system that has waited far too long for someone to speak to it again.
+And here, another turning point in Gleb’s life will unfold.">
+                "Среди обрушенных конструкций и погасших терминалов скрывается система, которая слишком долго ждала, пока кто-нибудь заговорит с ней снова. Именно здесь произойдет очередной поворот в жизни Глеба.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Обзорный купол Ковчега -->
+        <article class="location-card type-orbit">
+          <div class="location-card-inner">
+            <div class="location-image">
+              <img src="Images/locations/ark-view-dome.jpg"
+                   alt="Обзорный купол Ковчега"
+                   loading="lazy">
+            </div>
+            <div class="location-header">
+              <div class="location-title"
+                   data-ru="Обзорный купол Ковчега"
+                   data-en="Ark Observation Dome">
+                Обзорный купол Ковчега
+              </div>
+              <div class="location-tag"
+                   data-ru="вид на звёзды"
+                   data-en="star view">
+                вид на звёзды
+              </div>
+            </div>
+            <p class="location-summary"
+               data-ru="Панорамная зона, где можно увидеть звёзды и траекторию движения ковчега."
+               data-en="A panoramic zone where one can see the stars and the Ark’s flight path.">
+              Панорамная зона, где можно увидеть звёзды и траекторию движения ковчега.
+            </p>
+            <p class="location-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to see details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="location-body">
+              <p
+                data-ru="Здесь часто проходят тихие разговоры и непростые признания — космос, видимый так близко, заставляет иначе смотреть на себя и свои решения."
+                data-en="Quiet talks and hard confessions often happen here—the close view of space makes people see themselves and their choices differently.">
+                Здесь часто проходят тихие разговоры и непростые признания — космос, видимый так близко, заставляет иначе смотреть на себя и свои решения.
+              </p>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Трасса Райдориан и внешние миры -->
+    <section class="locations-section">
+      <h2
+        data-ru="Гонки «Райдориан» и внешние миры"
+        data-en="Rydorian race and outer worlds">
+        Гонки «Райдориан» и внешние миры
+      </h2>
+      <p class="section-lead"
+         data-ru="Места, которые задают ритм истории: трасса, где важна каждая миллисекунда, дикие миры и точка, с которой начался путь Глеба."
+         data-en="Places that set the story’s rhythm: a track where every millisecond counts, wild worlds and the point where Gleb’s journey began.">
+        Места, которые задают ритм истории: трасса, где важна каждая миллисекунда, дикие миры и точка, с которой начался путь Глеба.
+      </p>
+
+      <div class="location-grid">
+
+        <!-- Трасса Райдориан -->
+        <article class="location-card type-race highlight">
+          <div class="location-card-inner">
+            <div class="location-image">
+              <img src="Images/locations/rydorian-track.jpg"
+                   alt="Трасса гонок «Райдориан»"
+                   loading="lazy">
+            </div>
+            <div class="location-header">
+              <div class="location-title"
+                   data-ru="Трасса гонок «Райдориан»"
+                   data-en="Rydorian Race Track">
+                Трасса гонок «Райдориан»
+              </div>
+              <div class="location-tag"
+                   data-ru="многоуровневая трасса"
+                   data-en="multi-level track">
+                многоуровневая трасса
+              </div>
+            </div>
+            <p class="location-summary"
+               data-ru="Многоуровневая трасса с изменяемой гравитацией и опасными секторами, на которой каждый гонщик познает себя."
+               data-en="A multi-level course with shifting gravity and perilous sectors, where every racer comes to know themselves.">
+              Многоуровневая трасса с изменяемой гравитацией и опасными секторами, на которой каждый гонщик познает себя.
+            </p>
+            <p class="location-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть подробное описание трассы."
+               data-en="Click to reveal a detailed track description.">
+              Нажмите, чтобы раскрыть подробное описание трассы.
+            </p>
+            <div class="location-body">
+              <p
+                data-ru="«Райдориан» — не трасса, а зеркало. Здесь гонщик гасит своё эго, сливается с кораблём и встречается с истиной о себе. Это путь, где учатся слышать тишину, говорить Светом и становиться тем, кем предназначено быть. „Райдориан“ — испытание на зрелость духа. Маршрут разделен на несколько ключевых зон:"
+                data-en="“Rydorian” is a ring track with a complex layout: some laps run through internal hangars, others along outer rails wrapped around the Ark’s hull under force-field protection. The route is split into several key zones:">
+                «Райдориан» — не трасса, а зеркало. Здесь гонщик гасит своё эго, сливается с кораблём и встречается с истиной о себе. Это путь, где учатся слышать тишину, говорить Светом и становиться тем, кем предназначено быть. „Райдориан“ — испытание на зрелость духа. Маршрут разделен на несколько ключевых зон:
+              </p>
+              <ul class="location-list">
+                <li
+                  data-ru="Туманность Иллиар"
+                  data-en="The Illiar Nebula">
+                  Туманность Иллиар
+                </li>
+                <li
+                  data-ru="Слалом Летона"
+                  data-en="The Slalom of Leton">
+                  Слалом Летона.
+                </li>
+                <li
+                  data-ru="Перекрёсток Вероятностей"
+                  data-en="Crossroad of Probabilities">
+                  Перекрёсток Вероятностей
+                </li>
+                <li
+                  data-ru="Сектор «Зеркальных Вихрей» "
+                  data-en="The Sector of Mirror Vortices">
+                  Сектор «Зеркальных Вихрей» 
+                </li>
+                <li
+                  data-ru="Зеркало Страха"
+                  data-en="The Mirror of Fear">
+                  Зеркало Страха
+                </li>
+              </ul>
+              
+            </div>
+          </div>
+        </article>
+
+        <!-- Планета Ловцов -->
+        <article class="location-card type-nature">
+          <div class="location-card-inner">
+            <div class="location-image">
+              <img src="Images/locations/hunters-planet.jpg"
+                   alt="Планета Ловцов"
+                   loading="lazy">
+            </div>
+            <div class="location-header">
+              <div class="location-title"
+                   data-ru="Планета Ловцов"
+                   data-en="Hunters’ Planet">
+                Планета Ловцов
+              </div>
+              <div class="location-tag"
+                   data-ru="дикий мир"
+                   data-en="wild world">
+                дикий мир
+              </div>
+            </div>
+            <p class="location-summary"
+               data-ru="Мир с опасной фауной и культурой, в которой охота — часть языка и традиций."
+               data-en="A world with dangerous fauna and a culture where hunting is part of language and tradition.">
+              Мир с опасной фауной и культурой, в которой охота — часть языка и традиций.
+            </p>
+            <p class="location-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to see details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="location-body">
+              <p
+                data-ru="Планета, на которой не осталось ничего, кроме хищной флоры и фауны, запертые в бесконечном, жестоком преследовании друг друга. Существование здесь — это не жизнь, а безжалостная борьба с миром, который не знает пощады. Выживает только один раскинувшийся город, которым правит безжалостный военачальник Охотников — Араккус Дор."
+                data-en="A planet where nothing remains but predators — flora and fauna locked in endless, vicious pursuit of one another. Existence here is not life, but a relentless battle against a world that offers no mercy. Only one sprawling city endures, ruled by the pitiless warlord of the Hunters — Arrakus Dor.">
+                Планета, на которой не осталось ничего, кроме хищной флоры и фауны, запертые в бесконечном, жестоком преследовании друг друга. Существование здесь — это не жизнь, а безжалостная борьба с миром, который не знает пощады. Выживает только один раскинувшийся город, которым правит безжалостный военачальник Охотников — Араккус Дор.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Приют «Свет Надежды» -->
+        <article class="location-card type-earth">
+          <div class="location-card-inner">
+            <div class="location-image">
+              <img src="Images/locations/orphanage-light-of-hope.jpg"
+                   alt="Приют «Свет Надежды»"
+                   loading="lazy">
+            </div>
+            <div class="location-header">
+              <div class="location-title"
+                   data-ru="Приют «Свет Надежды»"
+                   data-en="Orphanage “Light of Hope”">
+                Приют «Свет Надежды»
+              </div>
+              <div class="location-tag"
+                   data-ru="точка отсчёта"
+                   data-en="starting point">
+                точка отсчёта
+              </div>
+            </div>
+            <p class="location-summary"
+               data-ru="Земной приют, от которого начинается путь Глеба к звёздам."
+               data-en="The Earth orphanage from which Gleb’s journey to the stars begins.">
+              Земной приют, от которого начинается путь Глеба к звёздам.
+            </p>
+            <p class="location-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть атмосферу."
+               data-en="Click to expand atmosphere.">
+              Нажмите, чтобы раскрыть атмосферу.
+            </p>
+            <div class="location-body">
+              <p
+                data-ru="Скрип половиц, запах столовой, небольшая игровая площадка и та самая поляна в лесу неподалёку, которая однажды изменит всё."
+                data-en="Creaking floorboards, the smell of the cafeteria, a small playground and the clearing in the nearby forest that will one day change everything.">
+                Скрип половиц, запах столовой, небольшая игровая площадка и та самая поляна в лесу неподалёку, которая однажды изменит всё.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Поляна у костра -->
+        <article class="location-card type-earth">
+          <div class="location-card-inner">
+            <div class="location-image">
+              <img src="Images/locations/forest-clearing.jpg"
+                   alt="Поляна у костра"
+                   loading="lazy">
+            </div>
+            <div class="location-header">
+              <div class="location-title"
+                   data-ru="Поляна у костра"
+                   data-en="Campfire Clearing">
+                Поляна у костра
+              </div>
+              <div class="location-tag"
+                   data-ru="место исчезновения"
+                   data-en="disappearance site">
+                место исчезновения
+              </div>
+            </div>
+            <p class="location-summary"
+               data-ru="Небольшая поляна в лесу, где в обычный вечер заканчивается прежняя жизнь Глеба."
+               data-en="A small forest clearing where, on an ordinary evening, Gleb’s former life comes to an end.">
+              Небольшая поляна в лесу, где в обычный вечер заканчивается прежняя жизнь Глеба.
+            </p>
+            <p class="location-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to see details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="location-body">
+              <p
+                data-ru="Угасающий огонь, темнеющее небо, шепот ветра и навязчивое ощущение, что кто-то наблюдает за ним из-за деревьев. Здесь реальность на мгновение распадается, позволяя Глебу перейти в другую часть истории."
+                data-en="The dying fire, the darkening sky, the whisper of the wind and the haunting sense that someone is watching from beyond the trees.Here, reality fractures for a moment, allowing Gleb to slip into another part of the story.">
+                Угасающий огонь, темнеющее небо, шепот ветра и навязчивое ощущение, что кто-то наблюдает за ним из-за деревьев. Здесь реальность на мгновение распадается, позволяя Глебу перейти в другую часть истории.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Зал Совета Старейшин -->
+        <article class="location-card type-city">
+          <div class="location-card-inner">
+            <div class="location-image">
+              <img src="Images/locations/council-hall.jpg"
+                   alt="Зал Совета Старейшин"
+                   loading="lazy">
+            </div>
+            <div class="location-header">
+              <div class="location-title"
+                   data-ru="Зал Совета Старейшин"
+                   data-en="Council Hall of Elders">
+                Зал Совета Старейшин
+              </div>
+              <div class="location-tag"
+                   data-ru="место решений"
+                   data-en="decision hall">
+                место решений
+              </div>
+            </div>
+            <p class="location-summary"
+               data-ru="Тихий зал, где обсуждают не только судьбу Глеба, но и будущее всего Ковчега."
+               data-en="A quiet hall where not only Gleb’s fate is discussed, but the future of the entire Ark.">
+              Тихий зал, где обсуждают не только судьбу Глеба, но и будущее всего Ковчега.
+            </p>
+            <p class="location-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to see details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="location-body">
+              <p
+                data-ru="Высоченные колонны поднимаются в темноту свода, тусклый свет скользит по стенам, густо покрытым реликвиями забытых эпох —каждая из них хранит историю, боль и выборы тех, кто жил задолго до ныне живущих. Здесь воздух тяжелеет от значимости, и сама тишина кажется древнее любого слова. В этом зале любое произнесённое слово может обрести силу закона,
+а любая ошибка — обрушить будущее целых поколений. Это не просто место — это сердце памяти, где решения отзываются эхом через века."
+                data-en="Towering columns rise into the shadowed heights above,
+while dim light glides across walls laden with relics of ages long vanished — each one carrying the weight, the sorrow, and the choices of those who lived before. Here the very air grows heavy with significance,
+and even silence feels older than any spoken word. Within this hall, a single utterance can harden into law, and a single misstep can doom generations yet to come. This place is more than a chamber —
+it is the heart of memory, where decisions echo across centuries.">
+                Высоченные колонны поднимаются в темноту свода, тусклый свет скользит по стенам, густо покрытым реликвиями забытых эпох —каждая из них хранит историю, боль и выборы тех, кто жил задолго до ныне живущих. Здесь воздух тяжелеет от значимости, и сама тишина кажется древнее любого слова. В этом зале любое произнесённое слово может обрести силу закона,
+а любая ошибка — обрушить будущее целых поколений. Это не просто место — это сердце памяти, где решения отзываются эхом через века.
+              </p>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p
+      data-ru="© 2025 «Последний тарианец». Описания локаций могут дополняться и меняться по мере развития вселенной."
+      data-en="© 2025 “The Last Tarian”. Location descriptions may be updated as the universe expands.">
+      © 2025 «Последний тарианец». Описания локаций могут дополняться и меняться по мере развития вселенной.
+    </p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.location-card');
+      cards.forEach(card => {
+        card.addEventListener('click', () => {
+          card.classList.toggle('open');
+        });
+      });
+    });
+  </script>
+
+  <script src="lang.js"></script>
+</body>
+</html>
