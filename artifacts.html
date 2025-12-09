@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Артефакты — Последний тарианец</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    .artifacts-main {
+      padding: 16px 16px 40px;
+    }
+
+    .text-block-auto {
+      height: auto;
+      max-height: none;
+      overflow-y: visible;
+      overflow-x: visible;
+    }
+
+    .artifacts-intro {
+      max-width: 1000px;
+      margin: 0 auto 26px;
+    }
+
+    .artifacts-section {
+      max-width: 1100px;
+      margin: 0 auto 30px;
+    }
+
+    .artifacts-section h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #facc15;
+    }
+
+    .artifacts-section p.section-lead {
+      margin: 0 0 16px;
+      font-size: 14px;
+      color: #e5e7eb;
+      max-width: 780px;
+    }
+
+    .artifact-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .artifact-card {
+      position: relative;
+      border-radius: 20px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background:
+        radial-gradient(circle at top left,
+          rgba(56, 189, 248, 0.25),
+          rgba(15, 23, 42, 0.98));
+      box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.95),
+        0 0 24px rgba(15, 23, 42, 0.9);
+      padding: 14px 14px 16px;
+      cursor: pointer;
+      transition:
+        transform .2s ease-out,
+        box-shadow .2s ease-out,
+        border-color .2s ease-out,
+        background .2s ease-out;
+      font-size: 13px;
+      line-height: 1.55;
+      overflow: hidden;
+    }
+
+    .artifact-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 0 0,
+          rgba(56, 189, 248, 0.35),
+          transparent 55%),
+        radial-gradient(circle at 100% 100%,
+          rgba(250, 204, 21, 0.3),
+          transparent 55%);
+      mix-blend-mode: screen;
+      opacity: 0.85;
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
+    .artifact-card:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 22px 44px rgba(0, 0, 0, 0.98),
+        0 0 28px rgba(56, 189, 248, 0.4);
+      border-color: rgba(250, 204, 21, 0.9);
+      background:
+        radial-gradient(circle at top,
+          rgba(56, 189, 248, 0.3),
+          rgba(15, 23, 42, 0.98));
+    }
+
+    .artifact-card-inner {
+      position: relative;
+      z-index: 2;
+    }
+
+    .artifact-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .artifact-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: #f9fafb;
+    }
+
+    .artifact-tag {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      color: #a5b4fc;
+      white-space: nowrap;
+    }
+
+    .artifact-summary {
+      margin: 0 0 4px;
+      color: #e5e7eb;
+    }
+
+    .artifact-toggle-hint {
+      font-size: 11px;
+      opacity: 0.75;
+      margin-bottom: 4px;
+    }
+
+    .artifact-body {
+      display: none;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.8);
+      font-size: 12.5px;
+    }
+
+    .artifact-card.open .artifact-body {
+      display: block;
+    }
+
+    .artifact-card.open .artifact-toggle-hint {
+      opacity: 0.55;
+    }
+
+    .artifact-list {
+      padding-left: 18px;
+      margin: 4px 0 0;
+    }
+
+    .artifact-list li + li {
+      margin-top: 2px;
+    }
+
+    .artifact-meta {
+      font-size: 11px;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+
+    /* цветовые акценты */
+    .artifact-card.ai .artifact-tag {
+      color: #f9a8d4;
+    }
+
+    .artifact-card.ai {
+      background:
+        radial-gradient(circle at top left,
+          rgba(244, 114, 182, 0.35),
+          rgba(15, 23, 42, 0.98));
+    }
+
+    .artifact-card.tarian .artifact-tag {
+      color: #c4b5fd;
+    }
+
+    .artifact-card.tarian {
+      background:
+        radial-gradient(circle at top left,
+          rgba(129, 140, 248, 0.35),
+          rgba(15, 23, 42, 0.98));
+    }
+
+    .artifact-card.museum .artifact-tag {
+      color: #7dd3fc;
+    }
+
+    .artifact-card.book .artifact-tag {
+      color: #fde68a;
+    }
+
+    .artifact-card.lore .artifact-tag {
+      color: #bbf7d0;
+    }
+
+    .artifact-card.lore {
+      background:
+        radial-gradient(circle at top left,
+          rgba(16, 185, 129, 0.3),
+          rgba(15, 23, 42, 0.98));
+    }
+
+    @media (max-width: 600px) {
+      .artifact-card {
+        font-size: 12px;
+        padding: 12px 12px 14px;
+      }
+
+      .artifact-title {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-overlay"></div>
+
+  <div class="lang-switch">
+    <button onclick="setLang('ru')">RU</button>
+    <button onclick="setLang('en')">EN</button>
+  </div>
+
+  <header class="subpage-header">
+    <h1 data-ru="Артефакты"
+        data-en="Artifacts">
+      Артефакты
+    </h1>
+    <p class="subpage-lead"
+       data-ru="Особые реликвии, технологии и носители памяти, через которые Глеб шаг за шагом открывает настоящую историю Вселенной."
+       data-en="Special relics, technologies and memory carriers through which Gleb gradually uncovers the real history of the universe.">
+      Особые реликвии, технологии и носители памяти, через которые Глеб шаг за шагом открывает настоящую историю Вселенной.
+    </p>
+  </header>
+
+   <!-- ГЛАВНОЕ МЕНЮ (такое же, как на главной) -->
+  <nav class="main-nav">
+    <a href="index.html"
+       data-ru="Главная" data-en="Home">Главная</a>
+
+    <a href="about.html"
+       data-ru="О книге" data-en="About">О книге</a>
+
+    <a href="characters.html"
+       data-ru="Герои" data-en="Characters">Герои</a>
+
+    <a href="locations.html"
+       data-ru="Локации" data-en="Locations">Локации</a>
+
+    <a href="artifacts.html"
+       data-ru="Артефакты" data-en="Artifacts">Артефакты</a>
+
+    <a href="rydorian.html"
+       data-ru="Гонка 'Райдориан'" data-en="'Rydorian' Race">Гонка 'Райдориан'</a>
+
+    <a href="equipment.html"
+       data-ru="Экипировка"
+       data-en="Equipment">
+      Экипировка
+    </a>
+
+    <a href="media.html"
+       data-ru="Медиа" data-en="Media">Медиа</a>
+
+     <a href="fragments.html"
+       data-ru="Обрывки текстов" data-en="Text fragments">
+      Обрывки текстов
+    </a>
+
+    <a href="contacts.html"
+       data-ru="Контакты" data-en="Contacts">Контакты</a>
+<a href="donate.html"
+       data-ru="Поддержать автора" data-en="Donate">Поддержать автора</a>
+
+  </nav>
+
+
+  <main class="about-main artifacts-main">
+
+    <!-- Вступление -->
+    <section class="text-block text-block-auto artifacts-intro">
+      <h2 data-ru="О разделе артефактов"
+          data-en="About the artifacts section">
+        О разделе артефактов
+      </h2>
+      <p
+        data-ru="Здесь собраны ключевые артефакты истории: от экспонатов Музея Каледона до уникального ИИ, который станет для Глеба чем-то большим, чем просто древняя программа."
+        data-en="Here you’ll find key artifacts of the story: from the exhibits of Kaledon’s Museum to a unique AI that will become more than just an ancient program to Gleb.">
+        Здесь собраны ключевые артефакты истории: от экспонатов Музея Каледона до уникального ИИ, который станет для Глеба чем-то большим, чем просто древняя программа.
+      </p>
+      <p
+        data-ru="Нажмите на карточку, чтобы раскрыть подробности. Тексты не содержат жёстких спойлеров, но намекают на роль каждой реликвии в мире книги."
+        data-en="Click a card to reveal more details. Texts avoid heavy spoilers, but hint at the role each relic plays in the book’s world.">
+        Нажмите на карточку, чтобы раскрыть подробности. Тексты не содержат жёстких спойлеров, но намекают на роль каждой реликвии в мире книги.
+      </p>
+    </section>
+
+    <!-- Ключевые артефакты -->
+    <section class="artifacts-section">
+      <h2
+        data-ru="Ключевые артефакты"
+        data-en="Key artifacts">
+        Ключевые артефакты
+      </h2>
+      <p class="section-lead"
+         data-ru="Объекты, вокруг которых завязывается судьба Глеба и целых цивилизаций."
+         data-en="Objects around which the fate of Gleb and entire civilizations starts to twist.">
+        Объекты, вокруг которых завязывается судьба Глеба и целых цивилизаций.
+      </p>
+
+      <div class="artifact-grid">
+
+        <!-- ИИ То Ма -->
+        <article class="artifact-card ai">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="ИИ «То Ма»"
+                   data-en="AI “To Ma”">
+                ИИ «То Ма»
+              </div>
+              <div class="artifact-tag"
+                   data-ru="Искусственный интеллект"
+                   data-en="Artificial Intelligence">
+                тарианский ИИ
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Незавершённый искусственный интеллект неизвестной цивилизации, который по задумке создателя имеет право один раз и навсегда выбрать себе пользователя по своему усмотрению."
+               data-en="A partially completed artificial intelligence of an unknown civilization, designed with a singular purpose: to choose its one and only user — freely, irrevocably, and forever.">
+              Незавершённый искусственный интеллект неизвестной цивилизации, который по задумке создателя имеет право один раз и навсегда выбрать себе пользователя по своему усмотрению.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы узнать, что о ней можно рассказать без спойлеров."
+               data-en="Click to see what can be told about her without spoilers.">
+              Нажмите, чтобы узнать, что о ней можно рассказать без спойлеров.
+            </p>
+
+            <div class="artifact-body">
+              <p
+                data-ru="То Ма знает слишком много о прошлом и почти ничего о последних тысячелетиях. Её знания обрываются там, где исчез создатель, но в этом отрезке она помнит больше, чем многие архивы Ковчега."
+                data-en="To Ma knows far too much about the past—and almost nothing about the last millennia. Her knowledge ends where her creator vanished, yet within that narrow span she remembers more than many of the Ark’s archives ever preserved.">
+                То Ма знает слишком много о прошлом и почти ничего о последних тысячелетиях. Её знания обрываются там, где исчез создатель, но в этом отрезке она помнит больше, чем многие архивы Ковчега.
+              </p>
+              <ul class="artifact-list">
+                <li
+                  data-ru="Часть её внутренних протоколов закрыта даже при прямых вопросах — она сама решает, когда и что стоит раскрывать."
+                  data-en="Some of her internal protocols remain closed even under direct questioning—she decides when and what to reveal.">
+                  Часть её внутренних протоколов закрыта даже при прямых вопросах — она сама решает, когда и что стоит раскрывать.
+                </li>
+                <li
+                  data-ru="Единственный основной протокол То Ма — помогать выбранному человеку любой доступной ей ценой."
+                  data-en="To Ma’s single core protocol is to assist the chosen person by any means available.">
+                  Единственный основной протокол То Ма — помогать выбранному человеку любой доступной ей ценой.
+                </li>
+                <li
+                  data-ru="Программа не была завершена, поэтому часть её морали и решений может постепенно настраиваться самим пользователем."
+                  data-en="The project was never finished, so parts of her morality and decision-making can gradually be shaped by the user.">
+                  Программа не была завершена, поэтому часть её морали и решений может постепенно настраиваться самим пользователем.
+                </li>
+              </ul>
+              <p class="artifact-meta"
+                 data-ru="По какой-то случайности, а может, закономерности, своим пользователем она выбирает Глеба. С этого момента они гораздо больше, чем просто человек и программа."
+                 data-en="By chance—or design—she chooses Gleb as her user. From that moment on they are much more than just a human and a program.">
+                По какой-то случайности, а может, закономерности, своим пользователем она выбирает Глеба. С этого момента они гораздо больше, чем просто человек и программа.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Куб Тариан -->
+        <article class="artifact-card tarian">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Куб «Тариан»"
+                   data-en="“Tarien” Cube">
+                Куб «Тариан»
+              </div>
+              <div class="artifact-tag"
+                   data-ru="реликвия Первых"
+                   data-en="First Ones relic">
+                реликвия Первых
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Чёрный куб, не отражающий свет и кажущийся вырезанным из цельного куска неизвестного материала. Одна из самых ценных и загадочных реликвий Первых."
+               data-en="A Black cube that reflects no light, appearing as though carved from a single, unknowable substance. One of the most precious and most enigmatic relics of the First Ones.">
+              Чёрный куб, не отражающий свет и кажущийся вырезанным из цельного куска неизвестного материала. Одна из самых ценных и загадочных реликвий Первых.            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы узнать, что о нём известно на момент посещения музея."
+               data-en="Click to see what is known about it by the time of the museum visit.">
+              Нажмите, чтобы узнать, что о нём известно на момент посещения музея.
+            </p>
+
+            <div class="artifact-body">
+              <p
+                data-ru="Куб «Тариан» не отражает ничего — взгляд словно проваливается внутрь, хотя поверхность идеально гладкая. Он ощутимо излучает энергию, но её природа до сих пор непонятна."
+                data-en="The “Tarien” cube reflects nothing—your gaze seems to fall inward, though its surface is perfectly smooth. It emits a distinct energy whose nature remains unknown.">
+                Куб «Тариан» не отражает ничего — взгляд словно проваливается внутрь, хотя поверхность идеально гладкая. Он ощутимо излучает энергию, но её природа до сих пор непонятна.
+              </p>
+              <ul class="artifact-list">
+                <li
+                  data-ru="Считается реликвией древней цивилизации Первых, старше большинства известных культур."
+                  data-en="Considered a relic of the ancient First Ones, older than most known cultures.">
+                  Считается реликвией древней цивилизации Первых, старше большинства известных культур.
+                </li>
+                <li
+                  data-ru="Энергия куба проявляет себя странно и непредсказуемо, поэтому его держат в изоляции за усиленным специальным стеклом."
+                  data-en="The cube’s energy manifests in strange, unpredictable ways, so it is kept in isolation behind reinforced special glass.">
+                  Энергия куба проявляет себя странно и непредсказуемо, поэтому его держат в изоляции за усиленным специальным стеклом.
+                </li>
+                <li
+                  data-ru="Одни считают, что он скрывает ключ к тайнам Вселенной, другие же, что его активация может привести к катастрофе."
+                  data-en="Some believe it hides a key to the universe’s secrets, others fear its activation might cause catastrophe.">
+                  Одни считают, что он скрывает ключ к тайнам Вселенной, другие же, что его активация может привести к катастрофе.
+                </li>
+              </ul>
+              <p class="artifact-meta"
+                 data-ru="На момент посещения музея никто на Ковчеге не знает его истинного назначения и это, возможно, к лучшему."
+                 data-en="At the time of the museum visit, no one on the Ark knows its true purpose and that may be for the best.">
+                На момент посещения музея никто на Ковчеге не знает его истинного назначения и это, возможно, к лучшему.
+              </p>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Экспонаты музея Каледона -->
+    <section class="artifacts-section">
+      <h2
+        data-ru="Экспонаты музея Каледона"
+        data-en="Exhibits of the Kaledon Museum">
+        Экспонаты музея Каледона
+      </h2>
+      <p class="section-lead"
+         data-ru="Артефакты из разных миров и эпох, которые Глеб видит во время первого визита в музей истории."
+         data-en="Artifacts from different worlds and eras that Gleb sees during his first visit to the history museum.">
+        Артефакты из разных миров и эпох, которые Глеб видит во время первого визита в музей истории.
+      </p>
+
+      <div class="artifact-grid">
+
+        <!-- Обелиск Первого Контакта -->
+        <article class="artifact-card museum">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Обелиск Первого Контакта"
+                   data-en="Obelisk of First Contact">
+                Обелиск Первого Контакта
+              </div>
+              <div class="artifact-tag"
+                   data-ru="символ диалога"
+                   data-en="symbol of dialogue">
+                символ диалога
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Каменный монумент с гравировками, символизирующий первый диалог между разными разумными цивилизациями."
+               data-en="A stone monument covered in engravings that symbolizes the first dialogue between different intelligent civilizations.">
+              Каменный монумент с гравировками, символизирующий первый диалог между разными разумными цивилизациями.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+
+            <div class="artifact-body">
+              <p
+                data-ru="Точное происхождение обелиска неизвестно, но считается, что он появился в момент, когда несколько цивилизаций впервые признали друг друга равными партнёрами."
+                data-en="The obelisk’s exact origin is unknown, but it is believed to date back to the moment when several civilizations first acknowledged each other as equal partners.">
+                Точное происхождение обелиска неизвестно, но считается, что он появился в момент, когда несколько цивилизаций впервые признали друг друга равными партнёрами.
+              </p>
+              <ul class="artifact-list">
+                <li
+                  data-ru="Гравировки представляют собой договор о дружбе и взаимном ненападении между расами."
+                  data-en="The engravings form a pact of friendship and non-aggression between species.">
+                  Гравировки представляют собой договор о дружбе и взаимном ненападении между расами.
+                </li>
+                <li
+                  data-ru="Многие посетители говорят, что чувствуют, будто обелиск «смотрит» на них, оценивая их намерения."
+                  data-en="Many visitors claim they feel as if the obelisk is “watching” them, assessing their intentions.">
+                  Многие посетители говорят, что чувствуют, будто обелиск «смотрит» на них, оценивая их намерения.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <!-- Звёздный Кристалл С’ира -->
+        <article class="artifact-card museum">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Звёздный Кристалл С’ира"
+                   data-en="Star Crystal of S’ir">
+                Звёздный Кристалл С’ира
+              </div>
+              <div class="artifact-tag"
+                   data-ru="энергия звезды"
+                   data-en="star energy">
+                энергия звезды
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Ярко сверкающий кристалл, внутри которого движутся фрагменты света, словно звёздное ядро заключено в прозрачную оболочку."
+               data-en="A bright crystal whose inner fragments move like a star’s core trapped inside a transparent shell.">
+              Ярко сверкающий кристалл, внутри которого движутся фрагменты света, словно звёздное ядро заключено в прозрачную оболочку.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+
+            <div class="artifact-body">
+              <p
+                data-ru="Кристалл хранит энергию звезды, которая некогда освещала мир С’ир. Для этой цивилизации звёзды были не просто источниками света, а местом, где живут души предков."
+                data-en="The crystal stores the energy of a star that once shone upon the world of S’ir. To that civilization, stars were not just light sources but homes of their ancestors’ souls.">
+                Кристалл хранит энергию звезды, которая некогда освещала мир С’ир. Для этой цивилизации звёзды были не просто источниками света, а местом, где живут души предков.
+              </p>
+              <ul class="artifact-list">
+                <li
+                  data-ru="Считался священным объектом и использовался в обрядах памяти и связи с предками."
+                  data-en="It was considered sacred and used in rituals of remembrance and connection with ancestors.">
+                  Считался священным объектом и использовался в обрядах памяти и связи с предками.
+                </li>
+                <li
+                  data-ru="Даже в музейных условиях внутри кристалла заметно медленное движение световых фрагментов."
+                  data-en="Even in the museum, slow motion of light fragments can be seen within the crystal.">
+                  Даже в музейных условиях внутри кристалла заметно медленное движение световых фрагментов.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <!-- Реликвия Атлантов -->
+        <article class="artifact-card museum">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Реликвия Атлантов"
+                   data-en="Relic of the Atlanteans">
+                Реликвия Атлантов
+              </div>
+              <div class="artifact-tag"
+                   data-ru="карта Атлантиды"
+                   data-en="Atlantis map">
+                карта Атлантиды
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Металлическое кольцо с выгравированными символами, которые ни один из ныне живущих ученых не может расшифровать, его поверхность украшена узорами, более древними, чем записанная история. "
+               data-en="A metallic ring inscribed with symbols no living scholar can decipher, its surface alive with patterns older than recorded history.">
+              Металлическое кольцо с выгравированными символами, которые ни один из ныне живущих ученых не может расшифровать, его поверхность украшена узорами, более древними, чем записанная история. 
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+
+            <div class="artifact-body">
+              <p
+                data-ru="На самом деле является картой потерянного континента Атлантида, содержащий подсказки к технологиям этой цивилизации. Это истинная форма реликвии, о которой человечество имеет лишь обрывочные представления... это напоминание о давно утраченных знаниях и силе, которую никогда не следовало возвращать."
+                data-en="In truth, it is a map of the lost continent of Atlantis, bearing encoded clues to the technologies of that vanished civilization. This is the relic’s true form—of which humanity possesses only scattered fragments of understanding… a reminder of knowledge long surrendered to time, and of a power that was never meant to return.">
+                На самом деле является картой потерянного континента Атлантида, содержащий подсказки к технологиям этой цивилизации. Это истинная форма реликвии, о которой человечество имеет лишь обрывочные представления... это напоминание о давно утраченных знаниях и силе, которую никогда не следовало возвращать.
+              </p>
+              <ul class="artifact-list">
+                <li
+                  data-ru="Человечество долго не могло разгадать даже копию артефакта, найденную на дне океана."
+                  data-en="Humanity was unable to fully decode even the incomplete copy found on Earth’s ocean floor.">
+                  Человечество долго не могло разгадать даже копию артефакта, найденную на дне океана.
+                </li>
+                <li
+                  data-ru="Селариты давно знают, что многие технологии Атлантов появились благодаря помощи с Ковчега."
+                  data-en="The Selarites have long known that many Atlantean technologies came from help given by the Ark.">
+                  Селариты давно знают, что многие технологии Атлантов появились благодаря помощи с Ковчега.
+                </li>
+                
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <!-- Книга Знаний О’Райн -->
+        <article class="artifact-card book">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Книга Знаний О’Райн"
+                   data-en="Book of Knowledge O’Rain">
+                Книга Знаний О’Райн
+              </div>
+              <div class="artifact-tag"
+                   data-ru="язык Первых"
+                   data-en="language of the First">
+                язык Первых
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Старая книга за стеклом, написанная на самом первом языке во Вселенной, который до сих пор остаётся неразгаданным."
+               data-en="An ancient book behind glass, written in the very first language in the universe, which remains undeciphered.">
+              Старая книга за стеклом, написанная на самом первом языке во Вселенной, который до сих пор остаётся неразгаданным.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+
+            <div class="artifact-body">
+              <p
+                data-ru="Книга знаний О'Райн, как полагают, принадлежит одной из древнейших и могущественных цивилизаций во вселенной — цивилизации Первых. За бесчисленные тысячелетия не было найдено ни одного следа их живых потомков. Величайшие умы объединили свои силы в отчаянной попытке расшифровать тексты в книге. Язык книги называют первым языком Вселенной, и его структура не похожа ни на одну известную систему письма."
+                data-en="The Book of Knowledge O’Ryne is believed to belong to one of the most ancient and powerful civilizations in the universe—the civilization of the First Ones. Across countless millennia, not a single trace of their living descendants has ever been found. The greatest minds have joined forces in a desperate attempt to decipher the book’s scripts. The language of the book is called the universe’s first language, its structure unlike any known writing system.">
+                Книга знаний О'Райн, как полагают, принадлежит одной из древнейших и могущественных цивилизаций во вселенной — цивилизации Первых. За бесчисленные тысячелетия не было найдено ни одного следа их живых потомков. Величайшие умы объединили свои силы в отчаянной попытке расшифровать тексты в книге. Язык книги называют первым языком Вселенной, и его структура не похожа ни на одну известную систему письма.
+              </p>
+              <ul class="artifact-list">
+               
+              </ul>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Артефакты расширенного лора -->
+    <section class="artifacts-section">
+      <h2
+        data-ru="Артефакты расширенного лора"
+        data-en="Extended lore artifacts">
+        Артефакты расширенного лора
+      </h2>
+      <p class="section-lead"
+         data-ru="Реликвии и устройства, которые пока лишь упоминаются или существуют в тени, но в будущем могут сыграть важную роль в истории."
+         data-en="Relics and devices that so far exist only in the background, but may become important later in the story.">
+        Реликвии и устройства, которые пока лишь упоминаются или существуют в тени, но в будущем могут сыграть важную роль в истории.
+      </p>
+
+      <div class="artifact-grid">
+
+        <!-- Слои Памяти -->
+        <article class="artifact-card lore">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="«Слои Памяти»"
+                   data-en="“Layers of Memory”">
+                «Слои Памяти»
+              </div>
+              <div class="artifact-tag"
+                   data-ru="многослойный архив"
+                   data-en="layered archive">
+                многослойный архив
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Полупрозрачные пластины, в которых одна и та же сцена зашифрована сразу в нескольких смысловых слоях."
+               data-en="Translucent plates where the same scene is encoded in several semantic layers at once.">
+              Полупрозрачные пластины, в которых одна и та же сцена зашифрована сразу в нескольких смысловых слоях.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="artifact-body">
+              <p
+                data-ru="Обычные сканеры считывают лишь поверхностный слой, тогда как нижние слои требуют особых ключей и, возможно, участия носителя с нестандартными способностями."
+                data-en="Conventional scanners only read the top layer, while deeper ones require special keys and, possibly, a carrier with unusual abilities.">
+                Обычные сканеры считывают лишь поверхностный слой, тогда как нижние слои требуют особых ключей и, возможно, участия носителя с нестандартными способностями.
+              </p>
+              <ul class="artifact-list">
+                <li
+                  data-ru="Часть пластин считается «немыми» — они отказываются показывать что-либо большинству посетителей."
+                  data-en="Some plates are considered “mute”—they refuse to show anything to most visitors.">
+                  Часть пластин считается «немыми» — они отказываются показывать что-либо большинству посетителей.
+                </li>
+                <li
+                  data-ru="Считается, что нижние слои могут содержать не только воспоминания, но и альтернативные варианты событий."
+                  data-en="Lower layers may contain not just memories, but alternative versions of events.">
+                  Считается, что нижние слои могут содержать не только воспоминания, но и альтернативные варианты событий.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <!-- Хронокристалл Первых -->
+        <article class="artifact-card lore">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Хронокристалл Первых"
+                   data-en="Chronocrystal of the First Ones">
+                Хронокристалл Первых
+              </div>
+              <div class="artifact-tag"
+                   data-ru="осколок времени"
+                   data-en="time shard">
+                осколок времени
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Кристалл, способный проецировать короткие фрагменты прошлого в виде полупрозрачных сцен вокруг носителя."
+               data-en="A crystal capable of projecting brief fragments of the past as translucent scenes around the bearer.">
+              Кристалл, способный проецировать короткие фрагменты прошлого в виде полупрозрачных сцен вокруг носителя.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="artifact-body">
+              <p
+                data-ru="Проекции всегда обрываются на самом интересном месте, будто кто-то намеренно обрезал запись. Одни считают, что это ограничение, другие — защита."
+                data-en="The projections always cut off at the most intriguing moment, as if someone deliberately trimmed the recording. Some think it’s a limitation, others a safeguard.">
+                Проекции всегда обрываются на самом интересном месте, будто кто-то намеренно обрезал запись. Одни считают, что это ограничение, другие — защита.
+              </p>
+              <ul class="artifact-list">
+                <li
+                  data-ru="Реагирует на эмоциональное состояние носителя: чем сильнее переживания, тем ярче фрагменты."
+                  data-en="It responds to the bearer’s emotional state: the stronger the feelings, the brighter the fragments.">
+                  Реагирует на эмоциональное состояние носителя: чем сильнее переживания, тем ярче фрагменты.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <!-- Руна Связи -->
+        <article class="artifact-card lore">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Руна Связи"
+                   data-en="Rune of Connection">
+                Руна Связи
+              </div>
+              <div class="artifact-tag"
+                   data-ru="эмоциональный канал"
+                   data-en="emotional link">
+                эмоциональный канал
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Один из древних символов, усиливающий эмоциональную связь между существами, не вмешиваясь в мысли."
+               data-en="One of the ancient symbols that amplifies emotional bonds between beings without touching their thoughts.">
+              Один из древних символов, усиливающий эмоциональную связь между существами, не вмешиваясь в мысли.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="artifact-body">
+              <p
+                data-ru="Использовалась в обучении эмпатии и в переговорах между расами, чтобы участники лучше ощущали состояние друг друга."
+                data-en="It was used to teach empathy and in negotiations between species so that participants could better feel each other’s state.">
+                Использовалась в обучении эмпатии и в переговорах между расами, чтобы участники лучше ощущали состояние друг друга.
+              </p>
+              <ul class="artifact-list">
+                <li
+                  data-ru="Считается, что Руна Связи опасна в руках того, кто не уважает чужие чувства."
+                  data-en="The Rune of Connection is considered dangerous in the hands of someone who does not respect others’ feelings.">
+                  Считается, что Руна Связи опасна в руках того, кто не уважает чужие чувства.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <!-- Полевой Модуль Переплетения -->
+        <article class="artifact-card lore">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Полевой модуль Переплетения"
+                   data-en="Field Module of Weaving">
+                Полевой модуль Переплетения
+              </div>
+              <div class="artifact-tag"
+                   data-ru="связь артефактов"
+                   data-en="artifact link">
+                связь артефактов
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Компактный блок, который реагирует на присутствие других артефактов, соединяя их тонкими световыми нитями."
+               data-en="A compact unit that reacts to the presence of other artifacts, linking them with thin threads of light.">
+              Компактный блок, который реагирует на присутствие других артефактов, соединяя их тонкими световыми нитями.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="artifact-body">
+              <p
+                data-ru="Учёные предполагают, что модуль показывает, как артефакты «разговаривают» друг с другом, передавая сигналы и состояния."
+                data-en="Researchers believe the module visualizes how artifacts “talk” to one another, passing signals and states.">
+                Учёные предполагают, что модуль показывает, как артефакты «разговаривают» друг с другом, передавая сигналы и состояния.
+              </p>
+              <ul class="artifact-list">
+                <li
+                  data-ru="Иногда нити переплетения появляются даже там, где видимых артефактов нет."
+                  data-en="Sometimes weaving threads appear even where no visible artifacts are present.">
+                  Иногда нити переплетения появляются даже там, где видимых артефактов нет.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <!-- Кристалл Созвучия -->
+        <article class="artifact-card lore">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Кристалл Созвучия"
+                   data-en="Crystal of Resonance">
+                Кристалл Созвучия
+              </div>
+              <div class="artifact-tag"
+                   data-ru="личный мотив"
+                   data-en="personal tone">
+                личный мотив
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Резонатор, который издаёт уникальный звук для каждого, кто к нему приближается."
+               data-en="A resonator that emits a unique tone for everyone who comes near.">
+              Резонатор, который издаёт уникальный звук для каждого, кто к нему приближается.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="artifact-body">
+              <p
+                data-ru="Считается, что Кристалл Созвучия показывает не голос, а внутренний «ритм» существа — то, как оно звучит для Вселенной."
+                data-en="The Crystal of Resonance is said to reflect not a person’s voice, but their inner “rhythm”—how they sound to the universe.">
+                Считается, что Кристалл Созвучия показывает не голос, а внутренний «ритм» существа — то, как оно звучит для Вселенной.
+              </p>
+              <ul class="artifact-list">
+                <li
+                  data-ru="У некоторых людей кристалл молчит, что вызывает у исследователей много вопросов."
+                  data-en="For some people the crystal remains silent, raising a lot of questions.">
+                  У некоторых людей кристалл молчит, что вызывает у исследователей много вопросов.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <!-- Зеркало Отголосков -->
+        <article class="artifact-card lore">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Зеркало Отголосков"
+                   data-en="Mirror of Echoes">
+                Зеркало Отголосков
+              </div>
+              <div class="artifact-tag"
+                   data-ru="варианты себя"
+                   data-en="alternate self">
+                варианты себя
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Полупрозрачная панель, показывающая не будущее, а версию тебя самого при одном единственном изменённом выборе."
+               data-en="A translucent panel that shows not the future, but a version of you with one single decision changed.">
+              Полупрозрачная панель, показывающая не будущее, а версию тебя самого при одном единственном изменённом выборе.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="artifact-body">
+              <p
+                data-ru="Зеркало используется крайне редко: слишком высок риск того, что кто-то захочет стать тем, кого увидит по ту сторону."
+                data-en="The mirror is used very rarely: the risk is high that someone might want to become the person they see on the other side.">
+                Зеркало используется крайне редко: слишком высок риск того, что кто-то захочет стать тем, кого увидит по ту сторону.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Маяк Утраченной Орбиты -->
+        <article class="artifact-card lore">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Маяк Утраченной Орбиты"
+                   data-en="Beacon of the Lost Orbit">
+                Маяк Утраченной Орбиты
+              </div>
+              <div class="artifact-tag"
+                   data-ru="поиск катастроф"
+                   data-en="catastrophe tracker">
+                поиск катастроф
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Навигационный модуль, который всегда указывает не на север, а на последнюю крупную катастрофу, связанную с артефактами."
+               data-en="A navigation module that points not north, but toward the most recent major catastrophe linked to artifacts.">
+              Навигационный модуль, который всегда указывает не на север, а на последнюю крупную катастрофу, связанную с артефактами.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="artifact-body">
+              <p
+                data-ru="Стрелка маяка иногда «дёргается», будто желает выбрать не одну точку, а сразу несколько, как если бы реальность помнила несколько исходов."
+                data-en="At times, the beacon’s needle gives a faint, nervous twitch, as if trying to choose not one destination but several at once as though reality itself still remembers the paths that might have been.">
+                Стрелка маяка иногда «дёргается», будто не может выбрать одну точку, а сразу несколько — как если бы реальность помнила несколько исходов.
+              </p>
+              <p class="artifact-meta"
+                 data-ru="В какой-то момент именно этот маяк может сыграть неожиданную роль."
+                 data-en="At some point, this very beacon may play a role no one expects.">
+                В какой-то момент именно этот маяк может сыграть неожиданную роль.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Сфера Настроений -->
+        <article class="artifact-card lore">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Сфера Настроений"
+                   data-en="Sphere of Moods">
+                Сфера Настроений
+              </div>
+              <div class="artifact-tag"
+                   data-ru="эмоциональный индикатор"
+                   data-en="emotional indicator">
+                эмоциональный индикатор
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Шар, меняющий цвет в зависимости от эмоционного состояния того, кто к нему прикасается."
+               data-en="A sphere that changes color according to the emotional state of whoever touches it.">
+              Шар, меняющий цвет в зависимости от эмоционного состояния того, кто к нему прикасается.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="artifact-body">
+              <p
+                data-ru="Считается одним из самых безопасных артефактов и нередко используется в обучении детей управлению эмоциями."
+                data-en="Considered one of the safest artifacts, it is often used to teach children emotional self-awareness.">
+                Считается одним из самых безопасных артефактов и нередко используется в обучении детей управлению эмоциями.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Маска Хранителя -->
+        <article class="artifact-card lore">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Маска Хранителя"
+                   data-en="Keeper’s Mask">
+                Маска Хранителя
+              </div>
+              <div class="artifact-tag"
+                   data-ru="доступ к архиву"
+                   data-en="archive access">
+                доступ к архиву
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Реликвия, дающая доступ к скрытым слоям архива, но временно приглушающая личные эмоции носителя."
+               data-en="A relic that grants access to hidden archive layers while temporarily damping the wearer’s emotions.">
+              Реликвия, дающая доступ к скрытым слоям архива, но временно приглушающая личные эмоции носителя.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="artifact-body">
+              <p
+                data-ru="Говорят, что тот, кто слишком долго носит Маску, рискует утратить грань между собственным “я” и бесстрастным взором Хранителя. Со временем становится невозможно понять, чья воля движет им — его собственная или та, что смотрит сквозь Маску."
+                data-en="It is said that those who wear the Mask for too long begin to lose the boundary between themselves and the impartial gaze of the Keeper. In time, one can no longer tell whose will guides their actions—their own, or the one that watches through the Mask.">
+                Говорят, что тот, кто слишком долго носит Маску, рискует утратить грань между собственным “я” и бесстрастным взором Хранителя. Со временем становится невозможно понять, чья воля движет им — его собственная или та, что смотрит сквозь Маску.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Печать Забвения -->
+        <article class="artifact-card lore">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Печать Забвения"
+                   data-en="Seal of Oblivion">
+                Печать Забвения
+              </div>
+              <div class="artifact-tag"
+                   data-ru="скрытие памяти"
+                   data-en="memory lock">
+                скрытие памяти
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Компактный диск, способный временно скрывать часть воспоминаний или данных, не уничтожая их."
+               data-en="A compact disc capable of temporarily hiding memories or data without destroying them.">
+              Компактный диск, способный временно скрывать часть воспоминаний или данных, не уничтожая их.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="artifact-body">
+              <p
+                data-ru="Следы работы Печати порой находят в местах, где, казалось бы, нечего было скрывать — и это тревожит даже самых спокойных из Хранителей. Эта технология применяется лишь в самых рискованных миссиях Совета. Если посланник попадёт в руки Ловцов, Печать гарантирует лишь одно: он не сможет рассказать им ничего. Ни по доброй воле… ни под пытками."
+                data-en="Traces of the Seal’s work are sometimes discovered in places where nothing should have been hidden at all — a fact unsettling even to the calmest of the Keepers. This technology is used only during the Council’s most perilous missions. Should an envoy fall into the hands of the Hunters, the Seal ensures only one thing: he will have nothing to tell them. Not willingly… and not under torture.">
+                Следы работы Печати порой находят в местах, где, казалось бы, нечего было скрывать — и это тревожит даже самых спокойных из Хранителей. Эта технология применяется лишь в самых рискованных миссиях Совета. Если посланник попадёт в руки Ловцов, Печать гарантирует лишь одно: он не сможет рассказать им ничего. Ни по доброй воле… ни под пытками.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Линия Времени -->
+        <article class="artifact-card lore">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Линия Времени"
+                   data-en="Line of Time">
+                Линия Времени
+              </div>
+              <div class="artifact-tag"
+                   data-ru="ветви будущего"
+                   data-en="future branches">
+                ветви будущего
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Гибкая светящаяся лента в прозрачном контейнере."
+               data-en="The Line of Time is a thin, glowing filament sealed within a transparent vessel">
+              Гибкая светящаяся лента в прозрачном контейнере.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="artifact-body">
+              <p
+                data-ru="Линия Времени — тонкая светящаяся нить в прозрачном контейнере, реагирующая на присутствие живых существ. Она не позволяет путешествовать во времени — она показывает развилки судьбы: моменты, где выбор меняет ход истории. Иногда нить вспыхивает ярче, словно узнавая тех, кому предстоит важное решение. Хранители считают, что Линия даёт не знание, а испытание: увидеть — значит принять ответственность."
+                data-en="The Line of Time is a thin, glowing filament sealed within a transparent vessel, reacting subtly to the presence of life. It does not allow travel through time — it reveals moments of divergence, where a single choice reshapes destiny. At times, the filament brightens, as if recognizing those standing before a crucial decision. The Keepers believe the Line offers not answers, but a trial: to witness is to accept responsibility.">
+                Линия Времени — тонкая светящаяся нить в прозрачном контейнере, реагирующая на присутствие живых существ. Она не позволяет путешествовать во времени — она показывает развилки судьбы: моменты, где выбор меняет ход истории. Иногда нить вспыхивает ярче, словно узнавая тех, кому предстоит важное решение. Хранители считают, что Линия даёт не знание, а испытание: увидеть — значит принять ответственность.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Голос Архива -->
+        <article class="artifact-card lore">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Голос Архива"
+                   data-en="Voice of the Archive">
+                Голос Архива
+              </div>
+              <div class="artifact-tag"
+                   data-ru="озвученные хроники"
+                   data-en="voiced chronicles">
+                озвученные хроники
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Невидимый модуль, который может понимать, что точно необходимо спрашивающему."
+               data-en="An unseen module capable of discerning precisely what the seeker truly needs to ask.">
+              Невидимый модуль, который может понимать, что точно необходимо спрашивающему.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="artifact-body">
+              <p
+                data-ru="Голос Архива — это древняя система озвучивания данных, созданная с применением технологии, утраченной ещё до эпохи Хранителей. Никто не знает, как именно он работает: звук не исходит ни из колонок, ни из кристаллов, ни из механизмов. Голос словно рождается из пустоты, и его слышат все, кто находится внутри Архива. Иногда кажется, что он не просто зачитывает данные…а точно выбирает то, что именно нужно озвучить тому кто интересуется. Хранители предполагают, что Голос обладает собственной логикой и открывает знания лишь тем, кто готов их принять."
+                data-en="The Voice of the Archive is an ancient system of spoken data, crafted with a technology lost long before the age of the Keepers. No one knows how it truly functions: the sound comes from no speaker, no crystal, no mechanism. The Voice simply emerges from the void, heard by all who stand within the Archive’s domain. At times, it seems that the Voice does more than recite information…it chooses the words meant for the one who seeks. The Keepers believe the Voice follows a logic of its own, revealing knowledge only to those who are prepared to bear it.">
+                Голос Архива — это древняя система озвучивания данных, созданная с применением технологии, утраченной ещё до эпохи Хранителей. Никто не знает, как именно он работает: звук не исходит ни из колонок, ни из кристаллов, ни из механизмов. Голос словно рождается из пустоты, и его слышат все, кто находится внутри Архива. Иногда кажется, что он не просто зачитывает данные…а точно выбирает то, что именно нужно озвучить тому кто интересуется. Хранители предполагают, что Голос обладает собственной логикой и открывает знания лишь тем, кто готов их принять.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Кокон Эвакуации -->
+        <article class="artifact-card lore">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Кокон Эвакуации"
+                   data-en="Evacuation Cocoon">
+                Кокон Эвакуации
+              </div>
+              <div class="artifact-tag"
+                   data-ru="аварийная защита"
+                   data-en="emergency shield">
+                аварийная защита
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Портативная капсула, кратковременно искажает восприятие времени, даёт носителю лишние секунды для реакции в критической ситуации."
+               data-en="A portable capsule that briefly distorts time perception, giving the bearer extra seconds to react in a critical situation.">
+              Портативная капсула, кратковременно искажает восприятие времени, даёт носителю лишние секунды для реакции в критической ситуации.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="artifact-body">
+              <p
+                data-ru="Кокон Эвакуации — древний артефакт Первых. В обычном состоянии он почти невидим, но при критической угрозе его частицы вспыхивают и за долю секунды сворачиваются вокруг носителя, создавая защитную сферу. Внутри время замедляется, предотвращая шок и смертельные перегрузки. Кокон способен сам решать, достоин ли человек спасения. Иногда он не активируется вовсе. После эвакуации в разуме остаётся короткое эхо последнего мгновения — образ или предупреждение. В редких случаях артефакт переходит в режим Материнской оболочки, восстанавливая жизненные показатели тех, «кто несёт свет»."
+                data-en="The Evacuation Cocoon is an ancient relic of the First Ones. Normally almost invisible, it activates in moments of extreme danger: its particles ignite and fold around the bearer in a fraction of a second, forming a protective sphere. Inside, time slows, shielding the mind and body from shock and lethal forces. The Cocoon can choose whether a person is worthy of rescue; at times, it refuses to activate. After evacuation, a faint echo of the final moment remains in the survivor’s mind—an image or warning. In rare cases, it enters Mother-Shell mode, restoring vital signs for those “who carry the light.”">
+                Кокон Эвакуации — древний артефакт Первых. В обычном состоянии он почти невидим, но при критической угрозе его частицы вспыхивают и за долю секунды сворачиваются вокруг носителя, создавая защитную сферу. Внутри время замедляется, предотвращая шок и смертельные перегрузки. Кокон способен сам решать, достоин ли человек спасения. Иногда он не активируется вовсе. После эвакуации в разуме остаётся короткое эхо последнего мгновения — образ или предупреждение. В редких случаях артефакт переходит в режим Материнской оболочки, восстанавливая жизненные показатели тех, «кто несёт свет».
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Осколок Слияния -->
+        <article class="artifact-card lore">
+          <div class="artifact-card-inner">
+            <div class="artifact-header">
+              <div class="artifact-title"
+                   data-ru="Осколок Слияния"
+                   data-en="Shard of Convergence">
+                Осколок Слияния
+              </div>
+              <div class="artifact-tag"
+                   data-ru="усилитель эффектов"
+                   data-en="effect amplifier">
+                усилитель эффектов
+              </div>
+            </div>
+            <p class="artifact-summary"
+               data-ru="Фрагмент неизвестного сплава, который на короткое время позволяет объединять эффекты двух артефактов."
+               data-en="A fragment of unknown alloy that can temporarily merge the effects of two artifacts.">
+              Фрагмент неизвестного сплава, который на короткое время позволяет объединять эффекты двух артефактов.
+            </p>
+            <p class="artifact-toggle-hint"
+               data-ru="Нажмите, чтобы раскрыть детали."
+               data-en="Click to expand details.">
+              Нажмите, чтобы раскрыть детали.
+            </p>
+            <div class="artifact-body">
+              <p
+                data-ru="Осколок Слияния способен на короткое время поглощать свойства сразу нескольких артефактов, создавая единую, нестабильную форму силы. Результат такого сочетания почти всегда непредсказуем: эффекты могут усиливаться, искажаться или проявляться иначе, чем ожидалось. Из-за высокой опасности Осколок официально запрещён к применению вне тщательно контролируемых экспериментов. Хранители считают, что он был создан не для использования, а для проверки тех, кто стремится управлять силами Первых."
+                data-en="The Fusion Shard can temporarily absorb the properties of several artifacts at once, merging them into a single, unstable form of power.
+The outcome of such a fusion is almost always unpredictable: effects may intensify, distort, or manifest in entirely unexpected ways. Due to its inherent danger, the Shard is officially forbidden outside strictly controlled experiments. The Keepers believe it was crafted not for use, but as a test for those who dare to command the power of the First Ones.">
+                Осколок Слияния способен на короткое время поглощать свойства сразу нескольких артефактов, создавая единую, нестабильную форму силы. Результат такого сочетания почти всегда непредсказуем: эффекты могут усиливаться, искажаться или проявляться иначе, чем ожидалось. Из-за высокой опасности Осколок официально запрещён к применению вне тщательно контролируемых экспериментов. Хранители считают, что он был создан не для использования, а для проверки тех, кто стремится управлять силами Первых.
+              </p>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p
+      data-ru="© 2025 «Последний тарианец». Описания артефактов могут дополняться и меняться по мере выхода новых глав."
+      data-en="© 2025 “The Last Tarian”. Artifact descriptions may be updated as new chapters are released.">
+      © 2025 «Последний тарианец». Описания артефактов могут дополняться и меняться по мере выхода новых глав.
+    </p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.artifact-card');
+      cards.forEach(card => {
+        card.addEventListener('click', () => {
+          card.classList.toggle('open');
+        });
+      });
+    });
+  </script>
+
+  <script src="lang.js"></script>
+</body>
+</html>
