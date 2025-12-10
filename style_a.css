@@ -9,7 +9,7 @@
     border-radius: 20px;
     padding: 20px 22px;
     margin: 26px auto;
-    max-width: 1050px;
+    max-width: 1040px;
 
     border: 1px solid rgba(51, 65, 85, 0.8);
     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.85);
@@ -207,5 +207,6 @@
         filter: brightness(1.05);
     }
 }
+
 
 
