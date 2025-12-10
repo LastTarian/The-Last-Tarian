@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Герои — The Last tarian</title>
+
+    <!-- Общий стиль сайта -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Старый стиль с карточками героев (оставляем подсветку и оформление) -->
+    <link rel="stylesheet" href="style_a.css">
+
+    <!-- Локальные стили  -->
+    <style>
+        
+        .hero-tabs {
+            display: flex;
+            gap: 20px;
+            margin: 10px auto 18px;
+            max-width: 950px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.45);
+            position: relative;
+        }
+
+        .hero-tab {
+            background: none;
+            border: none;
+            color: #e5e7ebcc;
+            font-size: 15px;
+            cursor: pointer;
+            padding: 4px 2px;
+            position: relative;
+            transition: color .2s;
+            white-space: nowrap;
+        }
+
+        .hero-tab:hover {
+            color: #ffffff;
+        }
+
+        .hero-tab.is-active {
+            color: #facc15;
+            font-weight: 600;
+        }
+
+        
+        .hero-tab-underline {
+            position: absolute;
+            bottom: -1px;
+            height: 2px;
+            width: 0;
+            background: #facc15;
+            border-radius: 999px;
+            transition: left .2s, width .2s;
+        }
+
+        
+        .heroes-group {
+            display: none;
+        }
+
+        .heroes-group.is-active {
+            display: block;
+        }
+
+        
+        .lang-block {
+            display: none; /* покажем нужный через JS */
+        }
+
+        
+        .lang-switch button.is-active {
+            color: #facc15;
+            font-weight: 600;
+        }
+
+        
+        main.about-main {
+            max-width: 1100px;
+            margin: 0 auto 32px;
+            padding: 0 16px 40px;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="page-overlay"></div>
+
+
+    <div class="lang-switch">
+        <button type="button" data-lang-btn="ru">RU</button>
+        <button type="button" data-lang-btn="en">EN</button>
+    </div>
+
+    <!-- Шапка в общем стиле -->
+    <header class="subpage-header">
+        <h1 data-ru="Герои книги" data-en="Characters of the Book">
+            Герои книги
+        </h1>
+    </header>
+
+     <!-- ГЛАВНОЕ МЕНЮ (такое же, как на главной) -->
+  <nav class="main-nav">
+    <a href="index.html"
+       data-ru="Главная" data-en="Home">Главная</a>
+
+    <a href="about.html"
+       data-ru="О книге" data-en="About">О книге</a>
+
+    <a href="characters.html"
+       data-ru="Герои" data-en="Characters">Герои</a>
+
+    <a href="locations.html"
+       data-ru="Локации" data-en="Locations">Локации</a>
+
+    <a href="artifacts.html"
+       data-ru="Артефакты" data-en="Artifacts">Артефакты</a>
+
+    <a href="rydorian.html"
+       data-ru="Гонка 'Райдориан'" data-en="'Rydorian' Race">Гонка 'Райдориан'</a>
+
+    <a href="equipment.html"
+       data-ru="Экипировка"
+       data-en="Equipment">
+      Экипировка
+    </a>
+
+    <a href="media.html"
+       data-ru="Медиа" data-en="Media">Медиа</a>
+
+     <a href="fragments.html"
+       data-ru="Обрывки текстов" data-en="Text fragments">
+      Обрывки текстов
+    </a>
+
+    <a href="contacts.html"
+       data-ru="Контакты" data-en="Contacts">Контакты</a>
+<a href="donate.html"
+       data-ru="Поддержать автора" data-en="Donate">Поддержать автора</a>
+
+  </nav>
+
+
+    <main class="about-main">
+
+        
+        <nav class="hero-tabs">
+            <button class="hero-tab"
+                    data-group="shelter"
+                    data-ru='Приют "Свет надежды"'
+                    data-en='Orphanage "Light of Hope"'>
+                Приют "Свет надежды"
+            </button>
+
+            <button class="hero-tab is-active"
+                    data-group="ark"
+                    data-ru='Ковчег "Конкорд"'
+                    data-en='Ark "Concord"'>
+                Ковчег "Конкорд"
+            </button>
+
+            <button class="hero-tab"
+                    data-group="hunters"
+                    data-ru="Ловцы"
+                    data-en="Hunters">
+                Ловцы
+            </button>
+
+          
+            <div class="hero-tab-underline"></div>
+        </nav>
+
+        <!-- ================= RU ВЕРСИЯ ================= -->
+        <div class="lang-block" data-lang="ru">
+
+            <!-- ===== ГРУППА 1: ПРИЮТ "СВЕТ НАДЕЖДЫ" ===== -->
+            <div class="heroes-group" data-group="shelter">
+                <!-- ... ВСЕ ТВОИ РУ-КАРТОЧКИ КАК ЕСТЬ ... -->
+                <!-- Я их не меняю — оставляю ровно как ты прислал -->
+                <!-- ↓↓↓ КОД ИЗ ТВОЕЙ ВЕРСИИ (РУ) ↓↓↓ -->
+                <!-- Лиза -->
+                <div class="character-card">
+                    <img src="images/liza.jpg" alt="Лиза" class="hero-photo">
+                    <div class="hero-info">
+                        <h2 class="hero-name">Лиза</h2>
+                        <ul class="hero-profile">
+                            <li><strong>Пол:</strong> Женский</li>
+                            <li><strong>Раса:</strong> Человек</li>
+                            <li><strong>Возраст:</strong> 14</li>
+                            <li><strong>Планета:</strong> Земля</li>
+                            <li><strong>Сектор проживания:</strong> Детский дом «Свет надежды»</li>
+                            <li><strong>Специализация:</strong> Подруга Глеба, одна из неформальных лидеров группы</li>
+                            <li><strong>Сторона:</strong> Свет</li>
+                            <li><strong>Страхи:</strong> Боязнь потерять друзей и остаться одна; страх ночного леса.</li>
+                        </ul>
+                        <p class="hero-desc">
+                            Активная, смелая и рассудительная. Помогает организовывать поиски, всегда берёт на себя
+                            ответственность и старается поддерживать остальных, особенно когда речь идёт о Глебе.
+                        </p>
+                    </div>
+                </div>
+
+                 <div class="character-card">
+                <img src="images/grigorio.jpg" alt="Григорий «Жердь»" class="hero-photo">
+                <div class="hero-info">
+                    <h2 class="hero-name">Григорий «Жердь»</h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Мужской</li>
+                        <li><strong>Раса:</strong> Человек</li>
+                        <li><strong>Возраст:</strong> 15</li>
+                        <li><strong>Планета:</strong> Земля</li>
+                        <li><strong>Сектор проживания:</strong> Детский дом «Свет надежды»</li>
+                        <li><strong>Специализация:</strong> Инициатор походов, лидер подростковой группы</li>
+                        <li><strong>Сторона:</strong> Нейтральная (склонен к авантюрам)</li>
+                        <li><strong>Страхи:</strong> Страх показаться слабым; скрытая боязнь темноты и неизвестных звуков леса.</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Высокий и худой подросток с бесконечной энергией. Любит приключения и истории о таинственном,
+                        но часто скрывает собственные тревоги, чтобы казаться смелее перед другими.
+                    </p>
+                </div>
+            </div>
+
+            <div class="character-card">
+                <img src="images/dasha.jpg" alt="Даша" class="hero-photo">
+                <div class="hero-info">
+                    <h2 class="hero-name">Даша</h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Женский</li>
+                        <li><strong>Раса:</strong> Человек</li>
+                        <li><strong>Возраст:</strong> 14</li>
+                        <li><strong>Планета:</strong> Земля</li>
+                        <li><strong>Сектор проживания:</strong> Детский дом «Свет надежды»</li>
+                        <li><strong>Специализация:</strong> Эмоциональный центр компании</li>
+                        <li><strong>Сторона:</strong> Свет</li>
+                        <li><strong>Страхи:</strong> Боязнь сверхъестественного; страх потерять близких.</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Добрая и чувствительная девочка, быстро реагирующая на перемены настроения в группе.
+                        Исчезновение Глеба вызывает у неё особенно сильные переживания.
+                    </p>
+                </div>
+            </div>
+
+            <div class="character-card">
+                <img src="images/vitya.jpg" alt="Витя" class="hero-photo">
+                <div class="hero-info">
+                    <h2 class="hero-name">Витя</h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Мужской</li>
+                        <li><strong>Раса:</strong> Человек</li>
+                        <li><strong>Возраст:</strong> 14</li>
+                        <li><strong>Планета:</strong> Земля</li>
+                        <li><strong>Сектор проживания:</strong> Детский дом «Свет надежды»</li>
+                        <li><strong>Специализация:</strong> Ответственный за снаряжение и подготовку походов</li>
+                        <li><strong>Сторона:</strong> Свет</li>
+                        <li><strong>Страхи:</strong> Страх допустить ошибку и подвести друзей; боязнь глубины леса.</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Практичный и собранный подросток. В компании часто играет роль «голоса разума», следя за
+                        тем, чтобы никто не уходил в лес неподготовленным.
+                    </p>
+                </div>
+            </div>
+
+            <div class="character-card">
+                <img src="images/olga_vasilievna.jpg" alt="Ольга Васильевна" class="hero-photo">
+                <div class="hero-info">
+                    <h2 class="hero-name">Ольга Васильевна</h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Женский</li>
+                        <li><strong>Раса:</strong> Человек</li>
+                        <li><strong>Возраст:</strong> около 50</li>
+                        <li><strong>Планета:</strong> Земля</li>
+                        <li><strong>Сектор проживания:</strong> Детский дом «Свет надежды»</li>
+                        <li><strong>Специализация:</strong> Заведующая приютом</li>
+                        <li><strong>Сторона:</strong> Нейтральная (строгий порядок)</li>
+                        <li><strong>Страхи:</strong> Потеря контроля над приютом; страх повторения прошлых трагедий.</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Строгая, требовательная и организованная руководительница приюта. За внешней холодностью
+                        скрывается человек, которому небезразлична судьба каждого ребёнка.
+                    </p>
+                </div>
+            </div>
+
+            <div class="character-card">
+                <img src="images/sergey_pavlovich.jpg" alt="Сергей Павлович" class="hero-photo">
+                <div class="hero-info">
+                    <h2 class="hero-name">Сергей Павлович</h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Мужской</li>
+                        <li><strong>Раса:</strong> Человек</li>
+                        <li><strong>Возраст:</strong> около 40</li>
+                        <li><strong>Планета:</strong> Земля</li>
+                        <li><strong>Сектор проживания:</strong> Детский дом «Свет надежды»</li>
+                        <li><strong>Специализация:</strong> Учитель физкультуры</li>
+                        <li><strong>Сторона:</strong> Свет</li>
+                        <li><strong>Страхи:</strong> Страх не суметь защитить детей; боязнь, что легенды о лесных исчезновениях — не выдумка.</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Энергичный, строгий, но справедливый преподаватель. Когда ситуация требует действий,
+                        становится одним из самых надёжных взрослых.
+                    </p>
+                </div>
+            </div>
+
+            <div class="character-card">
+                <img src="images/villager.jpg" alt="Сельчанин" class="hero-photo">
+                <div class="hero-info">
+                    <h2 class="hero-name">Сельчанин</h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Мужской</li>
+                        <li><strong>Раса:</strong> Человек</li>
+                        <li><strong>Возраст:</strong> около 70</li>
+                        <li><strong>Планета:</strong> Земля</li>
+                        <li><strong>Сектор проживания:</strong> Деревня рядом с приютом</li>
+                        <li><strong>Специализация:</strong> Знающий лес и его легенды</li>
+                        <li><strong>Сторона:</strong> Нейтральная</li>
+                        <li><strong>Страхи:</strong> Страх древних лесных преданий; боязнь столкнуться с тем, что забирает детей.</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Местный мужчина, который часто ходит в лес и знает о нём куда больше,
+                        чем остальные. Его находка на поляне добавляет тревоги взрослым.
+                    </p>
+                </div>
+            </div>
+
+            </div>
+
+            <!-- ===== ГРУППА 2: КОВЧЕГ "КОНКОРД АТРОНА" ===== -->
+            <div class="heroes-group is-active" data-group="ark">
+                <!-- Глеб -->
+            <div class="character-card">
+                <img src="images/gleb.jpg" alt="Глеб" class="hero-photo" data-hero="gleb">
+                <div class="hero-info">
+                    <h2 class="hero-name">ГЛЕБ</h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Мужской</li>
+                        <li><strong>Раса:</strong> Неизвестно</li>
+                        <li><strong>Возраст:</strong> 14</li>
+                        <li><strong>Планета:</strong> Земля</li>
+                        <li><strong>Сектор проживания:</strong> Базовый Купол</li>
+                        <li><strong>Специализация на Ковчеге:</strong> Слушатель Академии Ко’Марис</li>
+                        <li><strong>Сторона:</strong> Свет (потенциал баланса)</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Храбрый мальчик, родившийся на Луне и затерянный среди земных людей.
+                        Стремится разгадать загадку своего происхождения.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Аркан -->
+            <div class="character-card">
+                <img src="images/arkan.jpg" alt="Аркан" class="hero-photo" data-hero="arkan">
+                <div class="hero-info">
+                    <h2 class="hero-name">
+                        <span class="hero-text">АРКАН</span>
+                        <span class="hero-runes selarit">ᚫ⟠ᚱ⟠ᚲ⟟ᚫ⟠ᚾ⟟</span>
+                    </h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Мужской</li>
+                        <li><strong>Раса:</strong> Селарит</li>
+                        <li><strong>Возраст:</strong> около 40 000 (по земному эквиваленту)</li>
+                        <li><strong>Планета:</strong> Селара, Галактика </li>
+                        <li><strong>Сектор проживания:</strong> Сектор Стражей Альянса</li>
+                        <li><strong>Специализация на Ковчеге:</strong> Старший советник Старейшин, наставник в Академии Ко’Марис по боевым и тактическим дисциплинам</li>
+                        <li><strong>Сторона:</strong> Свет (стабильная гармония)</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Мудрый и загадочный наставник, обладающий огромной физической и энергетической силой.
+                        Несмотря на спокойный характер, способен внушать благоговейный страх одним взглядом.
+                        Скрывает древние тайны расы селаритов и знает больше, чем говорит.
+                        Его истинные возможности до конца не понимает даже Совет Старейшин.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Кайн -->
+            <div class="character-card">
+                <img src="images/kain.jpg" alt="Кайн" class="hero-photo" data-hero="kain">
+                <div class="hero-info">
+                    <h2 class="hero-name">
+                        КАЙН
+                        <span class="hero-runes selarit">ᚲ⟟ᚫ⟠ᛂᛁᚾ⟟</span>
+                    </h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Мужской</li>
+                        <li><strong>Раса:</strong> Селарит</li>
+                        <li><strong>Возраст:</strong> 15</li>
+                        <li><strong>Планета:</strong> Селарит</li>
+                        <li><strong>Сектор проживания:</strong> Академический район Ко’Марис</li>
+                        <li><strong>Специализация на Ковчеге:</strong> Курсант Академии Ко’Марис</li>
+                        <li><strong>Сторона:</strong> Свет (динамическое равновесие)</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Харизматичный и дерзкий юный селарит, природный воин с отличной реакцией и острым умом.
+                        Имеет тонкое чувство юмора, легко находит общий язык с окружающими, но на тренировках способен
+                        становиться серьёзным и сосредоточенным. Обладает огромным потенциалом и стремлением показать,
+                        что достоин учиться среди лучших.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Нериана -->
+            <div class="character-card">
+                <img src="images/neriana.jpg" alt="Нериана" class="hero-photo" data-hero="neriana">
+                <div class="hero-info">
+                    <h2 class="hero-name">
+                        НЕРИАНА
+                        <span class="hero-runes selarit">ᚾ⟟ᚿ⟡ᚱ⠠ᛁ⟢ᚫ⟠ᚾ⟟ᚫ⟠</span>
+                    </h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Женский</li>
+                        <li><strong>Раса:</strong> Селарит</li>
+                        <li><strong>Возраст:</strong> 15</li>
+                        <li><strong>Планета:</strong> Селарит</li>
+                        <li><strong>Сектор проживания:</strong> Академический район Ко’Марис</li>
+                        <li><strong>Специализация на Ковчеге:</strong> Курсант Академии Ко’Марис</li>
+                        <li><strong>Сторона:</strong> Свет (интеллектуальная гармония)</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Спокойная, умная и наблюдательная юная селаритка, обладающая высокой интуицией и способностью
+                        быстро анализировать сложные ситуации. В отличие от брата, редко проявляет эмоции, но её слова
+                        всегда точны и продуманны. Прирождённая стратегиня, обладающая сильным внутренним стержнем.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Саломея -->
+            <div class="character-card">
+                <img src="images/salomea.jpg" alt="Саломея Л’Акрис" class="hero-photo" data-hero="salomea">
+                <div class="hero-info">
+                    <h2 class="hero-name">
+                        <span class="hero-name-text">САЛОМЕЯ</span>
+                        <span class="selarit">ᛋ⟜ᚫ⟠ᛚ⟠ᚩ⟣ᛗ⟡ᚿ⟡ᛡ⟢</span>
+                    </h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Женский</li>
+                        <li><strong>Раса:</strong> Селарит</li>
+                        <li><strong>Роль:</strong> Легендарный пилот, топ-10 гонок Райдориан</li>
+                        <li><strong>Занятие:</strong> Инструктор пилотирования Академии Ко’Марис</li>
+                        <li><strong>Специализация:</strong> Тактическое пилотирование и гравитационная навигация</li>
+                        <li><strong>Сторона:</strong> Свет (динамичная точность)</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Легендарная пилотесса селаритов, известная далеко за пределами Ковчега.
+                        Участвовала в десятках опасных операций и входила в первую десятку
+                        межгалактических гонок «Райдориан». Обладает редким даром — способностью
+                        буквально «сливаться» с кораблём, передавая это искусство своим ученикам.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Атрисса -->
+            <div class="character-card">
+                <img src="images/atrissa.jpg" alt="Атрисса Ксолл" class="hero-photo" data-hero="atrissa">
+                <div class="hero-info">
+                    <h2 class="hero-name">
+                        <span class="hero-name-text">АТРИССА КСОЛЛ</span>
+                        <span class="selarit">ᚫ⟠ᛏ⟢ᚱ⟠ᛁᛋ⟜ᛋ⟜ᚫ⟠ ᚲ⟟ᛋ⟜ᚩ⟣ᛚ⟠ᛚ⟠</span>
+                    </h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Женский</li>
+                        <li><strong>Раса:</strong> Илларианка</li>
+                        <li><strong>Роль:</strong> Главная старейшина Ковчега</li>
+                        <li><strong>Сектор:</strong> Высший Совет</li>
+                        <li><strong>Сторона:</strong> Баланс (стратегическое видение)</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Одна из самых влиятельных фигур Ковчега. Известна своей дальновидностью,
+                        мудростью и способностью сохранять равновесие между политической
+                        и энергетической стабильностью. Знает о древних пророчествах гораздо больше,
+                        чем позволяет понять окружающим.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Лаар -->
+            <div class="character-card">
+                <img src="images/laar.jpg" alt="Laar" class="hero-photo egg-laar-target" data-hero="laar">
+                <div class="hero-info">
+                    <h2 class="hero-name">
+                        <span class="hero-name-text">ЛААР</span>
+                        <span class="selarit">ᛚ⟠ᚫ⟠ᚫ⟠ᚱ⟠</span>
+                    </h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Мужской</li>
+                        <li><strong>Раса:</strong> Грандорианец</li>
+                        <li><strong>Роль:</strong> Капитан защитников Первого Кольца</li>
+                        <li><strong>Специализация:</strong> Оборона, боевые дисциплины, контроль периметра</li>
+                        <li><strong>Сторона:</strong> Свет (боевой порядок)</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Командир элитного Первого Кольца. Железная дисциплина и абсолютная
+                        преданность делают его одной из ключевых фигур обороны Ковчега.
+                        Отвечает за безопасность внешних секторов, граничащих с вакуумной зоной.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Ксавир -->
+            <div class="character-card">
+                <img src="images/xavir.jpg" alt="Ксавир Ранок" class="hero-photo" data-hero="xavir">
+                <div class="hero-info">
+                    <h2 class="hero-name">
+                        <span class="hero-name-text">КСАВИР РАНОК</span>
+                        <span class="selarit">ᚲ⟟ᛋ⟜ᚫ⟠ᚡ⟠ᛁ⟢ᚱ⟠ ᚱ⟠ᚫ⟠ᚾ⟟ᚩ⟣ᚲ⟟</span>
+                    </h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Мужской</li>
+                        <li><strong>Раса:</strong> Арконтар</li>
+                        <li><strong>Роль:</strong> Старейшина Совета</li>
+                        <li><strong>Специализация:</strong> Межзвёздная дипломатия и связи</li>
+                        <li><strong>Сторона:</strong> Баланс (космическая нейтральность)</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Представитель древней расы, возраст которой превосходит селаритов.
+                        Спокойный, рассудительный дипломат, отвечающий за связи между мирами.
+                        Его присутствие — важный противовес в работе Совета.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Лира -->
+            <div class="character-card">
+                <img src="images/lira.jpg" alt="Лира Нелиос" class="hero-photo" data-hero="lira">
+                <div class="hero-info">
+                    <h2 class="hero-name">
+                        <span class="hero-name-text">ЛИРА НЕЛИОС</span>
+                        <span class="selarit">ᛚ⟠ᛁ⟢ᚱ⟠ᚫ⟠ ᚾ⟟ᚿ⟡ᛚ⟠ᛁ⟢ᚩ⟣ᛋ⟜</span>
+                    </h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Женский</li>
+                        <li><strong>Раса:</strong> Церитианка</li>
+                        <li><strong>Роль:</strong> Старейшина Совета</li>
+                        <li><strong>Сектор:</strong> Хранительница древних знаний в Архивах Ковчега</li>
+                        <li><strong>Сторона:</strong> Свет (интеллектуальная гармония)</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Спокойная и глубоко мудрая хранительница истории, изучившая наследие Первых цивилизаций.
+                        По слухам, она знает правду о происхождении родителей Глеба.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Астария -->
+            <div class="character-card">
+                <img src="images/astaria.jpg" alt="Астария" class="hero-photo" data-hero="astaria">
+                <div class="hero-info">
+                    <h2 class="hero-name">
+                        <span class="hero-name-text">АСТАРИЯ</span>
+                        <span class="selarit">ᚫ⟠ᛋ⟜ᛏ⟢ᚫ⟠ᚱ⟠ᛁ⟢ᛡ⟢</span>
+                    </h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Женский</li>
+                        <li><strong>Раса:</strong> Селарит</li>
+                        <li><strong>Роль:</strong> Старшая студентка и наставник</li>
+                        <li><strong>Сектор:</strong> Академия Ко’Марис</li>
+                        <li><strong>Сторона:</strong> Свет</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Талантливая и дисциплинированная старшая ученица.
+                        Помогает младшим кадетам и часто участвует в боевых тренировках
+                        в роли наставника или партнёра.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Руайла -->
+            <div class="character-card">
+                <img src="images/ruaila.jpg" alt="Руайла" class="hero-photo" data-hero="ruaila">
+                <div class="hero-info">
+                    <h2 class="hero-name">
+                        <span class="hero-name-text">РУАЙЛА</span>
+                        <span class="selarit">ᚱ⟠ᚥ⟠̷ᚫ⟠ᛂᛁᛚ⟠ᚫ⟠</span>
+                    </h2>
+                    <ul class="hero-profile">
+                        <li><strong>Пол:</strong> Женский</li>
+                        <li><strong>Раса:</strong> Мирант</li>
+                        <li><strong>Роль:</strong> Директор Академии
+                            <a href="#" class="egg-komaris-link">Ко’Марис</a>
+                        </li>
+                        <li><strong>Сектор:</strong> Учебно-тренировочный комплекс</li>
+                        <li><strong>Сторона:</strong> Свет (структурная гармония)</li>
+                    </ul>
+                    <p class="hero-desc">
+                        Мудрая, авторитетная и справедливая руководительница Академии.
+                        Она курирует все направления обучения, от тактики до пилотирования,
+                        и заботится о будущем каждого кадета, несмотря на строгий характер.
+                    </p>
+                </div>
+            </div>
+
+           <div class="character-card" style="--glow-color: rgba(255, 130, 80, 0.85);">
+
+    <img src="images/siar_talis.jpg" alt="Сиар Талис" class="hero-photo">
+
+    <div class="hero-info">
+        <h2 class="hero-name">
+            СИАР ТАЛИС
+            <span class="selarit runes-glow">ᛋ⟜ᛁ⟢ᚫ⟠ᚱ⟠ ᛏ⟢ᚫ⟠ᛚ⟠ᛁ⟢ᛋ⟜</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Пол:</strong> женский</li>
+            <li><strong>Раса:</strong> Эннори</li>
+            <li><strong>Возраст:</strong>около 16500 лет</li>
+            <li><strong>Статус:</strong> Старейшина Совета</li>
+            <li><strong>Специализация:</strong> этика, риски, философия</li>
+            <li><strong>Локация:</strong> Каледон</li>
+        </ul>
+
+        <div class="hero-desc">
+            Сиар Талис — Старейшина, отвечающая за морально-этические нормы ковчега.
+            Она известна своей строгой справедливостью и глубокой мудростью. Именно она
+            предложила создать комиссию для защиты Глеба и изучения его природы, видя в нём
+            не угрозу, а возможность. Сиар верит в силу разума и в то, что страх никогда не
+            должен определять судьбу общества.
+        </div>
+    </div>
+
+</div>
+
+<div class="character-card" style="--glow-color: rgba(255, 90, 60, 0.85);">
+
+    <img src="images/vaat_zaron.jpg" alt="Ваат Зарон" class="hero-photo">
+
+    <div class="hero-info">
+        <h2 class="hero-name">
+            ВААТ ЗАРОН
+            <span class="selarit runes-glow">ᚡ⟠ᚫ⟠ᚫ⟠ᛏ⟢ ᛉ⟠ᚫ⟠ᚱ⟠ᚩ⟣ᚾ⟟</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Пол:</strong> мужской</li>
+            <li><strong>Раса:</strong> Раш'Кори</li>
+            <li><strong>Возраст:</strong> около 18 000 лет</li>
+            <li><strong>Статус:</strong> Старейшина Совета</li>
+            <li><strong>Специализация:</strong> безопасность, порядок, стратегическое планирование</li>
+            <li><strong>Локация:</strong> Каледон</li>
+        </ul>
+
+        <div class="hero-desc">
+            Ваат Зарон — Старейшина, известный своими консервативными взглядами и
+            непреклонной приверженностью порядку. Он один из тех, кто первым
+            выразил сомнения относительно Глеба, опасаясь его возможной мощи и
+            непредсказуемости. Несмотря на строгость, Ваат руководствуется
+            прежде всего ответственностью за безопасность ковчега и готов
+            действовать решительно, если почувствует угрозу обществу.
+        </div>
+    </div>
+
+</div>
+
+<div class="character-card" style="--glow-color: rgba(80, 180, 255, 0.85);">
+
+    <img src="images/phion_ra.jpg" alt="Фион Ра" class="hero-photo">
+
+    <div class="hero-info">
+        <h2 class="hero-name">
+            ФИОН РА
+            <span class="selarit runes-glow">ᚠ⟤ᛁ⟢ᚩ⟣ᚾ⟟ ᚱ⟠ᚫ⟠</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Пол:</strong> мужской</li>
+            <li><strong>Раса:</strong> Зафарианец</li>
+            <li><strong>Возраст:</strong> около 14 000 лет</li>
+            <li><strong>Статус:</strong> Старейшина Совета</li>
+            <li><strong>Специализация:</strong> снабжение, стратегическая логистика ковчега</li>
+            <li><strong>Локация:</strong> Каледон</li>
+        </ul>
+
+        <div class="hero-desc">
+            Фион Ра — Старейшина, отвечающий за ресурсы, снабжение и продовольственную
+            безопасность ковчега. Несмотря на мягкие манеры, обладает редким стратегическим
+            мышлением и способностью видеть последствия решений на столетия вперёд.
+            Он был одним из первых, кто подчеркнул важность миссии родителей Глеба,
+            уверенный, что их работа может изменить понимание истории и будущего всех рас.
+        </div>
+    </div>
+
+</div>
+
+<div class="character-card" style="--glow-color: rgba(180, 130, 255, 0.88);">
+
+    <img src="images/laria_nnok.jpg" alt="Лария Ннок" class="hero-photo">
+
+    <div class="hero-info">
+        <h2 class="hero-name">
+            <span class="hero-name-text">ЛАРИЯ ННОК</span>
+            <span class="selarit runes-glow">ᛚ⟠ᚫ⟠ᚱ⟠ᛁ⟢ᛡ⟢ ᚾ⟟ᚾ⟟ᚩ⟣ᚲ⟟</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Пол:</strong> женский</li>
+            <li><strong>Раса:</strong> Атриол</li>
+            <li><strong>Возраст:</strong> около 17 000 лет</li>
+            <li><strong>Статус:</strong> Старейшина Совета</li>
+            <li><strong>Специализация:</strong> ритуалы связи, энергетические круги, контакт с Хранителями истории</li>
+            <li><strong>Локация:</strong> Каледон</li>
+        </ul>
+
+        <div class="hero-desc">
+            Лария Ннок — Старейшина, отвечающая за ритуалы связи и энергетическую стабильность
+            ковчега. Именно она проводит сложнейшие церемонии установления контакта с Хранителями
+            истории, точно соблюдая древние протоколы. Лария относится к истории как к живому 
+            существу, которое нельзя ранить неосторожными действиями.
+        </div>
+    </div>
+
+</div>
+
+            </div>
+
+            <!-- ===== ГРУППА 3: ЛОВЦЫ ===== -->
+            <div class="heroes-group" data-group="hunters">
+               <div class="character-card" style="--glow-color: rgba(255, 40, 40, 0.85);">
+    <img src="images/arracus_dor.jpg" alt="Арракус Дор" class="hero-photo">
+    <div class="hero-info">
+        <h2 class="hero-name">
+            АРРАКУС ДОР
+            <span class="selarit runes-glow">ᚫ⟠ᚱ⟠ᚱ⟠ᚫ⟠ᚲ⟟ᚥ⟠̷ᛋ⟜ ᛑ⟠̷ᚩ⟣ᚱ⟠</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Пол:</strong> мужской</li>
+            <li><strong>Раса:</strong> Ксармори</li>
+            <li><strong>Статус:</strong> Предводитель Тёмных Ловцов</li>
+            <li><strong>Специализация:</strong> стратегия, подавление, управление фракцией</li>
+            <li><strong>Локация:</strong> Цитадель Ловцов</li>
+        </ul>
+
+        <div class="hero-desc">
+            Арракус Дор — безжалостный и расчётливый лидер Тёмных Ловцов.
+            Его лицо покрыто шрамами и металлическими пластинами, напоминающими о десятках войн.
+            Он не верит в легенды, пока сам не проверит их, но слухи о “невозможном ребёнке”
+            пробудили в нём охотничий азарт. Арракус стремится заполучить всё редкое и могущественное,
+            чтобы укрепить власть Ловцов и уничтожить любую угрозу. Для него Глеб — либо оружие,
+            либо потенциально опасная сила, которую нужно ликвидировать.
+        </div>
+    </div>
+
+</div>
+
+<div class="character-card" style="--glow-color: rgba(255, 80, 40, 0.85);">
+    <img src="images/rahdd_silmar.jpg" alt="Рахд Сильмар" class="hero-photo">
+
+    <div class="hero-info">
+        <h2 class="hero-name">
+            РАХД СИЛЬМАР
+            <span class="selarit runes-glow">ᚱ⟠ᚫ⟠ᚺ⟞ᛑ⟠̷ ᛋ⟜ᛁ⟢ᛚ⟠ᛦᛗ⟡ᚫ⟠ᚱ⟠</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Пол:</strong> мужской</li>
+            <li><strong>Раса:</strong> Варкали</li>
+            <li><strong>Статус:</strong> Глава шпионов Тёмных Ловцов</li>
+            <li><strong>Специализация:</strong> шпионаж, маскировка, внедрение, добыча информации</li>
+            <li><strong>Локация:</strong> Цитадель Ловцов</li>
+        </ul>
+
+        <div class="hero-desc">
+            Рахд Сильмар — главный мастер разведки среди Тёмных Ловцов.
+            Скользкий, тихий и непредсказуемый, он может раствориться в толпе,
+            сменить личность за минуты и внедриться даже в самые закрытые структуры.
+            Его сеть информаторов тянется через множество миров, подпольных рынков и тайных группировок.
+            Именно Рахд первым сообщил Арракусу о слухах о “невозможном ребёнке”.
+            Для него добыча истины — это искусство, а предательство — всего лишь инструмент работы.
+        </div>
+    </div>
+</div>
+
+<div class="character-card" style="--glow-color: rgba(140, 60, 160, 0.85);">
+
+    <img src="images/gront.jpg" alt="Гронт" class="hero-photo">
+
+    <div class="hero-info">
+        <h2 class="hero-name">
+            ГРОНТ
+            <span class="selarit runes-glow">ᚵ⟜ᚱ⟠ᚩ⟣ᚾ⟟ᛏ⟢</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Пол:</strong> мужской</li>
+            <li><strong>Раса:</strong> Ксармори</li>
+            <li><strong>Статус:</strong> Главный силовой командир Тёмных Ловцов</li>
+            <li><strong>Специализация:</strong> принуждение, боевые операции, подавление сопротивления</li>
+            <li><strong>Локация:</strong> Цитадель Ловцов</li>
+        </ul>
+
+        <div class="hero-desc">
+            Гронт — чудовищно мощный мутант, усиленный кибер-имплантами и биомеханическими пластинами. 
+            Его тело создано для войны, а разум — для безусловного подчинения приказам Арракуса Дора.
+            Известен своей жестокостью в бою и абсолютной беспощадностью. 
+            Его присутствие вселяет страх даже в опытных Ловцов, ведь Гронт — это живая машина разрушения.
+        </div>
+    </div>
+
+</div>
+
+            </div>
+
+            <!-- ===== ГРУППА 4: СТАРЕЙШИНЫ ===== -->
+            <div class="heroes-group" data-group="elders">
+                <div class="character-card">
+                    <img src="elders.jpg" alt="Старейшины" class="hero-photo">
+                    <div class="hero-info">
+                        <h2 class="hero-name">СОВЕТ СТАРЕЙШИН</h2>
+                        <ul class="hero-profile">
+                            <li><strong>Тип:</strong> Коллективный орган</li>
+                            <li><strong>Раса:</strong> Представители разных миров</li>
+                            <li><strong>Сектор:</strong> Центральный купол Ковчега</li>
+                            <li><strong>Роль:</strong> Управление и ключевые решения</li>
+                            <li><strong>Сторона:</strong> Баланс</li>
+                        </ul>
+                        <p class="hero-desc">
+                            Совет, который следит за судьбой Глеба и опасается активации древних артефактов.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ГРУППА 5: ХРАНИТЕЛИ ===== -->
+            <div class="heroes-group" data-group="keepers">
+                <div class="character-card">
+                    <img src="keepers.jpg" alt="Хранители истории" class="hero-photo">
+                    <div class="hero-info">
+                        <h2 class="hero-name">ХРАНИТЕЛИ ИСТОРИИ</h2>
+                        <ul class="hero-profile">
+                            <li><strong>Тип:</strong> Орден</li>
+                            <li><strong>Раса:</strong> Смешанная</li>
+                            <li><strong>Сектор:</strong> Архивы и хранилища памяти Ковчега</li>
+                            <li><strong>Роль:</strong> Охрана знаний, артефактов и пророчеств</li>
+                            <li><strong>Сторона:</strong> Свет / Баланс</li>
+                        </ul>
+                        <p class="hero-desc">
+                            Орден, который верит, что раса, забывшая свою историю, обречена.
+                            Особенно внимательно следит за Глебом и артефактами Первых.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /lang-block ru -->
+
+        <!-- ================= EN ВЕРСИЯ ================= -->
+       <div class="lang-block" data-lang="en">
+
+     <!-- ===== GROUP 1: “LIGHT OF HOPE” ORPHANAGE ===== -->
+    <div class="heroes-group" data-group="shelter">
+      
+        <div class="character-card">
+            <img src="images/liza.jpg" alt="Liza" class="hero-photo">
+            <div class="hero-info">
+                <h2 class="hero-name">Liza</h2>
+                <ul class="hero-profile">
+                    <li><strong>Gender:</strong> Female</li>
+                    <li><strong>Species:</strong> Human</li>
+                    <li><strong>Age:</strong> 14</li>
+                    <li><strong>Planet:</strong> Earth</li>
+                    <li><strong>Residence sector:</strong> “Light of Hope” orphanage</li>
+                    <li><strong>Role:</strong> Gleb’s friend, one of the informal leaders of the group</li>
+                    <li><strong>Allegiance:</strong> Light</li>
+                    <li><strong>Fears:</strong> Losing her friends and being left alone; fear of the night forest.</li>
+                </ul>
+                <p class="hero-desc">
+                    Active, brave and level-headed. She helps organize the search, readily takes responsibility
+                    and tries to support the others, especially when it comes to Gleb.
+                </p>
+            </div>
+        </div>
+
+        <div class="character-card">
+            <img src="images/grigorio.jpg" alt="Grigoriy “Zherd’”" class="hero-photo">
+            <div class="hero-info">
+                <h2 class="hero-name">Grigoriy “Zherd”</h2>
+                <ul class="hero-profile">
+                    <li><strong>Gender:</strong> Male</li>
+                    <li><strong>Species:</strong> Human</li>
+                    <li><strong>Age:</strong> 15</li>
+                    <li><strong>Planet:</strong> Earth</li>
+                    <li><strong>Residence sector:</strong> “Light of Hope” orphanage</li>
+                    <li><strong>Role:</strong> Initiator of hikes, leader of the teens’ group</li>
+                    <li><strong>Allegiance:</strong> Neutral (prone to risky adventures)</li>
+                    <li><strong>Fears:</strong> Afraid to appear weak; secretly fears darkness and strange sounds in the forest.</li>
+                </ul>
+                <p class="hero-desc">
+                    A very tall and slim teenager with endless energy. He loves adventures and stories about the mysterious,
+                    but often hides his own worries to look braver in front of others.
+                </p>
+            </div>
+        </div>
+
+        <div class="character-card">
+            <img src="images/dasha.jpg" alt="Dasha" class="hero-photo">
+            <div class="hero-info">
+                <h2 class="hero-name">Dasha</h2>
+                <ul class="hero-profile">
+                    <li><strong>Gender:</strong> Female</li>
+                    <li><strong>Species:</strong> Human</li>
+                    <li><strong>Age:</strong> 14</li>
+                    <li><strong>Planet:</strong> Earth</li>
+                    <li><strong>Residence sector:</strong> “Light of Hope” orphanage</li>
+                    <li><strong>Role:</strong> Emotional core of the group</li>
+                    <li><strong>Allegiance:</strong> Light</li>
+                    <li><strong>Fears:</strong> Fear of the supernatural; fear of losing those she cares about.</li>
+                </ul>
+                <p class="hero-desc">
+                    A kind and sensitive girl who quickly reacts to changes in the group’s mood.
+                    Gleb’s disappearance hits her especially hard and becomes one of her deepest worries.
+                </p>
+            </div>
+        </div>
+
+        <div class="character-card">
+            <img src="images/vitya.jpg" alt="Vitya" class="hero-photo">
+            <div class="hero-info">
+                <h2 class="hero-name">Vitya</h2>
+                <ul class="hero-profile">
+                    <li><strong>Gender:</strong> Male</li>
+                    <li><strong>Species:</strong> Human</li>
+                    <li><strong>Age:</strong> 14</li>
+                    <li><strong>Planet:</strong> Earth</li>
+                    <li><strong>Residence sector:</strong> “Light of Hope” orphanage</li>
+                    <li><strong>Role:</strong> Responsible for gear and preparations for hikes</li>
+                    <li><strong>Allegiance:</strong> Light</li>
+                    <li><strong>Fears:</strong> Fear of making a mistake and letting his friends down; fear of the deep forest.</li>
+                </ul>
+                <p class="hero-desc">
+                    A practical and organized teen. Often acts as the “voice of reason”, making sure no one goes
+                    into the forest unprepared.
+                </p>
+            </div>
+        </div>
+
+        <div class="character-card">
+            <img src="images/olga_vasilievna.jpg" alt="Olga Vasilievna" class="hero-photo">
+            <div class="hero-info">
+                <h2 class="hero-name">Olga Vasilievna</h2>
+                <ul class="hero-profile">
+                    <li><strong>Gender:</strong> Female</li>
+                    <li><strong>Species:</strong> Human</li>
+                    <li><strong>Age:</strong> about 50</li>
+                    <li><strong>Planet:</strong> Earth</li>
+                    <li><strong>Residence sector:</strong> “Light of Hope” orphanage</li>
+                    <li><strong>Role:</strong> Head of the orphanage</li>
+                    <li><strong>Allegiance:</strong> Neutral (strict order above all)</li>
+                    <li><strong>Fears:</strong> Losing control over the orphanage; fear of past tragedies repeating.</li>
+                </ul>
+                <p class="hero-desc">
+                    A strict, demanding and highly organized head of the orphanage. Behind her cold exterior
+                    there is a person who genuinely cares about the fate of every child.
+                </p>
+            </div>
+        </div>
+
+        <div class="character-card">
+            <img src="images/sergey_pavlovich.jpg" alt="Sergey Pavlovich" class="hero-photo">
+            <div class="hero-info">
+                <h2 class="hero-name">Sergey Pavlovich</h2>
+                <ul class="hero-profile">
+                    <li><strong>Gender:</strong> Male</li>
+                    <li><strong>Species:</strong> Human</li>
+                    <li><strong>Age:</strong> about 40</li>
+                    <li><strong>Planet:</strong> Earth</li>
+                    <li><strong>Residence sector:</strong> “Light of Hope” orphanage</li>
+                    <li><strong>Role:</strong> Physical education teacher</li>
+                    <li><strong>Allegiance:</strong> Light</li>
+                    <li><strong>Fears:</strong> Fear of failing to protect the children; fear that the legends
+                        about kids disappearing in the forest are not just stories.</li>
+                </ul>
+                <p class="hero-desc">
+                    An energetic, strict but fair teacher. When the situation calls for action, he becomes
+                    one of the most reliable adults around.
+                </p>
+            </div>
+        </div>
+
+        <div class="character-card">
+            <img src="images/villager.jpg" alt="Villager" class="hero-photo">
+            <div class="hero-info">
+                <h2 class="hero-name">Villager</h2>
+                <ul class="hero-profile">
+                    <li><strong>Gender:</strong> Male</li>
+                    <li><strong>Species:</strong> Human</li>
+                    <li><strong>Age:</strong> about 70</li>
+                    <li><strong>Planet:</strong> Earth</li>
+                    <li><strong>Residence sector:</strong> Village near the orphanage</li>
+                    <li><strong>Role:</strong> Knows the forest and its legends</li>
+                    <li><strong>Allegiance:</strong> Neutral</li>
+                    <li><strong>Fears:</strong> Fear of old forest legends; fear of facing the thing that takes children away.</li>
+                </ul>
+                <p class="hero-desc">
+                    A local man who often walks through the forest and knows much more about it than others.
+                    His discovery on the clearing adds extra anxiety to the adults’ search for Gleb.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== GROUP 2: ARK “CONCORD” (ACTIVE BY DEFAULT) ===== -->
+    <div class="heroes-group is-active" data-group="ark">
+
+        <!-- GLEB CARD (example — adjust later if needed) -->
+        <div class="character-card">
+            <img src="images/gleb.jpg" alt="Gleb" class="hero-photo">
+            <div class="hero-info">
+                <h2 class="hero-name">Gleb</h2>
+                <ul class="hero-profile">
+                    <li><strong>Gender:</strong> Male</li>
+                    <li><strong>Species:</strong> Unknown</li>
+                    <li><strong>Age:</strong> 14</li>
+                    <li><strong>Planet:</strong> Earth</li>
+                    <li><strong>Residence sector:</strong> Base Dome</li>
+                    <li><strong>Ark specialization:</strong> Student of Ko’Maris Academy</li>
+                    <li><strong>Allegiance:</strong> Light (potential balance)</li>
+                </ul>
+                <p class="hero-desc">
+                    A brave boy born on the Moon and lost among humans on Earth.
+                    He strives to uncover the mystery of his origin and the truth about his parents.
+                </p>
+            </div>
+        </div>
+
+<!-- CHARACTER CARD — ARKAN -->
+<div class="character-card">
+    <img src="images/arkan.jpg" alt="Arkan" class="hero-photo">
+    <div class="hero-info">
+        <h2 class="hero-name">
+            <span class="hero-name-text">ARKAN</span>
+            <span class="selarit">ᚫ⟠ᚱ⟠ᚲ⟟ᚫ⟠ᚾ⟟</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> Male</li>
+            <li><strong>Race:</strong> Selarite</li>
+            <li><strong>Age:</strong> around 40,000 (Earth equivalent)</li>
+            <li><strong>Homeworld:</strong> Selarit</li>
+            <li><strong>Residence Sector:</strong> Alliance Guardians Sector</li>
+            <li><strong>Specialization on the Ark:</strong> Senior Advisor to the Elders, mentor at Ko'Maris Academy in combat and tactical disciplines</li>
+            <li><strong>Alignment:</strong> Light (stable harmony)</li>
+        </ul>
+
+        <p class="hero-desc">
+            A wise and enigmatic mentor possessing immense physical and energetic strength.
+            Despite his calm demeanor, he can inspire awe with a single glance.
+            He hides ancient secrets of the Selarite race and knows far more than he reveals.
+            Even the Council of Elders cannot fully understand the true extent of his abilities.
+        </p>
+    </div>
+</div>
+
+<!-- CHARACTER CARD — KAIN -->
+<div class="character-card">
+    <img src="images/kain.jpg" alt="Kain" class="hero-photo">
+    <div class="hero-info">
+        <h2 class="hero-name">
+            <span class="hero-name-text">KAIN</span>
+            <span class="selarit">ᚲ⟟ᚫ⟠ᛂᛁᚾ⟟</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> Male</li>
+            <li><strong>Race:</strong> Selarite</li>
+            <li><strong>Age:</strong> 15</li>
+            <li><strong>Homeworld:</strong> Selarit</li>
+            <li><strong>Residence Sector:</strong> Ko'Maris Academy District</li>
+            <li><strong>Specialization on the Ark:</strong> Cadet of Ko'Maris Academy</li>
+            <li><strong>Alignment:</strong> Light (dynamic balance)</li>
+        </ul>
+
+        <p class="hero-desc">
+            A charismatic and bold young Selarite, a natural warrior with exceptional reflexes and a sharp mind.
+            He has a playful sense of humor and easily connects with others, yet becomes serious and focused during training.
+            He possesses great potential and a strong desire to prove he is worthy of studying among the best.
+        </p>
+    </div>
+</div>
+
+<!-- CHARACTER CARD — NERIANA -->
+<div class="character-card">
+    <img src="images/neriana.jpg" alt="Neriana" class="hero-photo">
+    <div class="hero-info">
+        <h2 class="hero-name">
+            <span class="hero-name-text">NERIANA</span>
+            <span class="selarit">ᚾ⟟ᚿ⟡ᚱ⟠ᛁ⟢ᚫ⟠ᚾ⟟ᚫ⟠</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> Female</li>
+            <li><strong>Race:</strong> Selarite</li>
+            <li><strong>Age:</strong> 15</li>
+            <li><strong>Homeworld:</strong> Selarit</li>
+            <li><strong>Residence Sector:</strong> Ko'Maris Academy District</li>
+            <li><strong>Specialization on the Ark:</strong> Cadet of Ko'Maris Academy</li>
+            <li><strong>Alignment:</strong> Light (intellectual harmony)</li>
+        </ul>
+
+        <p class="hero-desc">
+            A calm, intelligent, and observant young Selarite with heightened intuition and the 
+            ability to analyze complex situations quickly. Unlike her brother, she rarely shows emotion,
+            but her words are always precise and thoughtful. A natural strategist with strong inner 
+            resolve, able to see patterns where others see only chaos.
+        </p>
+    </div>
+</div>
+
+<div class="character-card">
+    <img src="images/salomea.jpg" alt="Salomea L'Akris" class="hero-photo">
+    <div class="hero-info">
+        <h2 class="hero-name">
+            <span class="hero-name-text">SALOMEA</span>
+            <span class="selarit">ᛋ⟜ᚫ⟠ᛚ⟠ᚩ⟣ᛗ⟡ᚿ⟡ᛡ⟢</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> Female</li>
+            <li><strong>Race:</strong> Selarite</li>
+            <li><strong>Role:</strong> Legendary pilot, top-10 of Rydorian</li>
+            <li><strong>Occupation:</strong> Flight Instructor of Ko’Maris Academy</li>
+            <li><strong>Specialization:</strong> Tactical piloting & gravitational navigation</li>
+            <li><strong>Alignment:</strong> Light (dynamic precision)</li>
+        </ul>
+
+        <p class="hero-desc">
+            A legendary Selarite pilot, known far beyond the Ark.
+            She participated in dozens of extreme missions and once ranked among the top ten racers of
+            the intergalactic Rydorian competition. She is capable of “merging” with her ship through
+            a rare intuitive gift, guiding students through the most complex aspects of flight.
+        </p>
+    </div>
+</div>
+
+<div class="character-card">
+    <img src="images/atrissa.jpg" alt="Atrissa Xsoll" class="hero-photo">
+    <div class="hero-info">
+        <h2 class="hero-name">
+            <span class="hero-name-text">ATRISSA XSOLL</span>
+            <span class="selarit">ᚫ⟠ᛏ⟢ᚱ⟠ᛁᛋ⟜ᛋ⟜ᚫ⟠ ᚲ⟟ᛋ⟜ᚩ⟣ᛚ⟠ᛚ⟠</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> Female</li>
+            <li><strong>Race:</strong> Illarians</li>
+            <li><strong>Role:</strong> Leading Elder of the Ark</li>
+            <li><strong>Sector:</strong> High Council</li>
+            <li><strong>Alignment:</strong> Balance (strategic vision)</li>
+        </ul>
+
+        <p class="hero-desc">
+            One of the most influential figures of the Ark. Known for her far-sightedness,
+            wisdom, and ability to keep political and energetic balance within the Council.
+            She knows far more about ancient prophecies than she openly admits.
+        </p>
+    </div>
+</div>
+
+<div class="character-card">
+    <img src="images/laar.jpg" alt="Laar" class="hero-photo egg-laar-target">
+    <div class="hero-info">
+        <h2 class="hero-name">
+            <span class="hero-name-text">LAAR</span>
+            <span class="selarit">ᛚ⟠ᚫ⟠ᚫ⟠ᚱ⟠</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> Male</li>
+            <li><strong>Race:</strong> Grandorians</li>
+            <li><strong>Role:</strong> Captain of the First Ring Guard</li>
+            <li><strong>Specialization:</strong> Defense, combat discipline, perimeter security</li>
+            <li><strong>Alignment:</strong> Light (martial order)</li>
+        </ul>
+
+        <p class="hero-desc">
+            Commander of the elite First Ring. Highly disciplined, unwavering and
+            respected among both cadets and elders. His duty is to protect the Ark from
+            external threats and maintain order in the sectors closest to the vacuum border.
+        </p>
+    </div>
+</div>
+
+<div class="character-card">
+    <img src="images/xavir.jpg" alt="Xavir Ranok" class="hero-photo">
+    <div class="hero-info">
+        <h2 class="hero-name">
+            <span class="hero-name-text">XAVIR RANOK</span>
+            <span class="selarit">ᚲ⟟ᛋ⟜ᚫ⟠ᚡ⟠ᛁ⟢ᚱ⟠ ᚱ⟠ᚫ⟠ᚾ⟟ᚩ⟣ᚲ⟟</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> Male</li>
+            <li><strong>Race:</strong> Arkontar</li>
+            <li><strong>Role:</strong> Elder of the Council</li>
+            <li><strong>Specialization:</strong> Interstellar communications & diplomacy</li>
+            <li><strong>Alignment:</strong> Balance (cosmic neutrality)</li>
+        </ul>
+
+        <p class="hero-desc">
+            A representative of an ancient race older than the Selarites.
+            Calm, analytical and perfectly disciplined, he maintains galactic
+            diplomatic ties and serves as an important counterweight within the Council.
+        </p>
+    </div>
+</div>
+
+<div class="character-card">
+    <img src="images/lira.jpg" alt="Lira Nelios" class="hero-photo">
+    <div class="hero-info">
+        <h2 class="hero-name">
+            <span class="hero-name-text">LIRA NELIOS</span>
+            <span class="selarit">ᛚ⟠ᛁ⟢ᚱ⟠ᚫ⟠ ᚾ⟟ᚿ⟡ᛚ⟠ᛁ⟢ᚩ⟣ᛋ⟜</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> Female</li>
+            <li><strong>Race:</strong> Cerathian</li>
+            <li><strong>Role:</strong> Elder of the Council</li>
+            <li><strong>Sector:</strong> Keeper of Ancient Knowledge in the Archives of the Ark</li>
+            <li><strong>Alignment:</strong> Light (intellectual harmony)</li>
+        </ul>
+
+        <p class="hero-desc">
+            A quiet, thoughtful and deeply knowledgeable elder who has spent
+            centuries studying ancient civilizations and the legacy of the First Ones.
+            She is believed to know the truth about the origins of Gleb’s parents.
+        </p>
+    </div>
+</div>
+
+<div class="character-card">
+    <img src="images/astaria.jpg" alt="Astaria" class="hero-photo">
+    <div class="hero-info">
+        <h2 class="hero-name">
+            <span class="hero-name-text">ASTARIA</span>
+            <span class="selarit">ᚫ⟠ᛋ⟜ᛏ⟢ᚫ⟠ᚱ⟠ᛁ⟢ᛡ⟢</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> Female</strong></li>
+            <li><strong>Race:</strong> Selarite</li>
+            <li><strong>Role:</strong> Senior student / mentor</li>
+            <li><strong>Sector:</strong> Ko’Maris Academy</li>
+            <li><strong>Alignment:</strong> Light</li>
+        </ul>
+
+        <p class="hero-desc">
+            A disciplined and talented senior student of Ko’Maris.
+            She helps guide younger cadets and often participates in combat
+            simulations as a sparring partner or assistant instructor.
+        </p>
+    </div>
+</div>
+
+<div class="character-card">
+    <img src="images/ruaila.jpg" alt="Ruaila" class="hero-photo">
+    <div class="hero-info">
+        <h2 class="hero-name">
+            <span class="hero-name-text">RUAILA</span>
+            <span class="selarit">ᚱ⟠ᚥ⟠̷ᚫ⟠ᛂᛁᛚ⟠ᚫ⟠</span>
+        </h2>
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> Female</li>
+            <li><strong>Race:</strong> Mirant</li>
+            <li><strong>Role:</strong> Director of Ko’Maris
+<a href="#" class="egg-komaris-link">Academy</a>
+</li>
+            <li><strong>Sector:</strong> Training & educational complex</li>
+            <li><strong>Alignment:</strong> Light (structural harmony)</li>
+        </ul>
+
+        <p class="hero-desc">
+            Wise, authoritative and fair. She oversees the entire Ko’Maris structure,
+            from combat disciplines to piloting modules. Despite her strict nature,
+            she deeply cares about the growth and future of each cadet.
+        </p>
+    </div>
+</div>
+
+<div class="character-card" style="--glow-color: rgba(255, 130, 80, 0.85);">
+
+    <img src="images/siar_talis.jpg" alt="Siar Talis" class="hero-photo">
+
+    <div class="hero-info">
+        <h2 class="hero-name">
+           SIAR TALIS
+            <span class="selarit runes-glow">ᛋ⟜ᛁ⟢ᚫ⟠ᚱ⟠ ᛏ⟢ᚫ⟠ᛚ⟠ᛁ⟢ᛋ⟜</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> female</li>
+            <li><strong>Race:</strong> Ennory</li>
+            <li><strong>Age:</strong> around 16,500 years</li>
+            <li><strong>Status:</strong> Council Elder</li>
+            <li><strong>Specialization:</strong> ethics, risk analysis, philosophy</li>
+            <li><strong>Location:</strong> Caledon</li>
+        </ul>
+
+        <div class="hero-desc">
+            Siar Talis is the Elder responsible for the moral and ethical framework
+            of the ark society. She is known for her strict sense of justice and profound wisdom.
+            It was she who proposed forming a commission to protect Gleb and study his nature,
+            seeing in him not a threat but an opportunity. Siar believes in the power of reason
+            and that fear should never define the destiny of a society.
+        </div>
+    </div>
+
+</div>
+
+<div class="character-card" style="--glow-color: rgba(255, 90, 60, 0.85);">
+
+    <img src="images/vaat_zaron.jpg" alt="Vaat Zaron" class="hero-photo">
+
+    <div class="hero-info">
+        <h2 class="hero-name">
+            VAAT ZARON
+            <span class="selarit runes-glow">ᚡ⟠ᚫ⟠ᚫ⟠ᛏ⟢ ᛉ⟠ᚫ⟠ᚱ⟠ᚩ⟣ᚾ⟟</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> Male</li>
+            <li><strong>Race:</strong> Rash'Kori</li>
+            <li><strong>Age:</strong> around 18,000 years</li>
+            <li><strong>Status:</strong> Council Elder</li>
+            <li><strong>Specialization:</strong> security, order, strategic planning</li>
+            <li><strong>Location:</strong> Caledon</li>
+        </ul>
+
+        <div class="hero-desc">
+            Vaat Zaron is a Council Elder known for his conservative views and
+            unwavering dedication to order. He was among the first to express
+            concerns regarding Gleb, fearing the boy’s potential power and
+            unpredictability. Despite his strict nature, Vaat is guided above
+            all by his responsibility for the safety of the Ark and is ready to
+            act decisively if he senses danger to society.
+        </div>
+    </div>
+
+</div>
+
+<div class="character-card" style="--glow-color: rgba(80, 180, 255, 0.85);">
+
+    <img src="images/phion_ra.jpg" alt="Phion Ra" class="hero-photo">
+
+    <div class="hero-info">
+        <h2 class="hero-name">
+            PHION RA
+            <span class="selarit runes-glow">ᚠ⟤ᛁ⟢ᚩ⟣ᚾ⟟ ᚱ⟠ᚫ⟠</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> male</li>
+            <li><strong>Race:</strong> Zypharians</li>
+            <li><strong>Age:</strong> ~14,000 years</li>
+            <li><strong>Status:</strong> Elder of the Council</li>
+            <li><strong>Specialization:</strong> supply management, strategic logistics of the Ark</li>
+            <li><strong>Location:</strong> Caledon</li>
+        </ul>
+
+        <div class="hero-desc">
+            Phion Ra is an Elder responsible for resources, supply chains, and the food
+            security of the Ark. Despite his soft-spoken nature, he possesses exceptionally
+            sharp strategic thinking and the rare ability to foresee the long-term consequences
+            of decisions centuries ahead. He was among the first to emphasize the importance
+            of Gleb’s parents’ mission, believing their work could reshape the understanding
+            of history—and the future—of all races.
+        </div>
+    </div>
+
+</div>
+
+<div class="character-card" style="--glow-color: rgba(180, 130, 255, 0.88);">
+
+    <img src="images/laria_nnok.jpg" alt="Laria Nnok" class="hero-photo">
+
+    <div class="hero-info">
+        <h2 class="hero-name">
+            <span class="hero-name-text">LARIA NNOK</span>
+            <span class="selarit runes-glow">ᛚ⟠ᚫ⟠ᚱ⟠ᛁ⟢ᛡ⟢ ᚾ⟟ᚾ⟟ᚩ⟣ᚲ⟟</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> Female</li>
+            <li><strong>Race:</strong> Atriol</li>
+            <li><strong>Age:</strong> around 17,000 years</li>
+            <li><strong>Status:</strong> Council Elder</li>
+            <li><strong>Specialization:</strong> communion rituals, energy circles, contact with the Keepers of History</li>
+            <li><strong>Location:</strong> Caledon</li>
+        </ul>
+
+        <div class="hero-desc">
+            Laria Nnok is the Elder responsible for the great communion rituals and the energetic
+            stability of the Ark. She conducts the delicate ceremonies that connect the Council
+            with the Keepers of History, following every ancient protocol with flawless precision.
+            Laria treats history as a living being—one that must never be harmed by careless action.
+        </div>
+    </div>
+</div>
+    </div>   
+   
+    <!-- ===== GROUP 3: HUNTERS ===== -->
+    <div class="heroes-group" data-group="hunters">
+       <div class="character-card" style="--glow-color: rgba(255, 40, 40, 0.85);">
+    <img src="images/arracus_dor.jpg" alt="Arracus Dor" class="hero-photo">
+    <div class="hero-info">
+        <h2 class="hero-name">
+            ARRACUS DOR
+            <span class="selarit runes-glow">ᚫ⟠ᚱ⟠ᚱ⟠ᚫ⟠ᚲ⟟ᚥ⟠̷ᛋ⟜ ᛑ⟠̷ᚩ⟣ᚱ⟠</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> male</li>
+            <li><strong>Race:</strong> Xsarmori</li>
+            <li><strong>Status:</strong> Leader of the Dark Hunters</li>
+            <li><strong>Specialization:</strong> strategy, domination, faction command</li>
+            <li><strong>Location:</strong> Hunters’ Citadel</li>
+        </ul>
+
+        <div class="hero-desc">
+            Arracus Dor is the ruthless and calculating leader of the Dark Hunters.
+            His face is covered in scars and metallic plates, each a reminder of countless battles.
+            He never believes in legends until he confirms them himself, yet the rumors about the
+            “impossible child” have awakened his predatory instinct. Arracus seeks to claim anything
+            rare and powerful to strengthen the Hunters' rule and eliminate any threat. To him,
+            Gleb is either a weapon to be controlled or a dangerous force that must be destroyed.
+        </div>
+    </div>
+</div>
+
+<div class="character-card" style="--glow-color: rgba(255, 80, 40, 0.85);">
+    <img src="images/rahdd_silmar.jpg" alt="Rahdd Silmar" class="hero-photo">
+
+    <div class="hero-info">
+        <h2 class="hero-name">
+            RAHDD SILMAR
+            <span class="selarit runes-glow">ᚱ⟠ᚫ⟠ᚺ⟞ᛑ⟠̷  ᛋ⟜ᛁ⟢ᛚ⟠ᛦᛗ⟡ᚫ⟠ᚱ⟠</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> Male</li>
+            <li><strong>Race:</strong> Varkali</li>
+            <li><strong>Status:</strong> Chief Spy of the Dark Hunters</li>
+            <li><strong>Specialization:</strong> espionage, infiltration, disguise, intelligence gathering</li>
+            <li><strong>Location:</strong> Hunters' Citadel</li>
+        </ul>
+
+        <div class="hero-desc">
+            Rahdd Silmar is the Dark Hunters’ master of espionage.
+            Elusive, silent, and unpredictable, he can blend into any environment,
+            shift identities within minutes, and infiltrate even the most secure structures.
+            His network of informants stretches across worlds, black markets,
+            and hidden factions. It was Rahdd who first brought Arraqus the rumors
+            about the “impossible child.”  
+            For him, truth is a craft — and betrayal is just another tool.
+        </div>
+    </div>
+</div>
+<div class="character-card" style="--glow-color: rgba(140, 60, 160, 0.85);">
+
+    <img src="images/gront.jpg" alt="Gront" class="hero-photo">
+
+    <div class="hero-info">
+        <h2 class="hero-name">
+            GRONT
+            <span class="selarit runes-glow">ᚵ⟜ᚱ⟠ᚩ⟣ᚾ⟟ᛏ⟢</span>
+        </h2>
+
+        <ul class="hero-profile">
+            <li><strong>Gender:</strong> Male</li>
+            <li><strong>Race:</strong> Mutant of unknown origin</li>
+            <li><strong>Status:</strong> Chief Enforcer of the Dark Hunters</li>
+            <li><strong>Specialization:</strong> force operations, suppression, frontline combat</li>
+            <li><strong>Location:</strong> Hunters’ Citadel</li>
+        </ul>
+
+        <div class="hero-desc">
+           Gront is a monstrously powerful mutant, enhanced with cybernetic implants and biomechanical plating.
+His body was engineered for war, and his mind shaped for absolute obedience to Arracus Dor.
+He is known for his brutality in battle and his complete lack of mercy.
+Even seasoned Hunters feel a chill in his presence — for Gront is not merely a warrior, but a living engine of destruction.
+        </div>
+    </div>
+
+</div>
+  
+
+    </div>
+
+
+    </main>
+
+    <footer class="site-footer">
+        <span data-ru="© Последний тарианец — мир книги в разработке"
+              data-en="© The Last Tarian — story world in development">
+            © Последний тарианец — мир книги в разработке
+        </span>
+    </footer>
+
+    
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const tabs = document.querySelectorAll(".hero-tab");
+        const groups = document.querySelectorAll(".heroes-group");
+        const underline = document.querySelector(".hero-tab-underline");
+
+        function activateTab(tab) {
+            const groupName = tab.dataset.group;
+
+            tabs.forEach(t => t.classList.toggle("is-active", t === tab));
+
+            groups.forEach(g => {
+                g.classList.toggle("is-active", g.dataset.group === groupName);
+            });
+
+            const rect = tab.getBoundingClientRect();
+            const parentRect = tab.parentElement.getBoundingClientRect();
+            underline.style.left = (rect.left - parentRect.left) + "px";
+            underline.style.width = rect.width + "px";
+        }
+
+        const defaultTab = document.querySelector(".hero-tab.is-active") || tabs[0];
+        if (defaultTab) {
+            setTimeout(() => activateTab(defaultTab), 0);
+        }
+
+        tabs.forEach(tab => {
+            tab.addEventListener("click", () => activateTab(tab));
+        });
+
+        window.addEventListener("resize", () => {
+            const current = document.querySelector(".hero-tab.is-active");
+            if (current) activateTab(current);
+        });
+    });
+    </script>
+
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const runeSpans = document.querySelectorAll('.hero-runes.selarit');
+        runeSpans.forEach(initRuneCycle);
+    });
+
+    function initRuneCycle(span) {
+        const original = span.textContent.trim();
+        span.dataset.runesOriginal = original;
+        startRuneCycle(span);
+    }
+
+    function startRuneCycle(span) {
+        const text = span.dataset.runesOriginal || "";
+        span.textContent = "";
+        span.classList.remove('runes-glow');
+
+        let i = 0;
+
+        function typeNext() {
+            if (i < text.length) {
+                span.textContent += text[i];
+                const delay = (text[i] === " " ? 50 : 350);
+                i++;
+                setTimeout(typeNext, delay);
+            } else {
+                span.classList.add('runes-glow');
+
+                setTimeout(() => {
+                    span.style.transition = 'opacity 0.8s ease-out';
+                    span.style.opacity = '0';
+
+                    setTimeout(() => {
+                        span.classList.remove('runes-glow');
+                        span.textContent = "";
+                        span.style.opacity = '1';
+                        setTimeout(() => startRuneCycle(span), 600);
+                    }, 800);
+                }, 45000);
+            }
+        }
+
+        typeNext();
+    }
+    </script>
+
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cards = document.querySelectorAll('.character-card');
+        if (!cards.length) return;
+
+        const palette = [
+            'rgba(56,189,248,0.85)',
+            'rgba(129,140,248,0.85)',
+            'rgba(52,211,153,0.85)',
+            'rgba(251,191,36,0.9)',
+            'rgba(248,113,113,0.9)',
+            'rgba(244,114,182,0.9)'
+        ];
+
+        let index = 0;
+
+        function highlightNext() {
+            cards.forEach(card => {
+                card.classList.remove('card-glow');
+                card.style.removeProperty('--glow-color');
+            });
+
+            const card = cards[index];
+            const color = palette[index % palette.length];
+
+            card.style.setProperty('--glow-color', color);
+            card.classList.add('card-glow');
+
+            index = (index + 1) % cards.length;
+
+            setTimeout(highlightNext, 6000);
+        }
+
+        highlightNext();
+    });
+    </script>
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const langBlocks = document.querySelectorAll('.lang-block');
+        const langButtons = document.querySelectorAll('[data-lang-btn]');
+        const navLinks = document.querySelectorAll('.main-nav a');
+        const title = document.querySelector('.subpage-header h1');
+        const footerSpan = document.querySelector('.site-footer span');
+        const heroTabs = document.querySelectorAll('.hero-tab');
+
+        function applyLangText(el, lang) {
+            if (!el) return;
+            const value = el.dataset[lang];
+            if (value) el.textContent = value;
+        }
+
+        function setLanguage(lang) {
+            document.documentElement.lang = lang;
+
+            
+            langBlocks.forEach(block => {
+                block.style.display = (block.dataset.lang === lang) ? 'block' : 'none';
+            });
+
+          
+            langButtons.forEach(btn => {
+                btn.classList.toggle('is-active', btn.dataset.langBtn === lang);
+            });
+
+           
+            applyLangText(title, lang);
+
+           
+            applyLangText(footerSpan, lang);
+
+         
+            navLinks.forEach(link => applyLangText(link, lang));
+
+            
+            heroTabs.forEach(tab => applyLangText(tab, lang));
+
+            
+            try {
+                localStorage.setItem('siteLang', lang);
+            } catch (e) {}
+        }
+
+     
+        langButtons.forEach(btn => {
+            btn.addEventListener('click', () => setLanguage(btn.dataset.langBtn));
+        });
+
+       
+        let initial = 'ru';
+        try {
+            const stored = localStorage.getItem('siteLang');
+            if (stored === 'ru' || stored === 'en') initial = stored;
+        } catch (e) {}
+
+        setLanguage(initial);
+    });
+    </script>
+
+</body>
+</html>
