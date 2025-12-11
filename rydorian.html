@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Гонка «Райдориан» — Последний тарианец</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+/* ===== АНИМИРОВАННЫЕ ГРАВИТАЦИОННЫЕ ЛИНИИ ===== */
+
+/* фон без jpg — твой градиент */
+body {
+  background:
+    radial-gradient(circle at 50% -20%,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(148, 163, 184, 0.12) 30%,
+      rgba(30, 41, 59, 0.95) 85%),
+    linear-gradient(180deg,
+      rgba(51, 65, 85, 0.35) 0%,
+      rgba(15, 23, 42, 0.95) 60%,
+      #0a0f1a 100%);
+  background-attachment: fixed;
+}
+
+/* отдельный слой с линиями */
+/* отдельный слой с линиями */
+.gravity-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0.18;
+
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.03) 0px,
+      rgba(255, 255, 255, 0.03) 2px,
+      transparent 2px,
+      transparent 80px
+    ),
+    repeating-linear-gradient(
+      45deg,
+      rgba(56, 189, 248, 0.03) 0px,
+      rgba(56, 189, 248, 0.03) 3px,
+      transparent 3px,
+      transparent 140px
+    );
+
+  animation: gravityFlow 32s linear infinite;
+  will-change: transform, opacity;
+}
+
+
+@keyframes gravityFlow {
+  0% {
+    transform: translate3d(0, 0, 0) skewX(0deg) skewY(0deg) scale(1);
+    opacity: 0.16;
+  }
+  25% {
+    transform: translate3d(-80px, -60px, 0) skewX(1deg) skewY(-0.7deg) scale(1.02);
+    opacity: 0.20;
+  }
+  50% {
+    transform: translate3d(-160px, -120px, 0) skewX(-1.4deg) skewY(1deg) scale(1.04);
+    opacity: 0.22;
+  }
+  75% {
+    transform: translate3d(-220px, -180px, 0) skewX(0.6deg) skewY(-0.4deg) scale(1.02);
+    opacity: 0.19;
+  }
+  100% {
+    transform: translate3d(-260px, -220px, 0) skewX(0deg) skewY(0deg) scale(1);
+    opacity: 0.18;
+  }
+}
+
+
+     /* Лёгкое подсвечивание текстовых блоков */
+.rydorian-main .text-block {
+  background: radial-gradient(circle at top left,
+      rgba(148, 163, 184, 0.18),
+      rgba(15, 23, 42, 0.90));
+  border-color: rgba(148, 163, 184, 0.6);
+
+  /* 🔥 ОТМЕНЯЕМ ГЛОБАЛЬНУЮ ФИКС-ВЫСОТУ ДЛЯ ЭТОЙ СТРАНИЦЫ */
+  height: auto;
+  max-height: none;
+  overflow: visible;
+}
+
+/* Светлые аккордеоны */
+.accordion-card {
+  background: radial-gradient(circle at 0 0,
+      rgba(148, 163, 184, 0.18),
+      rgba(30, 41, 59, 0.95));
+  border-color: rgba(148, 163, 184, 0.6);
+}
+.rule-text p {
+  line-height: 1.0;  /* или 1.3 / 1.25 — подбери что нравится */
+  margin: 5px 0;      /* уменьшает вертикальные отступы между абзацами */
+}
+
+
+    /* --- АККОРДЕОН (История / Правила / Транспорт) --- */
+
+    .accordion-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .accordion-card {
+      position: relative;
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background:
+        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.2), rgba(15, 23, 42, 0.96));
+      box-shadow:
+        0 16px 36px rgba(0, 0, 0, 0.95),
+        0 0 22px rgba(15, 23, 42, 0.9);
+      overflow: hidden;
+      transition:
+        transform .18s ease-out,
+        box-shadow .18s ease-out,
+        border-color .18s ease-out,
+        background .18s ease-out;
+    }
+
+    .accordion-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      background:
+        linear-gradient(135deg,
+          rgba(125, 211, 252, 0.24),
+          transparent 40%,
+          rgba(250, 204, 21, 0.16));
+      mix-blend-mode: screen;
+      opacity: 0.7;
+    }
+
+    .accordion-card.is-open {
+      transform: translateY(-2px);
+      border-color: rgba(250, 204, 21, 0.95);
+      background:
+        radial-gradient(circle at 0 0, rgba(250, 204, 21, 0.28), rgba(15, 23, 42, 0.98));
+      box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.98),
+        0 0 26px rgba(56, 189, 248, 0.5);
+    }
+
+    .accordion-inner {
+      position: relative;
+      z-index: 2;
+    }
+
+    .accordion-header {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 12px 16px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .accordion-header span {
+      pointer-events: none;
+    }
+
+    .accordion-header-icon {
+      font-size: 16px;
+      opacity: 0.85;
+    }
+
+    .accordion-content {
+      display: none;
+      padding: 0 16px 12px 16px;
+      font-size: 13px;
+      color: #dbeafe;
+      line-height: 1.55;
+    }
+
+    .accordion-card.is-open .accordion-content {
+      display: block;
+    }
+
+    .accordion-content p {
+      margin: 6px 0 8px;
+    }
+
+    .accordion-content ul {
+      margin: 4px 0 6px 18px;
+      padding: 0;
+    }
+
+    .accordion-content li + li {
+      margin-top: 2px;
+    }
+
+    /* --- ЛИДЕРБОРД: ВКЛАДКИ + ТАБЛИЦА --- */
+
+    .leaderboard-block {
+      margin-top: 22px;
+    }
+
+    .leaderboard-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0 10px;
+    }
+
+    .leader-tab-btn {
+      position: relative;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.92);
+      color: #e5e7eb;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition:
+        background .16s ease-out,
+        border-color .16s ease-out,
+        box-shadow .16s ease-out,
+        transform .12s ease-out;
+      white-space: nowrap;
+    }
+
+    .leader-tab-btn span {
+      pointer-events: none;
+    }
+
+    .leader-tab-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.2), transparent 55%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .16s ease-out;
+    }
+
+    .leader-tab-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(56, 189, 248, 0.9);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.45);
+    }
+
+    .leader-tab-btn.active {
+      background: rgba(15, 23, 42, 0.98);
+      border-color: rgba(250, 204, 21, 0.98);
+      box-shadow:
+        0 0 16px rgba(250, 204, 21, 0.6),
+        0 14px 30px rgba(0, 0, 0, 0.95);
+    }
+
+    .leader-tab-btn.active::before {
+      opacity: 1;
+    }
+
+    .lb-era-label {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+
+    .leaderboard-table-wrapper {
+      margin-top: 8px;
+      overflow-x: auto;
+    }
+
+    table.leaderboard {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(55, 65, 81, 0.95);
+      box-shadow:
+        0 18px 44px rgba(0, 0, 0, 0.96),
+        0 0 24px rgba(15, 23, 42, 0.9);
+    }
+
+    table.leaderboard th,
+    table.leaderboard td {
+      padding: 6px 10px;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    table.leaderboard th {
+      background: rgba(15, 23, 42, 1);
+      color: #e5e7eb;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 11px;
+      border-bottom: 1px solid rgba(75, 85, 99, 0.9);
+    }
+
+    table.leaderboard tbody tr:nth-child(odd) {
+      background: rgba(15, 23, 42, 0.96);
+    }
+
+    table.leaderboard tbody tr:nth-child(even) {
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    table.leaderboard tbody tr:hover {
+      background: rgba(30, 64, 175, 0.78);
+    }
+
+    /* скрываем неактивные Круги */
+    [data-era-body] {
+      display: none;
+    }
+
+    [data-era-body].is-active {
+      display: table-row-group;
+    }
+
+    @media (max-width: 640px) {
+      .leader-tab-btn {
+        font-size: 10px;
+        padding: 4px 9px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+ <div class="gravity-bg"></div>
+  <div class="page-overlay"></div>
+
+  <!-- языковая панель -->
+  <div class="lang-switch">
+    <button onclick="setLang('ru')">RU</button>
+    <button onclick="setLang('en')">EN</button>
+  </div>
+
+  <!-- верхний заголовок страницы -->
+  <header class="subpage-header">
+    <h1 data-ru="Гонка «Райдориан»"
+        data-en="Rydorian Race">
+      Гонка «Райдориан»
+    </h1>
+    <p class="subpage-lead"
+       data-ru="Легендарная Вселенская гонка, где пилоты рискуют всем ради скорости, чести и права войти в историю."
+       data-en="Legendary Interstellar Race where pilots risk everything for speed, honor, and the right to be written into history.">
+      Легендарная Вселенская гонка, где пилоты рискуют всем ради скорости, чести и права войти в историю.
+    </p>
+  </header>
+
+  <!-- ГЛАВНОЕ МЕНЮ  -->
+  <nav class="main-nav">
+    <a href="index.html"
+       data-ru="Главная" data-en="Home">Главная</a>
+
+    <a href="about.html"
+       data-ru="О книге" data-en="About">О книге</a>
+
+    <a href="characters.html"
+       data-ru="Герои" data-en="Characters">Герои</a>
+
+    <a href="locations.html"
+       data-ru="Локации" data-en="Locations">Локации</a>
+
+    <a href="artifacts.html"
+       data-ru="Артефакты" data-en="Artifacts">Артефакты</a>
+
+    <a href="rydorian.html"
+       data-ru="Гонка 'Райдориан'" data-en="'Rydorian' Race">Гонка 'Райдориан'</a>
+
+    <a href="equipment.html"
+       data-ru="Экипировка"
+       data-en="Equipment">
+      Экипировка
+    </a>
+
+    <a href="media.html"
+       data-ru="Медиа" data-en="Media">Медиа</a>
+
+     <a href="fragments.html"
+       data-ru="Обрывки текстов" data-en="Text fragments">
+      Обрывки текстов
+    </a>
+
+    <a href="contacts.html"
+       data-ru="Контакты" data-en="Contacts">Контакты</a>
+<a href="donate.html"
+       data-ru="Поддержать автора" data-en="Donate">Поддержать автора</a>
+
+  </nav>
+
+
+  <main class="about-main rydorian-main">
+
+    <!-- Блок 1: краткое описание гонки -->
+    <section class="text-block text-block-auto">
+      <h2 data-ru="Что такое гонка «Райдориан»"
+          data-en="What is the Rydorian Race">
+        Что такое гонка «Райдориан»
+      </h2>
+      <p
+        data-ru="Райдориан — это не просто гонка. Это древний ритуал посвящения, через который проходят те, кто готов доказать свою зрелость перед Вселенной. Каждый этап раскрывает гонщика иначе: не как пилота, а как личность, способную жить в мире, где всё меняется быстрее, чем звёзды мерцают на небосводе. Те, кто доходят до финала, обретают не славу победителей, а честь служить Альянсу там, где требуются сильнейшие духом. Райдориан учит противостоять страху, видеть путь среди хаоса, доверять своему экипажу и просить помощи, когда одиночество становится опасностью. Он отсекает тщеславие, разрушает эго и обнажает истинные ценности, по которым человек живёт. Для зрителей Райдориан — это грандиозное зрелище. Но каждый понимает: за внешней красотой скрыто испытание, где решается не жизнь гонщика, а то, кем он станет после."
+        data-en="Rydorian is more than a race. It is an ancient rite of passage for those who choose to prove their readiness before the ever-shifting universe. Each stage reveals the pilot anew
+not as a master of a craft, but as a being capable of surviving a cosmos that changes faster than starlight itself. Those who reach the end earn not fame, but the honor of serving the Alliance in the farthest corners of space places where only the strongest spirits endure. Rydorian teaches one to stand against fear, to find direction within chaos, to trust a crew, and to ask for help when solitude becomes a threat. It strips away vanity, confronts ego, and lays bare the values by which a person lives. To the countless spectators, Rydorian is a galactic spectacle. Yet all understand that beneath the brilliance lies a trial one that decides not the pilot’s survival, but the person he will become.">
+        Райдориан — это не просто гонка. Это древний ритуал посвящения, через который проходят те, кто готов доказать свою зрелость перед Вселенной. Каждый этап раскрывает гонщика иначе: не как пилота, а как личность, способную жить в мире, где всё меняется быстрее, чем звёзды мерцают на небосводе. Те, кто доходят до финала, обретают не славу победителей, а честь служить Альянсу там, где требуются сильнейшие духом. Райдориан учит противостоять страху, видеть путь среди хаоса, доверять своему экипажу и просить помощи, когда одиночество становится опасностью. Он отсекает тщеславие, разрушает эго и обнажает истинные ценности, по которым человек живёт. Для зрителей Райдориан — это грандиозное зрелище. Но каждый понимает: за внешней красотой скрыто испытание, где решается не жизнь гонщика, а то, кем он станет после.
+      </p>
+    </section>
+
+    <!-- Блок 2: кликабельные разделы (аккордеон) -->
+    <section class="text-block text-block-auto">
+      <h2 data-ru="Основные разделы гонки"
+          data-en="Core aspects of the race">
+        Основные разделы гонки
+      </h2>
+
+      <div class="accordion-list">
+
+        <!-- История гонок -->
+        <div class="accordion-card" data-acc="history">
+          <div class="accordion-inner">
+            <button class="accordion-header">
+              <span data-ru="Легенда образования гонок"
+                    data-en="The Legend of How the Races Came to Be">
+                Легенда образования гонок
+              </span>
+              <span class="accordion-header-icon">＋</span>
+            </button>
+            <div class="accordion-content">
+              <p
+                data-ru="Говорят, ещё до того, как поднялись башни Ковчега и открылись его врата, на орбитах Первых существовали тайные круги испытаний. И там, под тихим светом звёзд, рождалось то, что поздние эпохи назовут Райдорианом. Те испытания не были гонками. Они были тропой смелых, где пилоты проходили сквозь ловушки гравитации, видели образы грядущих битв и переживали то, что ждало путников в великой бездне. Но время меняло всё вокруг, и вместе с ним менялась и Тропа. Каждый новый мастер добавлял к ней свой замысел: ворота, что повинуются притяжению; тоннели, в которых слышатся голоса машин; участки, где дыхание само становится хрупким. Когда же Старейшины увидели, что Тропа обрела дух,
+они создали Мирантский Круг и стали вписывать туда имена тех, кто дошёл до конца и не дрогнул перед испытанием судьбы. Так Райдориан стал не состязанием,
+но путём посвящения. Говорят, всякий, кто однажды победил, изменялся навсегда
+и становился достойным служить там, где звёзды гаснут быстрее, чем произносится молитва, а ошибки отзываются эхом целых миров. Так рассказывают детям, чтобы помнили: Райдориан выбирает тех, кто готов услышать зов Вселенной."
+                data-en="It is said that long before the Ark raised its towers and before its gates opened to the stars, there existed hidden circles upon the orbits of the First Ones. And there, beneath the quiet shimmer of distant suns, the path later known as Rydorian was born. Those trials were not races. They were the Road of the Brave where pilots stepped through snares of gravity, beheld visions of battles yet to come, and faced the perils awaiting travelers in the vast abyss. But ages passed, and with them the Road changed. Each new master left their mark upon it: gates shaped by unseen forces; tunnels that whispered with the voices of ancient machines; regions where even breath turned fragile. When the Elders saw that the Road had gained a spirit of its own, they formed the Mirantine Circle and inscribed within it the names of those who walked the Road to its end and did not falter before the decree of fate. Thus Rydorian ceased to be a contest, becoming instead a rite of passage. And it is said that whoever triumphed once was forever changed made worthy to serve where stars die quicker than prayers are spoken, and where errors echo across worlds. So the tale is told to children that they may remember: Rydorian chooses those who are ready to hear the voice of the universe.">
+                Говорят, ещё до того, как поднялись башни Ковчега и открылись его врата, на орбитах Первых существовали тайные круги испытаний. И там, под тихим светом звёзд, рождалось то, что поздние эпохи назовут Райдорианом. Те испытания не были гонками. Они были тропой смелых, где пилоты проходили сквозь ловушки гравитации, видели образы грядущих битв и переживали то, что ждало путников в великой бездне. Но время меняло всё вокруг, и вместе с ним менялась и Тропа. Каждый новый мастер добавлял к ней свой замысел: ворота, что повинуются притяжению; тоннели, в которых слышатся голоса машин; участки, где дыхание само становится хрупким. Когда же Старейшины увидели, что Тропа обрела дух,
+они создали Мирантский Круг и стали вписывать туда имена тех, кто дошёл до конца и не дрогнул перед испытанием судьбы. Так Райдориан стал не состязанием,
+но путём посвящения. Говорят, всякий, кто однажды победил, изменялся навсегда
+и становился достойным служить там, где звёзды гаснут быстрее, чем произносится молитва, а ошибки отзываются эхом целых миров. Так рассказывают детям, чтобы помнили: Райдориан выбирает тех, кто готов услышать зов Вселенной.
+              </p>
+             
+            </div>
+          </div>
+        </div>
+
+        <!-- Правила гонок / Кодекс Райдориана -->
+<div class="accordion-card" data-acc="rules">
+  <div class="accordion-inner">
+    <button class="accordion-header">
+      <span
+        data-ru="Кодекс «Райдориан»"
+        data-en="The Rydorian Codex">
+        Кодекс «Райдориан»
+      </span>
+      <span class="accordion-header-icon">＋</span>
+    </button>
+
+    <div class="accordion-content">
+
+      <!-- Русский текст Кодекса -->
+      <div class="rule-text rule-text-ru">
+        <p><strong>I. Природа гонки</strong></p>
+        <p>Райдориан — это не соревнование скорости, а ритуал взросления.</p>
+        <p>Он создан, чтобы испытать волю, мудрость и внутреннюю чистоту пилота.</p>
+        <p>Те, кто проходит трассу до конца, считаются достойными служить Альянсу.</p>
+
+        <p><strong>II. Честность техники</strong></p>
+        <p>Каждый корабль обязан пройти преддопускную проверку.</p>
+        <p>Скрытые модернизации или ложные технические данные считаются предательством Трассы.</p>
+
+        <p><strong>III. Открытость экипажа</strong></p>
+        <p>Личность пилота и его состояние здоровья не могут быть скрыты.</p>
+        <p>Всё, что происходит на борту, фиксируется ИИ и передаётся Комиссии.</p>
+
+        <p><strong>IV. Полномочия ИИ</strong></p>
+        <p>ИИ отвечает только за жизнеобеспечение, защиту</p>
+        <p>и аварийный вывод корабля с трассы.</p>
+        <p>Он не имеет права вести гонку вместо пилота,</p>
+        <p>кроме единственного случая — угрозы его жизни.</p>
+
+        <p><strong>V. Абсолютный запрет на оружие</strong></p>
+        <p>Никакие виды вооружения — энергетические, физические или программные —</p>
+        <p>не допускаются на трассу.</p>
+        <p>Трасса — путь чести, а не войны.</p>
+
+        <p><strong>VI. Архив Трассы</strong></p>
+        <p>Все действия корабля фиксируются и передаются Хранителям.</p>
+        <p>Память Трассы считается высшей истиной</p>
+        <p>и основой для разбора любых споров.</p>
+
+        <p><strong>VII. Достоинство победы</strong></p>
+        <p>Пилот, прошедший Райдориан, получает не славу,</p>
+        <p>а право служить Альянсу.</p>
+        <p>Гонка раскрывает тех, кто умеет доверять, преодолевать страх</p>
+        <p>и находить свой путь в хаосе Вселенной.</p>
+      </div>
+
+      <!-- English text of the Codex -->
+      <div class="rule-text rule-text-en" style="display:none;">
+        <p><strong>I. The Nature of the Race</strong></p>
+        <p>Rydorian is not a contest of speed, but a rite of ascension.</p>
+        <p>It exists to test the will, wisdom, and inner clarity of the pilot.</p>
+        <p>Those who endure the course to its end are deemed worthy to serve the Alliance.</p>
+
+        <p><strong>II. The Honesty of Craft</strong></p>
+        <p>Every vessel must undergo pre-race inspection.</p>
+        <p>Hidden modifications or falsified specifications are regarded as betrayal of the Track.</p>
+
+        <p><strong>III. The Transparency of Crew</strong></p>
+        <p>A pilot’s identity and state of health may never be concealed.</p>
+        <p>All events aboard the craft are recorded by the AI and transmitted to the Commission.</p>
+
+        <p><strong>IV. The Mandate of the AI</strong></p>
+        <p>The AI is entrusted solely with life-support, protection,</p>
+        <p>and emergency extraction from the course.</p>
+        <p>It may not pilot the vessel in the race,</p>
+        <p>save for the single exception—when the pilot’s life is in danger.</p>
+
+        <p><strong>V. The Absolute Prohibition of Weapons</strong></p>
+        <p>No form of armament—energetic, physical, or digital—</p>
+        <p>may be brought onto the course.</p>
+        <p>The Track is a path of honor, not of war.</p>
+
+        <p><strong>VI. The Archive of the Track</strong></p>
+        <p>All actions of the vessel are recorded and delivered to the Keepers.</p>
+        <p>The memory of the Track is held as the highest truth</p>
+        <p>and the foundation for resolving all disputes.</p>
+
+        <p><strong>VII. The Dignity of Victory</strong></p>
+        <p>A pilot who completes Rydorian earns not fame,</p>
+        <p>but the right to serve the Alliance.</p>
+        <p>The Race reveals those who can trust, overcome fear,</p>
+        <p>and find their path through the chaos of the Universe.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+        <!-- Транспорт для гонок -->
+        <div class="accordion-card" data-acc="craft">
+          <div class="accordion-inner">
+            <button class="accordion-header">
+              <span data-ru="Транспорт для гонок"
+                    data-en="Racing craft">
+                Транспорт для гонок
+              </span>
+              <span class="accordion-header-icon">＋</span>
+            </button>
+           <div class="accordion-content">
+
+  <p
+    data-ru="Болиды Райдориана — это не просто быстрые машины. Их проектируют на стыке боевых платформ, спасательных шаттлов и экспериментальных лабораторий. Каждый корпус рассчитан под определённый уровень допуска, а каждая модификация фиксируется в Архиве Трассы — вплоть до состава сплавов и поведения обшивки под селаритскими штормами."
+    data-en="Rydorian craft are far more than fast machines. They are engineered at the crossroads of combat platforms, rescue shuttles, and experimental laboratories. Each hull is calibrated to a specific clearance level, and every modification is recorded in the Track Archive — down to the alloy composition and how the outer shell behaves under Selarite storms.">
+    Болиды Райдориана — это не просто быстрые машины...
+  </p>
+
+  <!-- CLASS A -->
+  <p><strong data-ru="Класс A — прототипы предельного режима"
+              data-en="Class A — Prototype Vessels of the Extreme Threshold">
+    Класс A — прототипы предельного режима
+  </strong></p>
+
+  <p
+    data-ru="Эти болиды существуют на границе допустимых параметров. Их двигатели работают в диапазонах, которые на боевых судах считаются аварийными, а система стабилизации вмешивается только в самый последний момент, если пилот теряет контроль."
+    data-en="These craft exist at the boundary of what is considered physically possible. Their engines operate in ranges that would be classified as critical-emergency on military ships, and stabilization systems intervene only at the final instant, when the pilot is seconds from losing control.">
+    Эти болиды существуют на границе допустимых параметров...
+  </p>
+
+  <ul>
+    <li data-ru="Допуск: ветераны гонки, пилоты спецподразделений, операторы секретных миссий Альянса."
+        data-en="Clearance: race veterans, special-operations pilots, and operatives of classified Alliance missions.">
+      Допуск: ветераны гонки...
+    </li>
+    <li data-ru="Ограничители: минимальны; часть систем намеренно отключена, чтобы не «гасить» реакцию пилота."
+        data-en="Limiters: minimal; several safety subsystems are deliberately disabled so they do not dull the pilot’s reflexes.">
+      Ограничители: минимальны...
+    </li>
+    <li data-ru="Риск: одна ошибка и корпус не подлежит восстановлению, а пилота ищут уже не медики, а Хранители."
+        data-en="Risk: a single mistake leaves the hull unrecoverable and the search for the pilot falls not to medics, but to the Keepers.">
+      Риск: одна ошибка...
+    </li>
+    <li data-ru="Особенность: многие A-болиды имеют «живую телеметрию» — мерцающие линии по кромке трассы, которые видит только пилот."
+        data-en="Feature: many Class A craft possess 'living telemetry'—shimmering lines along the track visible only to the pilot.">
+      Особенность: «живая телеметрия»...
+    </li>
+  </ul>
+
+  <!-- CLASS B -->
+  <p><strong data-ru="Класс B — боевая серия Райдориана"
+              data-en="Class B — The Combat Line of Rydorian">
+    Класс B — боевая серия Райдориана
+  </strong></p>
+
+  <p
+    data-ru="Баланс между безумием и выживаемостью. Болиды этого класса близки к боевым шаттлам фронтовых линий, но лишены оружия и усилены в зонах, где боевые суда обычно жертвуют бронёй ради огневой мощи."
+    data-en="A balance between madness and survivability. Craft of this class are close to frontline combat shuttles, but stripped of weaponry and reinforced in regions where military ships normally sacrifice armor for offensive systems.">
+    Баланс между безумием и выживаемостью...
+  </p>
+
+  <ul>
+    <li data-ru="Допуск: курсанты Академии Ко’Марис, действующие пилоты Альянса, прикреплённые к Мирантскому Кругу."
+        data-en="Clearance: Ko’Maris Academy cadets, active Alliance pilots, and members affiliated with the Mirant Circle.">
+      Допуск: курсанты...
+    </li>
+    <li data-ru="Ограничители: контролируются перегрузка, тепловая нагрузка и уровень повреждений обшивки."
+        data-en="Limiters: acceleration, thermal load, and hull stress are strictly supervised.">
+      Ограничители: контролируются...
+    </li>
+    <li data-ru="Риск: при грубых ошибках система аварийного отвода может насильно вывести болид с трассы."
+        data-en="Risk: severe piloting errors can trigger forced extraction, removing the craft from the race against the pilot’s will.">
+      Риск: аварийный отвод...
+    </li>
+    <li data-ru="Особенность: на B-классе проходят финальные испытания пилоты, которых готовят к дальним экспедициям."
+        data-en="Feature: Class B serves as the final testing ground for pilots destined for deep-space expeditions.">
+      Особенность: финальные испытания...
+    </li>
+  </ul>
+
+  <!-- CLASS C -->
+  <p><strong data-ru="Класс C — учебные болиды Первой Трассы"
+              data-en="Class C — Training Craft of the First Track">
+    Класс C — учебные болиды Первой Трассы
+  </strong></p>
+
+  <p
+    data-ru="Эти аппараты созданы для тех, кто впервые выходит на официальный Райдориан. Их обшивка утолщена, кабина окружена амортизационными полями, а разрешённые траектории проходят вдоль относительно мягких участков гравитационного рельефа."
+    data-en="These vessels are built for those stepping onto the official Rydorian course for the first time. Their hulls are thickened, cockpits wrapped in cushioning fields, and their permitted paths run along the gentlest parts of the gravitational terrain.">
+    Эти аппараты созданы...
+  </p>
+
+  <ul>
+    <li data-ru="Допуск: новички, младшие курсанты, участники из миров, только вступивших в Альянс."
+        data-en="Clearance: newcomers, junior cadets, and participants from worlds newly admitted to the Alliance.">
+      Допуск: новички...
+    </li>
+    <li data-ru="Ограничители: усиленная защита, мягкие перегрузки, ранний аварийный вывод."
+        data-en="Limiters: reinforced safety, softened G-forces, early emergency extraction.">
+      Ограничители: усиленная защита...
+    </li>
+    <li data-ru="Риск: минимизирован, но ошибки фиксируются в Архиве и могут закрыть путь к классам B и A."
+        data-en="Risk: minimized, though every mistake is still recorded in the Archive—and may bar advancement to higher classes.">
+      Риск: минимизирован...
+    </li>
+    <li data-ru="Особенность: многие пилоты сохраняют фрагменты обшивки своего первого C-болида как талисман."
+        data-en="Feature: many pilots keep fragments of their first C-class hull as a talisman.">
+      Особенность: талисман...
+    </li>
+  </ul>
+
+  <!-- LEGENDARY CUSTOM CRAFT -->
+  <p
+    data-ru="Некоторые легендарные пилоты, вроде Саломеи Л’Акрис, годами летают на корпусах, которые начинали жизнь как обычная B-серия. После десятков модернизаций такие болиды становятся уникальными машинами: по силуэту их узнают ещё до выхода на старт, а по резонансу двигателей даже с глухих трибун Мирантского Кольца. Считается, что если имя пилота и номер его корпуса трижды попадают в Мирантский календарь, болид больше не имеют права разбирать: его консервируют и отправляют в Тоннели Памяти как часть живой истории Райдориана."
+    data-en="Some legendary pilots—such as Salomea L’Akris—fly vessels that began life as ordinary B-series hulls. After decades of modifications, these machines become iconic, one-of-a-kind craft: recognized by silhouette even before entering the launch corridor, and by engine resonance from the farthest seats of the Mirant Ring. It is said that if a pilot’s name and hull number enter the Mirant Calendar three times, the vessel may never again be dismantled; it is sealed and placed into the Tunnels of Memory as a living fragment of Rydorian history.">
+    Некоторые легендарные пилоты...
+  </p>
+
+</div>
+         </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Блок 3: таблица лидеров по селаритскому календарю -->
+    <section class="text-block text-block-auto leaderboard-block">
+      <h2 data-ru="Миранский календарь победителей"
+          data-en="Mirant calendar of champions">
+        Миранский календарь победителей
+      </h2>
+
+      <p
+        data-ru="Миранты ведут учёт Райдориана по Кругам, тысячелетними промежутками. Каждый Круг фиксирует десятку лучших пилотов за тысячу лет. Ниже можно выбрать Круг и увидеть таблицу лидеров за соответствующий период (последние 10&nbsp;000 лет истории гонок)."
+        data-en="Mirantes record Rydorian results in Circles thousand-year periods. Each Circle holds the top ten pilots of its era. Below you can choose a Circle and see the corresponding leaderboard for the last 10,000 years of the race.">
+        Миранты ведут учёт Райдориана по Кругам, тысячелетними промежутками. Каждый Круг фиксирует десятку лучших пилотов за тысячу лет.
+      </p>
+
+      <!-- вкладки Кругов -->
+      <div class="leaderboard-tabs">
+        <button class="leader-tab-btn active" data-era="era10">
+          <span data-ru="X Круг" data-en="Circle X">X Круг</span>
+        </button>
+        <button class="leader-tab-btn" data-era="era9">
+          <span data-ru="IX Круг" data-en="Circle IX">IX Круг</span>
+        </button>
+        <button class="leader-tab-btn" data-era="era8">
+          <span data-ru="VIII Круг" data-en="Circle VIII">VIII Круг</span>
+        </button>
+        <button class="leader-tab-btn" data-era="era7">
+          <span data-ru="VII Круг" data-en="Circle VII">VII Круг</span>
+        </button>
+        <button class="leader-tab-btn" data-era="era6">
+          <span data-ru="VI Круг" data-en="Circle VI">VI Круг</span>
+        </button>
+        <button class="leader-tab-btn" data-era="era5">
+          <span data-ru="V Круг" data-en="Circle V">V Круг</span>
+        </button>
+        <button class="leader-tab-btn" data-era="era4">
+          <span data-ru="IV Круг" data-en="Circle IV">IV Круг</span>
+        </button>
+        <button class="leader-tab-btn" data-era="era3">
+          <span data-ru="III Круг" data-en="Circle III">III Круг</span>
+        </button>
+        <button class="leader-tab-btn" data-era="era2">
+          <span data-ru="II Круг" data-en="Circle II">II Круг</span>
+        </button>
+        <button class="leader-tab-btn" data-era="era1">
+          <span data-ru="I Круг" data-en="Circle I">I Круг</span>
+        </button>
+      </div>
+
+      <p class="lb-era-label"
+         data-ru="Время указано в селаритских стандартных циклах; рекорд считается действующим, если пилот прошёл все контрольные точки без нарушений."
+         data-en="Time is measured in Selarite standard cycles; a record is valid only if all checkpoints were passed without violations.">
+        Время указано в селаритских стандартных циклах; рекорд считается действующим, если пилот прошёл все контрольные точки без нарушений.
+      </p>
+
+      <div class="leaderboard-table-wrapper">
+        <table class="leaderboard">
+          <thead>
+            <tr>
+              <th data-ru="Место" data-en="Rank">Место</th>
+              <th data-ru="Пилот" data-en="Pilot">Пилот</th>
+              <th data-ru="Мир" data-en="World">Мир</th>
+              <th data-ru="Класс болида" data-en="Craft class">Класс болида</th>
+              <th data-ru="Рекорд" data-en="Record">Рекорд</th>
+            </tr>
+          </thead>
+
+                                             <!-- X Круг -->
+          <tbody data-era-body="era10" class="is-active">
+            <tr>
+              <td>1</td>
+              <td><span data-ru="Саломея Л’Акрис" data-en="Salomea L'Akris">Саломея Л’Акрис</span></td>
+              <td><span data-ru="Ковчег «Конкорд»" data-en="Ark &quot;Concord&quot;">Ковчег «Конкорд»</span></td>
+              <td><span data-ru="A-протокол" data-en="A-protocol">A-протокол</span></td>
+              <td>00:03:12.87</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><span data-ru="Ксавир Ранок" data-en="Ksavir Ranok">Ксавир Ранок</span></td>
+              <td><span data-ru="Аркон’тар" data-en="Arkon'tar">Аркон’тар</span></td>
+              <td><span data-ru="A-серия" data-en="A-series">A-серия</span></td>
+              <td>00:03:15.04</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><span data-ru="Каин Сел’Риан" data-en="Kain Sel'Rian">Каин Сел’Риан</span></td>
+              <td><span data-ru="Селара" data-en="Selara">Селара</span></td>
+              <td><span data-ru="B-тактический" data-en="B-tactical">B-тактический</span></td>
+              <td>00:03:17.92</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><span data-ru="Нериана Сел’Риан" data-en="Neriana Sel'Rian">Нериана Сел’Риан</span></td>
+              <td><span data-ru="Селара" data-en="Selara">Селара</span></td>
+              <td><span data-ru="B-аналитический" data-en="B-analytic">B-аналитический</span></td>
+              <td>00:03:20.11</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><span data-ru="Лаар Кольцевой" data-en="Laar Kol'tsevoy">Лаар Кольцевой</span></td>
+              <td><span data-ru="Селара" data-en="Selara">Селара</span></td>
+              <td><span data-ru="A-щитовой" data-en="A-shield pattern">A-щитовой</span></td>
+              <td>00:03:21.30</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><span data-ru="Риэн Тор’Хал" data-en="Rien Tor'Hal">Риэн Тор’Хал</span></td>
+              <td><span data-ru="Луна" data-en="Luna">Луна</span></td>
+              <td><span data-ru="B-боевой" data-en="B-assault">B-боевой</span></td>
+              <td>00:03:24.08</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><span data-ru="Эллис Кор" data-en="Ellis Kor">Эллис Кор</span></td>
+              <td><span data-ru="Земля" data-en="Zemlya">Земля</span></td>
+              <td><span data-ru="B-гибрид" data-en="B-hybrid">B-гибрид</span></td>
+              <td>00:03:25.67</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td><span data-ru="Майрин Лаэт" data-en="Mayrin Laet">Майрин Лаэт</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:26.90</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td><span data-ru="Таррен Вэл" data-en="Tarren Vel">Таррен Вэл</span></td>
+              <td><span data-ru="Луна" data-en="Luna">Луна</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:28.44</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td><span data-ru="Оррин Тай’Лар" data-en="Orrin Tai'Lar">Оррин Тай’Лар</span></td>
+              <td><span data-ru="Кольцо Миранты" data-en="Miranta Ring">Кольцо Миранты</span></td>
+              <td><span data-ru="Неклассифицирован" data-en="Unclassified">Неклассифицирован</span></td>
+              <td>00:03:29.99</td>
+            </tr>
+          </tbody>
+
+          <!-- IX Круг -->
+          <tbody data-era-body="era9">
+            <tr>
+              <td>1</td>
+              <td><span data-ru="Хайрон Т’Кал" data-en="Khairon T'Kal">Хайрон Т’Кал</span></td>
+              <td><span data-ru="Луна" data-en="Luna">Луна</span></td>
+              <td><span data-ru="A-серия" data-en="A-series">A-серия</span></td>
+              <td>00:03:18.01</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><span data-ru="Ариэль Соран" data-en="Ariel Soran">Ариэль Соран</span></td>
+              <td><span data-ru="Земля" data-en="Zemlya">Земля</span></td>
+              <td><span data-ru="A-серия" data-en="A-series">A-серия</span></td>
+              <td>00:03:18.77</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><span data-ru="Корт Ис’Рэл" data-en="Kort Is'Rel">Корт Ис’Рэл</span></td>
+              <td><span data-ru="Селара" data-en="Selara">Селара</span></td>
+              <td><span data-ru="B-тактический" data-en="B-tactical">B-тактический</span></td>
+              <td>00:03:21.42</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><span data-ru="Йивар Рал" data-en="Yivar Ral">Йивар Рал</span></td>
+              <td><span data-ru="Аркон’тар" data-en="Arkon'tar">Аркон’тар</span></td>
+              <td><span data-ru="A-серия" data-en="A-series">A-серия</span></td>
+              <td>00:03:22.05</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><span data-ru="Рея Ном" data-en="Reya Nom">Рея Ном</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="B-серия" data-en="B-series">B-серия</span></td>
+              <td>00:03:23.58</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><span data-ru="Карр Илл" data-en="Karr Ill">Карр Илл</span></td>
+              <td><span data-ru="Аркон’тар" data-en="Arkon'tar">Аркон’тар</span></td>
+              <td><span data-ru="B-серия" data-en="B-series">B-серия</span></td>
+              <td>00:03:24.88</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><span data-ru="Реон Сил" data-en="Reon Sil">Реон Сил</span></td>
+              <td><span data-ru="Луна" data-en="Luna">Луна</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:27.13</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td><span data-ru="Ряэл Кор" data-en="Ryael Kor">Ряэл Кор</span></td>
+              <td><span data-ru="Земля" data-en="Zemlya">Земля</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:28.71</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td><span data-ru="Зеррайн Фар’Тал" data-en="Zerrain Far'Tal">Зеррайн Фар’Тал</span></td>
+              <td><span data-ru="Каэл-3" data-en="Kael-3">Каэл-3</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:29.40</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td><span data-ru="Лирис Ом’Та" data-en="Liris Om'Ta">Лирис Ом’Та</span></td>
+              <td><span data-ru="Ковчег «Астралия»" data-en="Ark &quot;Astralia&quot;">Ковчег «Астралия»</span></td>
+              <td><span data-ru="Неклассифицирован" data-en="Unclassified">Неклассифицирован</span></td>
+              <td>00:03:30.00</td>
+            </tr>
+          </tbody>
+
+          <!-- VIII Круг -->
+          <tbody data-era-body="era8">
+            <tr>
+              <td>1</td>
+              <td><span data-ru="Хаэлин Мир" data-en="Haelin Mir">Хаэлин Мир</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="A-серия" data-en="A-series">A-серия</span></td>
+              <td>00:03:19.90</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><span data-ru="Верал Куир’Ан" data-en="Veral Quir'An">Верал Куир’Ан</span></td>
+              <td><span data-ru="Селара" data-en="Selara">Селара</span></td>
+              <td><span data-ru="A-щитовой" data-en="A-shield pattern">A-щитовой</span></td>
+              <td>00:03:20.33</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><span data-ru="Джанрос Тел’Мир" data-en="Djanros Tel'Mir">Джанрос Тел’Мир</span></td>
+              <td><span data-ru="Аркон’тар" data-en="Arkon'tar">Аркон’тар</span></td>
+              <td><span data-ru="B-тактический" data-en="B-tactical">B-тактический</span></td>
+              <td>00:03:22.77</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><span data-ru="Нериэль Саан" data-en="Neriel Saan">Нериэль Саан</span></td>
+              <td><span data-ru="Селара" data-en="Selara">Селара</span></td>
+              <td><span data-ru="B-стратегический" data-en="B-strategic">B-стратегический</span></td>
+              <td>00:03:23.02</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><span data-ru="Элдар Куин" data-en="Eldar Quin">Элдар Куин</span></td>
+              <td><span data-ru="Земля" data-en="Zemlya">Земля</span></td>
+              <td><span data-ru="B-серия" data-en="B-series">B-серия</span></td>
+              <td>00:03:24.55</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><span data-ru="Талия Орн’Вей" data-en="Talia Orn'Vey">Талия Орн’Вей</span></td>
+              <td><span data-ru="Луна" data-en="Luna">Луна</span></td>
+              <td><span data-ru="B-боевой" data-en="B-assault">B-боевой</span></td>
+              <td>00:03:25.89</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><span data-ru="Маррес Илон" data-en="Marres Ilon">Маррес Илон</span></td>
+              <td><span data-ru="Луна" data-en="Luna">Луна</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:28.11</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td><span data-ru="Фейра Нилл’Са" data-en="Feira Nill'Sa">Фейра Нилл’Са</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:28.42</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td><span data-ru="Коррен Вайст" data-en="Korren Vaist">Коррен Вайст</span></td>
+              <td><span data-ru="Каэл-3" data-en="Kael-3">Каэл-3</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:29.97</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td><span data-ru="Мираст Кэл" data-en="Mirast Kel">Мираст Кэл</span></td>
+              <td><span data-ru="Орион Прайм" data-en="Orion Prime">Орион Прайм</span></td>
+              <td><span data-ru="Неклассифицирован" data-en="Unclassified">Неклассифицирован</span></td>
+              <td>00:03:31.20</td>
+            </tr>
+          </tbody>
+
+          <!-- VII Круг -->
+          <tbody data-era-body="era7">
+            <tr>
+              <td>1</td>
+              <td><span data-ru="Харрен Вэл’Тор" data-en="Harren Vel'Tor">Харрен Вэл’Тор</span></td>
+              <td><span data-ru="Луна" data-en="Luna">Луна</span></td>
+              <td><span data-ru="A-серия" data-en="A-series">A-серия</span></td>
+              <td>00:03:21.10</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><span data-ru="Лиорис Эн’Рей" data-en="Lioris En'Rey">Лиорис Эн’Рей</span></td>
+              <td><span data-ru="Селара" data-en="Selara">Селара</span></td>
+              <td><span data-ru="A-протокол" data-en="A-protocol">A-протокол</span></td>
+              <td>00:03:21.45</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><span data-ru="Данвел Сор’Кан" data-en="Danvel Sor'Kan">Данвел Сор’Кан</span></td>
+              <td><span data-ru="Земля" data-en="Zemlya">Земля</span></td>
+              <td><span data-ru="B-серия" data-en="B-series">B-серия</span></td>
+              <td>00:03:23.21</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><span data-ru="Реана Мор’Лия" data-en="Reana Mor'Liya">Реана Мор’Лия</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="B-серия" data-en="B-series">B-серия</span></td>
+              <td>00:03:24.70</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><span data-ru="Вастир Нел’Рен" data-en="Vastir Nel'Ren">Вастир Нел’Рен</span></td>
+              <td><span data-ru="Селара" data-en="Selara">Селара</span></td>
+              <td><span data-ru="B-тактический" data-en="B-tactical">B-тактический</span></td>
+              <td>00:03:25.03</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><span data-ru="Кеалис Дор’На" data-en="Kealis Dor'Na">Кеалис Дор’На</span></td>
+              <td><span data-ru="Аркон’тар" data-en="Arkon'tar">Аркон’тар</span></td>
+              <td><span data-ru="A-щитовой" data-en="A-shield pattern">A-щитовой</span></td>
+              <td>00:03:25.90</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><span data-ru="Меррин Таэл" data-en="Merrin Tael">Меррин Таэл</span></td>
+              <td><span data-ru="Зерра" data-en="Zerra">Зерра</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:28.64</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td><span data-ru="Кайрос Лем’Та" data-en="Kairos Lem'Ta">Кайрос Лем’Та</span></td>
+              <td><span data-ru="Каэл-3" data-en="Kael-3">Каэл-3</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:29.80</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td><span data-ru="Норай Си’Лет" data-en="Norai Si'Let">Норай Си’Лет</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:30.02</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td><span data-ru="Жаарим Фол’Кас" data-en="Zhaarim Fol'Kas">Жаарим Фол’Кас</span></td>
+              <td><span data-ru="Орион Прайм" data-en="Orion Prime">Орион Прайм</span></td>
+              <td><span data-ru="Неклассифицирован" data-en="Unclassified">Неклассифицирован</span></td>
+              <td>00:03:31.50</td>
+            </tr>
+          </tbody>
+
+          <!-- VI Круг -->
+          <tbody data-era-body="era6">
+            <tr>
+              <td>1</td>
+              <td><span data-ru="Ряэл Кор" data-en="Ryael Kor">Ряэл Кор</span></td>
+              <td><span data-ru="Земля" data-en="Zemlya">Земля</span></td>
+              <td><span data-ru="A-серия" data-en="A-series">A-серия</span></td>
+              <td>00:03:22.89</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><span data-ru="Кейран Ол’Мир" data-en="Keiran Ol'Mir">Кейран Ол’Мир</span></td>
+              <td><span data-ru="Селара" data-en="Selara">Селара</span></td>
+              <td><span data-ru="A-щитовой" data-en="A-shield pattern">A-щитовой</span></td>
+              <td>00:03:23.44</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><span data-ru="Торанис Вэл’Дор" data-en="Toranis Vel'Dor">Торанис Вэл’Дор</span></td>
+              <td><span data-ru="Аркон’тар" data-en="Arkon'tar">Аркон’тар</span></td>
+              <td><span data-ru="B-тактический" data-en="B-tactical">B-тактический</span></td>
+              <td>00:03:24.77</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><span data-ru="Невра Си’Ран" data-en="Nevra Si'Ran">Невра Си’Ран</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="B-стратегический" data-en="B-strategic">B-стратегический</span></td>
+              <td>00:03:25.19</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><span data-ru="Марта Эйр’Лин" data-en="Marta Ayr'Lin">Марта Эйр’Лин</span></td>
+              <td><span data-ru="Луна" data-en="Luna">Луна</span></td>
+              <td><span data-ru="B-серия" data-en="B-series">B-серия</span></td>
+              <td>00:03:27.01</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><span data-ru="Оэлрис Дан’Тар" data-en="Oelris Dan'Tar">Оэлрис Дан’Тар</span></td>
+              <td><span data-ru="Зерра" data-en="Zerra">Зерра</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:28.93</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><span data-ru="Хорвин Се’Ал" data-en="Khorvin Se'Al">Хорвин Се’Ал</span></td>
+              <td><span data-ru="Каэл-3" data-en="Kael-3">Каэл-3</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:29.50</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td><span data-ru="«Кодекс-7»" data-en="&quot;Codex-7&quot;">«Кодекс-7»</span></td>
+              <td><span data-ru="Ковчег «Аргос»" data-en="Ark &quot;Argos&quot;">Ковчег «Аргос»</span></td>
+              <td><span data-ru="Технический модуль" data-en="Technical module">Технический модуль</span></td>
+              <td>00:03:30.64</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td><span data-ru="Жилен Арк’Тес" data-en="Zhilen Ark'Tes">Жилен Арк’Тес</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:31.90</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td><span data-ru="Мелин Тор’Ра" data-en="Melin Tor'Ra">Мелин Тор’Ра</span></td>
+              <td><span data-ru="Кольцо Миранты" data-en="Miranta Ring">Кольцо Миранты</span></td>
+              <td><span data-ru="Архивный фрагмент" data-en="Archival fragment">Архивный фрагмент</span></td>
+              <td>00:03:33.02</td>
+            </tr>
+          </tbody>
+
+          <!-- V Круг -->
+          <tbody data-era-body="era5">
+            <tr>
+              <td>1</td>
+              <td><span data-ru="Хорис Тал’Рен" data-en="Khoris Tal'Ren">Хорис Тал’Рен</span></td>
+              <td><span data-ru="Луна" data-en="Luna">Луна</span></td>
+              <td><span data-ru="A-серия" data-en="A-series">A-серия</span></td>
+              <td>00:03:24.10</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><span data-ru="Мираэл Ли’Крис" data-en="Mirael Li'Kris">Мираэл Ли’Крис</span></td>
+              <td><span data-ru="Селара" data-en="Selara">Селара</span></td>
+              <td><span data-ru="A-протокол" data-en="A-protocol">A-протокол</span></td>
+              <td>00:03:24.55</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><span data-ru="Джалэн Фар’Се" data-en="Dzhalaen Far'Se">Джалэн Фар’Се</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="B-серия" data-en="B-series">B-серия</span></td>
+              <td>00:03:26.01</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><span data-ru="Веорн Са’Тал" data-en="Veorn Sa'Tal">Веорн Са’Тал</span></td>
+              <td><span data-ru="Аркон’тар" data-en="Arkon'tar">Аркон’тар</span></td>
+              <td><span data-ru="B-тактический" data-en="B-tactical">B-тактический</span></td>
+              <td>00:03:26.77</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><span data-ru="Лиор Эн’Вас" data-en="Lior En'Vas">Лиор Эн’Вас</span></td>
+              <td><span data-ru="Земля" data-en="Zemlya">Земля</span></td>
+              <td><span data-ru="B-серия" data-en="B-series">B-серия</span></td>
+              <td>00:03:27.90</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><span data-ru="Кенрис Ал’Ро" data-en="Kenris Al'Ro">Кенрис Ал’Ро</span></td>
+              <td><span data-ru="Луна" data-en="Luna">Луна</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:30.05</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><span data-ru="Фария Но’Рим" data-en="Faria No'Rim">Фария Но’Рим</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:31.44</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td><span data-ru="Карис Джо’Тен" data-en="Karis Dzho'Ten">Карис Джо’Тен</span></td>
+              <td><span data-ru="Каэл-3" data-en="Kael-3">Каэл-3</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:32.10</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td><span data-ru="Миррон Тас’Кел" data-en="Mirron Tas'Kel">Миррон Тас’Кел</span></td>
+              <td><span data-ru="Ковчег «Орфей»" data-en="Ark &quot;Orpheus&quot;">Ковчег «Орфей»</span></td>
+              <td><span data-ru="Неклассифицирован" data-en="Unclassified">Неклассифицирован</span></td>
+              <td>00:03:33.77</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td><span data-ru="Таврис Он’Лар" data-en="Tavris On'Lar">Таврис Он’Лар</span></td>
+              <td><span data-ru="Кольцо Миранты" data-en="Miranta Ring">Кольцо Миранты</span></td>
+              <td><span data-ru="Архивный пилот" data-en="Archive pilot">Архивный пилот</span></td>
+              <td>00:03:35.00</td>
+            </tr>
+          </tbody>
+
+          <!-- IV Круг -->
+          <tbody data-era-body="era4">
+            <tr>
+              <td>1</td>
+              <td><span data-ru="Корвин Тар’Нес" data-en="Korvin Tar'Nes">Корвин Тар’Нес</span></td>
+              <td><span data-ru="Селара" data-en="Selara">Селара</span></td>
+              <td><span data-ru="A-щитовой" data-en="A-shield pattern">A-щитовой</span></td>
+              <td>00:03:25.60</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><span data-ru="Хэлир Мо’Сат" data-en="Khelir Mo'Sat">Хэлир Мо’Сат</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="A-серия" data-en="A-series">A-серия</span></td>
+              <td>00:03:26.10</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><span data-ru="Джавир Сел’Кор" data-en="Dzhavir Sel'Kor">Джавир Сел’Кор</span></td>
+              <td><span data-ru="Аркон’тар" data-en="Arkon'tar">Аркон’тар</span></td>
+              <td><span data-ru="B-тактический" data-en="B-tactical">B-тактический</span></td>
+              <td>00:03:27.02</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <<td><span data-ru="Неолла Вен’Тир" data-en="Neolla Ven'Tir">Неолла Вен’Тир</span></td>
+              <td><span data-ru="Селара" data-en="Selara">Селара</span></td>
+              <td><span data-ru="B-стратегический" data-en="B-strategic">B-стратегический</span></td>
+              <td>00:03:27.58</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><span data-ru="Кайлин Ар’Дос" data-en="Kailin Ar'Dos">Кайлин Ар’Дос</span></td>
+              <td><span data-ru="Земля" data-en="Zemlya">Земля</span></td>
+              <td><span data-ru="B-серия" data-en="B-series">B-серия</span></td>
+              <td>00:03:28.90</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><span data-ru="Ривир Со’Лам" data-en="Rivir So'Lam">Ривир Со’Лам</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="B-серия" data-en="B-series">B-серия</span></td>
+              <td>00:03:29.33</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><span data-ru="Талмор Эн’Рит" data-en="Talmor En'Rit">Талмор Эн’Рит</span></td>
+              <td><span data-ru="Каэл-3" data-en="Kael-3">Каэл-3</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:31.11</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td><span data-ru="Джерис Тол’Век" data-en="Djeris Tol'Vek">Джерис Тол’Век</span></td>
+              <td><span data-ru="Аркон’тар" data-en="Arkon'tar">Аркон’тар</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:32.05</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td><span data-ru="Фейлин Са’Рен" data-en="Feilin Sa'Ren">Фейлин Са’Рен</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:33.44</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td><span data-ru="Нертис Кол’Тар" data-en="Nertis Kol'Tar">Нертис Кол’Тар</span></td>
+              <td><span data-ru="Ковчег «Селестия»" data-en="Ark &quot;Celestia&quot;">Ковчег «Селестия»</span></td>
+              <td><span data-ru="Неклассифицирован" data-en="Unclassified">Неклассифицирован</span></td>
+              <td>00:03:35.20</td>
+            </tr>
+          </tbody>
+
+          <!-- III Круг -->
+          <tbody data-era-body="era3">
+            <tr>
+              <td>1</td>
+              <td><span data-ru="Элар Пер’Вас" data-en="Elar Per'Vas">Элар Пер’Вас</span></td>
+              <td><span data-ru="Луна" data-en="Luna">Луна</span></td>
+              <td><span data-ru="A-серия" data-en="A-series">A-серия</span></td>
+              <td>00:03:27.00</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><span data-ru="Саарин Тал’Крес" data-en="Saarin Tal'Kres">Саарин Тал’Крес</span></td>
+              <td><span data-ru="Селара" data-en="Selara">Селара</span></td>
+              <td><span data-ru="A-протокол" data-en="A-protocol">A-протокол</span></td>
+              <td>00:03:27.55</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><span data-ru="Риона Мер’Тал" data-en="Riona Mer'Tal">Риона Мер’Тал</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="B-серия" data-en="B-series">B-серия</span></td>
+              <td>00:03:28.98</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><span data-ru="Джарик Фол’Ран" data-en="Djarik Fol'Ran">Джарик Фол’Ран</span></td>
+              <td><span data-ru="Аркон’тар" data-en="Arkon'tar">Аркон’тар</span></td>
+              <td><span data-ru="B-тактический" data-en="B-tactical">B-тактический</span></td>
+              <td>00:03:29.90</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><span data-ru="Эмрис Со’Тай" data-en="Emris So'Tai">Эмрис Со’Тай</span></td>
+              <td><span data-ru="Земля" data-en="Zemlya">Земля</span></td>
+              <td><span data-ru="B-серия" data-en="B-series">B-серия</span></td>
+              <td>00:03:31.01</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><span data-ru="Келлар Мор’Рат" data-en="Kellar Mor'Rat">Келлар Мор’Рат</span></td>
+              <td><span data-ru="Луна" data-en="Luna">Луна</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:33.14</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><span data-ru="Нерра Вэл’Си" data-en="Nerra Vel'Si">Нерра Вэл’Си</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:34.26</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td><span data-ru="Халдин Ор’Тей" data-en="Khaldin Or'Tey">Халдин Ор’Тей</span></td>
+              <td><span data-ru="Каэл-3" data-en="Kael-3">Каэл-3</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:35.02</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td><span data-ru="Миртас Вен’Лар" data-en="Mirtas Ven'Lar">Миртас Вен’Лар</span></td>
+              <td><span data-ru="Кольцо Миранты" data-en="Miranta Ring">Кольцо Миранты</span></td>
+              <td><span data-ru="Архивный пилот" data-en="Archive pilot">Архивный пилот</span></td>
+              <td>00:03:36.90</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td><span data-ru="Тиерис Ал’Фор" data-en="Tieris Al'For">Тиерис Ал’Фор</span></td>
+              <td><span data-ru="Орион Прайм" data-en="Orion Prime">Орион Прайм</span></td>
+              <td><span data-ru="Архивный пилот" data-en="Archive pilot">Архивный пилот</span></td>
+              <td>00:03:38.00</td>
+            </tr>
+          </tbody>
+
+          <!-- II Круг -->
+          <tbody data-era-body="era2">
+            <tr>
+              <td>1</td>
+              <td><span data-ru="Вердан Си’Лор" data-en="Verdan Si'Lor">Вердан Си’Лор</span></td>
+              <td><span data-ru="Селара" data-en="Selara">Селара</span></td>
+              <td><span data-ru="A-щитовой" data-en="A-shield pattern">A-щитовой</span></td>
+              <td>00:03:28.10</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><span data-ru="Халин Мор’Тес" data-en="Khalin Mor'Tes">Халин Мор’Тес</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="A-серия" data-en="A-series">A-серия</span></td>
+              <td>00:03:28.77</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><span data-ru="Каэрин Сол’Дар" data-en="Kaerin Sol'Dar">Каэрин Сол’Дар</span></td>
+              <td><span data-ru="Аркон’тар" data-en="Arkon'tar">Аркон’тар</span></td>
+              <td><span data-ru="B-тактический" data-en="B-tactical">B-тактический</span></td>
+              <td>00:03:30.12</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><span data-ru="Нейрия Ор’Лис" data-en="Neiriya Or'Lis">Нейрия Ор’Лис</span></td>
+              <td><span data-ru="Селара" data-en="Selara">Селара</span></td>
+              <td><span data-ru="B-стратегический" data-en="B-strategic">B-стратегический</span></td>
+              <td>00:03:31.00</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><span data-ru="Джейсен Ра’Вир" data-en="Djeisen Ra'Vir">Джейсен Ра’Вир</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="B-серия" data-en="B-series">B-серия</span></td>
+              <td>00:03:32.40</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><span data-ru="Марто Кел’Рис" data-en="Marto Kel'Ris">Марто Кел’Рис</span></td>
+              <td><span data-ru="Аркон’тар" data-en="Arkon'tar">Аркон’тар</span></td>
+              <td><span data-ru="B-тактический" data-en="B-tactical">B-тактический</span></td>
+              <td>00:03:33.75</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><span data-ru="Элра Вин’Тар" data-en="Elra Vin'Tar">Элра Вин’Тар</span></td>
+              <td><span data-ru="Земля" data-en="Zemlya">Земля</span></td>
+              <td><span data-ru="B-серия" data-en="B-series">B-серия</span></td>
+              <td>00:03:34.80</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td><span data-ru="Корсен Та’Лир" data-en="Korsen Ta'Lir">Корсен Та’Лир</span></td>
+              <td><span data-ru="Каэл-3" data-en="Kael-3">Каэл-3</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:36.00</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td><span data-ru="Файрис Ом’Рал" data-en="Fayris Om'Ral">Файрис Ом’Рал</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="C-учебный" data-en="C-training">C-учебный</span></td>
+              <td>00:03:37.44</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td><span data-ru="Талир Нор’Вас" data-en="Talir Nor'Vas">Талир Нор’Вас</span></td>
+              <td><span data-ru="Ковчег «Элион»" data-en="Ark &quot;Elion&quot;">Ковчег «Элион»</span></td>
+              <td><span data-ru="Архивный фрагмент" data-en="Archival fragment">Архивный фрагмент</span></td>
+              <td>00:03:39.10</td>
+            </tr>
+          </tbody>
+
+          <!-- I Круг -->
+          <tbody data-era-body="era1">
+            <tr>
+              <td>1</td>
+              <td><span data-ru="Элар Первый" data-en="Elar Pervyy">Элар Первый</span></td>
+              <td><span data-ru="Селара" data-en="Selara">Селара</span></td>
+              <td><span data-ru="Прототип-0" data-en="Prototype-0">Прототип-0</span></td>
+              <td>00:03:35.77</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><span data-ru="Раэлин Сор’Тас" data-en="Raelin Sor'Tas">Раэлин Сор’Тас</span></td>
+              <td><span data-ru="Миранта" data-en="Miranta">Миранта</span></td>
+              <td><span data-ru="Прототип-0" data-en="Prototype-0">Прототип-0</span></td>
+              <td>00:03:36.90</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><span data-ru="Мортис Хел’Риан" data-en="Mortis Khel'Rian">Мортис Хел’Риан</span></td>
+              <td><span data-ru="Аркон’тар" data-en="Arkon'tar">Аркон’тар</span></td>
+              <td><span data-ru="Архив" data-en="Archive record">Архив</span></td>
+              <td>00:03:38.42</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><span data-ru="Саэлла Вер’Тар" data-en="Saella Ver'Tar">Саэлла Вер’Тар</span></td>
+              <td><span data-ru="Сферия" data-en="Sferiya">Сферия</span></td>
+              <td><span data-ru="Архив" data-en="Archive record">Архив</span></td>
+              <td>00:03:39.99</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><span data-ru="Тирон Кас’Мир" data-en="Tiron Kas'Mir">Тирон Кас’Мир</span></td>
+              <td><span data-ru="Земля" data-en="Zemlya">Земля</span></td>
+              <td><span data-ru="Стенд-испытания" data-en="Test bench">Стенд-испытания</span></td>
+              <td>00:03:41.10</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><span data-ru="Валор Сен’Рет" data-en="Valor Sen'Ret">Валор Сен’Рет</span></td>
+              <td><span data-ru="Каэл-3" data-en="Kael-3">Каэл-3</span></td>
+              <td><span data-ru="Неклассифицирован" data-en="Unclassified">Неклассифицирован</span></td>
+              <td>00:03:42.77</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td><span data-ru="Лиэнна Мор’Рай" data-en="Lienna Mor'Ray">Лиэнна Мор’Рай</span></td>
+              <td><span data-ru="Луна" data-en="Luna">Луна</span></td>
+              <td><span data-ru="Стенд-испытания" data-en="Test bench">Стенд-испытания</span></td>
+              <td>00:03:44.33</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td><span data-ru="Корим Тал’Ис" data-en="Korim Tal'Is">Корим Тал’Ис</span></td>
+              <td><span data-ru="Орион Прайм" data-en="Orion Prime">Орион Прайм</span></td>
+              <td><span data-ru="Технический модуль" data-en="Technical module">Технический модуль</span></td>
+              <td>00:03:45.98</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td><span data-ru="Джарн Эв’Рет" data-en="Dzharn Ev'Ret">Джарн Эв’Рет</span></td>
+              <td><span data-ru="Кольцо Миранты" data-en="Miranta Ring">Кольцо Миранты</span></td>
+              <td><span data-ru="Архив" data-en="Archive record">Архив</span></td>
+              <td>00:03:47.60</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td><span data-ru="Сирас Нор’Эл" data-en="Siras Nor'El">Сирас Нор’Эл</span></td>
+              <td><span data-ru="Ковчег «Тоннель»" data-en="Ark &quot;Tonnel&quot;">Ковчег «Тоннель»</span></td>
+              <td><span data-ru="Архивный фрагмент" data-en="Archival fragment">Архивный фрагмент</span></td>
+              <td>—</td>
+            </tr>
+          </tbody>
+
+
+
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p
+      data-ru="@ 2025 Мир «Последний тарианец» продолжает расширяться. Возвращайтесь на страницу Райдориана, чтобы увидеть новые трассы, имена и рекорды."
+      data-en="@ 2025 The world of “The Last Tarian” keeps expanding. Come back to the Rydorian page to see new tracks, names and records.">
+      @ 2025 Мир «Последний тарианец» продолжает расширяться. Возвращайтесь на страницу Райдориана, чтобы увидеть новые трассы, имена и рекорды.
+    </p>
+  </footer>
+
+ <script src="lang.js"></script>
+<script src="easter-eggs.js"></script>
+
+<!-- Локальный скрипт: аккордеон + переключение Кругов + язык Кодекса -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // --- Аккордеон ---
+    const cards = document.querySelectorAll('.accordion-card');
+
+    cards.forEach(card => {
+      const header = card.querySelector('.accordion-header');
+      const icon = card.querySelector('.accordion-header-icon');
+
+      if (!header) return;
+
+      header.addEventListener('click', () => {
+        const isOpen = card.classList.contains('is-open');
+
+        // сворачиваем все
+        cards.forEach(c => {
+          c.classList.remove('is-open');
+          const ic = c.querySelector('.accordion-header-icon');
+          if (ic) ic.textContent = '＋';
+        });
+
+        // если текущий был закрыт — раскрываем
+        if (!isOpen) {
+          card.classList.add('is-open');
+          if (icon) icon.textContent = '−';
+          card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // --- Переключение Кругов (таблица лидеров) ---
+    const tabButtons = document.querySelectorAll('.leader-tab-btn');
+    const eraBodies = document.querySelectorAll('[data-era-body]');
+
+    function setEra(era) {
+      eraBodies.forEach(tb => {
+        tb.classList.toggle('is-active', tb.getAttribute('data-era-body') === era);
+      });
+      tabButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-era') === era);
+      });
+    }
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const era = btn.getAttribute('data-era');
+        if (!era) return;
+        setEra(era);
+      });
+    });
+
+    // --- Переключение языков для Кодекса Райдориана ---
+    function updateCodexLang(lang) {
+      const ruBlocks = document.querySelectorAll('.rule-text-ru');
+      const enBlocks = document.querySelectorAll('.rule-text-en');
+
+      ruBlocks.forEach(el => {
+        el.style.display = (lang === 'ru') ? 'block' : 'none';
+      });
+      enBlocks.forEach(el => {
+        el.style.display = (lang === 'en') ? 'block' : 'none';
+      });
+    }
+
+    // начальный язык из localStorage или ru
+    const initialLang = (localStorage.getItem('lang') || 'ru').toLowerCase();
+    updateCodexLang(initialLang);
+
+    // слушаем клики по кнопкам RU/EN
+    document.querySelectorAll('.lang-switch button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lang = btn.textContent.toLowerCase(); // "ru" или "en"
+        updateCodexLang(lang);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
