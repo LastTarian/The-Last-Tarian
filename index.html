@@ -1,75 +1,277 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>Технические работы</title>
 
-<meta name="robots" content="noindex, nofollow">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background: radial-gradient(ellipse at center, #111a2e 0%, #070b14 70%);
-    color: #e6ebff;
+  :root{
+    --bg1:#070b14;
+    --bg2:#0b1230;
+    --card: rgba(12, 18, 38, .82);
+    --stroke: rgba(140, 160, 255, .16);
+    --text:#e8ecff;
+    --muted:#b9c2ff;
+    --accent:#7b8bff;
+    --accent2:#34d399;
+    --warn:#f59e0b;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; height:100%;
     font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-}
+    color:var(--text);
+    overflow:hidden;
+    background: radial-gradient(1200px 600px at 50% 20%, #18285c 0%, var(--bg1) 60%);
+  }
 
-.wrapper {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+  /* animated space glow */
+  body::before{
+    content:"";
+    position:fixed; inset:-40%;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(123,139,255,.25), transparent 55%),
+      radial-gradient(circle at 70% 65%, rgba(52,211,153,.18), transparent 60%),
+      radial-gradient(circle at 55% 40%, rgba(245,158,11,.14), transparent 62%);
+    filter: blur(18px);
+    animation: drift 10s ease-in-out infinite;
+    pointer-events:none;
+  }
 
-.panel {
-    max-width: 520px;
-    padding: 40px 36px;
-    text-align: center;
-    border-radius: 18px;
-    background: rgba(12, 18, 38, 0.85);
+  /* subtle stars */
+  body::after{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      radial-gradient(#ffffff 1px, transparent 1px),
+      radial-gradient(#aab6ff 1px, transparent 1px);
+    background-size: 120px 120px, 180px 180px;
+    background-position: 0 0, 40px 70px;
+    opacity:.06;
+    pointer-events:none;
+  }
+
+  @keyframes drift{
+    0%,100%{ transform: translate(0,0) scale(1); opacity:.9; }
+    50%{ transform: translate(2%, -2%) scale(1.04); opacity:1; }
+  }
+
+  .wrap{
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    position:relative;
+    z-index:1;
+  }
+
+  .card{
+    width:min(640px, 100%);
+    border-radius:22px;
+    background:var(--card);
+    border:1px solid var(--stroke);
     box-shadow:
-        0 0 40px rgba(110,140,255,0.15),
-        inset 0 0 20px rgba(255,255,255,0.03);
-}
+      0 30px 80px rgba(0,0,0,.45),
+      0 0 60px rgba(123,139,255,.10),
+      inset 0 0 18px rgba(255,255,255,.03);
+    padding:28px 28px 22px;
+    backdrop-filter: blur(10px);
+  }
 
-.panel h1 {
-    margin: 0 0 14px;
-    font-size: 26px;
-    letter-spacing: 0.04em;
-}
+  .top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    margin-bottom:18px;
+  }
 
-.panel p {
-    margin: 0;
-    line-height: 1.6;
-    color: #b9c2ff;
-    font-size: 15px;
-}
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 12px;
+    border-radius:999px;
+    border:1px solid rgba(123,139,255,.22);
+    background: rgba(123,139,255,.10);
+    color:var(--muted);
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
 
-.sig {
-    margin-top: 26px;
-    font-size: 13px;
-    letter-spacing: 0.12em;
-    color: #6f7dff;
-    opacity: 0.85;
-}
+  .dot{
+    width:10px; height:10px;
+    border-radius:50%;
+    background: var(--warn);
+    box-shadow: 0 0 0 0 rgba(245,158,11,.55);
+    animation: pulse 1.4s ease-out infinite;
+  }
+
+  @keyframes pulse{
+    0%{ box-shadow: 0 0 0 0 rgba(245,158,11,.55); }
+    100%{ box-shadow: 0 0 0 14px rgba(245,158,11,0); }
+  }
+
+  .chips{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+  }
+
+  .chip{
+    font-size:12px;
+    padding:7px 10px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.05);
+    color:#cfd6ff;
+    opacity:.95;
+    white-space:nowrap;
+  }
+
+  h1{
+    margin:10px 0 8px;
+    font-size:28px;
+    letter-spacing:.02em;
+    line-height:1.15;
+  }
+
+  p{
+    margin:0;
+    color:var(--muted);
+    line-height:1.7;
+    font-size:15.5px;
+  }
+
+  .humor{
+    margin-top:12px;
+    padding:12px 14px;
+    border-radius:14px;
+    border:1px dashed rgba(123,139,255,.26);
+    background: rgba(123,139,255,.07);
+    color:#cbd3ff;
+    font-size:14px;
+  }
+
+  .humor b{ color: var(--text); }
+
+  .bar{
+    margin-top:18px;
+    height:10px;
+    border-radius:999px;
+    background: rgba(255,255,255,.06);
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.08);
+  }
+
+  .bar > span{
+    display:block;
+    height:100%;
+    width:42%;
+    border-radius:999px;
+    background: linear-gradient(90deg, rgba(123,139,255,.9), rgba(52,211,153,.85));
+    animation: load 2.2s ease-in-out infinite;
+  }
+
+  @keyframes load{
+    0%{ transform: translateX(-30%); width:30%; opacity:.8; }
+    50%{ transform: translateX(40%); width:55%; opacity:1; }
+    100%{ transform: translateX(120%); width:30%; opacity:.8; }
+  }
+
+  .actions{
+    margin-top:18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 14px;
+    border-radius:14px;
+    border:1px solid rgba(123,139,255,.25);
+    background: rgba(123,139,255,.10);
+    color: var(--text);
+    text-decoration:none;
+    font-size:14px;
+    cursor:pointer;
+    user-select:none;
+    transition: transform .12s ease, background .12s ease, border-color .12s ease;
+  }
+
+  .btn:hover{
+    transform: translateY(-1px);
+    background: rgba(123,139,255,.16);
+    border-color: rgba(123,139,255,.35);
+  }
+
+  .btn:active{ transform: translateY(0px) scale(.99); }
+
+  .small{
+    font-size:12px;
+    color: rgba(185,194,255,.85);
+    letter-spacing:.10em;
+    text-transform:uppercase;
+  }
+
+  .sig{
+    margin-top:14px;
+    font-size:12px;
+    letter-spacing:.14em;
+    color: rgba(123,139,255,.85);
+    opacity:.9;
+  }
 </style>
 </head>
 
 <body>
-<div class="wrapper">
-    <div class="panel">
-        <h1>Ведутся технические работы</h1>
-        <p>
-            Ковчег временно закрыт для стабилизации систем.<br>
-            Пожалуйста, загляните чуть позже.
-        </p>
-        <div class="sig">
-            SYSTEM STATUS · MAINTENANCE
+  <div class="wrap">
+    <main class="card" role="main" aria-label="Maintenance">
+      <div class="top">
+        <div class="badge"><span class="dot" aria-hidden="true"></span> режим обслуживания</div>
+        <div class="chips" aria-label="Status">
+          <span class="chip">🔧 подкручиваем гайки</span>
+          <span class="chip">🛰️ калибруем антенны</span>
+          <span class="chip">☕ инженер на кофе</span>
         </div>
-    </div>
-</div>
+      </div>
+
+      <h1>Ковчег на техобслуживании 🚀</h1>
+      <p>
+        Мы временно отключили доступ, чтобы не случилось классическое
+        “ну я же просто нажал одну кнопку…”.
+        <br />
+        Загляни чуть позже — всё вернётся в строй.
+      </p>
+
+      <div class="humor">
+        <b>Официально:</b> стабилизация систем. <br />
+        <b>Неофициально:</b> мы ловим баги, пока они не убежали в прод и не сделали вид, что так и задумано.
+      </div>
+
+      <div class="bar" aria-label="Progress">
+        <span></span>
+      </div>
+
+      <div class="actions">
+        <a class="btn" href="#" onclick="location.reload(); return false;">🔁 Попробовать снова</a>
+        <div class="small">HTTP 503 · I’ll be back</div>
+      </div>
+
+      <div class="sig">SYSTEM STATUS · MAINTENANCE · CLOUD-SHIELDED</div>
+    </main>
+  </div>
 </body>
 </html>
