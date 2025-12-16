@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Хроники Ковчега — Последний тарианец</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    .chronicles-main {
+      padding: 16px 16px 40px;
+    }
+
+    .chronicles-intro {
+      max-width: 1000px;
+      margin: 0 auto 26px;
+    }
+
+    .chronicles-intro h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #facc15;
+    }
+
+    .chronicles-intro p {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: #e5e7eb;
+      max-width: 860px;
+    }
+
+    /* ===== Таймер ===== */
+    .countdown-section {
+      margin: 24px auto 32px;
+      max-width: 900px;
+      text-align: center;
+    }
+
+    .countdown-section h2 {
+      font-size: 18px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #facc15;
+      margin-bottom: 12px;
+    }
+
+    .countdown-section p {
+      max-width: 680px;
+      margin: 0 auto 18px;
+      color: #e5e7eb;
+    }
+
+    .countdown-timer {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background:
+        radial-gradient(circle at top left,
+          rgba(56, 189, 248, 0.22),
+          rgba(15, 23, 42, 0.98));
+      box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.95),
+        0 0 24px rgba(56, 189, 248, 0.35);
+    }
+
+    .count-item {
+      min-width: 80px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .count-number {
+      display: block;
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+      color: #f9fafb;
+    }
+
+    .count-label {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #a5b4fc;
+    }
+
+    .countdown-status {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #cbd5e1;
+      opacity: 0.85;
+    }
+
+    @media (max-width: 480px) {
+      .countdown-timer {
+        padding: 12px;
+        gap: 10px;
+      }
+      .count-item {
+        min-width: 70px;
+        padding: 8px 10px;
+      }
+      .count-number {
+        font-size: 22px;
+      }
+    }
+
+    /* ===== Лента хроник ===== */
+    .chronicles-timeline {
+      max-width: 1000px;
+      margin: 0 auto 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .chronicle-card {
+      position: relative;
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 14px 16px 16px;
+      background:
+        radial-gradient(circle at top left,
+          rgba(56, 189, 248, 0.16),
+          rgba(15, 23, 42, 0.98));
+      box-shadow:
+        0 18px 32px rgba(0, 0, 0, 0.9),
+        0 0 18px rgba(15, 23, 42, 0.8);
+    }
+
+    .chronicle-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .chronicle-date {
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 11px;
+      color: #a5b4fc;
+    }
+
+    .chronicle-tag {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(129, 140, 248, 0.7);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+      white-space: nowrap;
+    }
+
+    .chronicle-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #f9fafb;
+      margin: 0 0 6px;
+    }
+
+    .chronicle-body {
+      font-size: 13px;
+      color: #e5e7eb;
+      line-height: 1.6;
+    }
+
+    .chronicle-body p {
+      margin: 0 0 6px;
+    }
+
+    .chronicle-body ul {
+      margin: 6px 0 0 18px;
+      padding: 0;
+    }
+
+    .chronicle-body li {
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="lang-switch">
+    <button onclick="setLang('ru')">RU</button>
+    <button onclick="setLang('en')">EN</button>
+  </div>
+
+  <div class="page-overlay"></div>
+
+  <!-- ГЛАВНОЕ МЕНЮ -->
+  <nav class="main-nav">
+    <a href="index.html"
+       data-ru="Главная" data-en="Home">Главная</a>
+
+    <a href="about.html"
+       data-ru="О книге" data-en="About">О книге</a>
+
+    <a href="characters.html"
+       data-ru="Герои" data-en="Characters">Герои</a>
+
+    <a href="locations.html"
+       data-ru="Локации" data-en="Locations">Локации</a>
+
+    <a href="artifacts.html"
+       data-ru="Артефакты" data-en="Artifacts">Артефакты</a>
+
+    <a href="rydorian.html"
+       data-ru="Гонка 'Райдориан'" data-en="'Rydorian' Race">Гонка 'Райдориан'</a>
+
+    <a href="equipment.html"
+       data-ru="Экипировка" data-en="Equipment">Экипировка</a>
+
+    <a href="media.html"
+       data-ru="Медиа" data-en="Media">Медиа</a>
+
+    <a href="fragments.html"
+       data-ru="Обрывки текстов" data-en="Text fragments">Обрывки текстов</a>
+
+    <a href="chronicles.html"
+       data-ru="Хроники Ковчега" data-en="Ark Chronicles">Хроники Ковчега</a>
+
+    <a href="contacts.html"
+       data-ru="Контакты" data-en="Contacts">Контакты</a>
+
+    <a href="donate.html"
+       data-ru="Поддержать автора" data-en="Donate">Поддержать автора</a>
+  </nav>
+
+  <!-- ШАПКА -->
+  <header class="subpage-header">
+    <h1
+      data-ru="Хроники Ковчега"
+      data-en="Ark Chronicles"
+    >
+      Хроники Ковчега
+    </h1>
+    <p class="subpage-lead"
+       data-ru="Раздел для новостей о книге, сайте и лоре — и обратного отсчёта до завершения рукописи."
+       data-en="A place for news about the book, website, and lore — and a live countdown to the completed manuscript.">
+      Раздел для новостей о книге, сайте и лоре — и обратного отсчёта до завершения рукописи.
+    </p>
+  </header>
+
+  <!-- ОСНОВНОЙ КОНТЕНТ -->
+  <main class="chronicles-main">
+    <!-- Вступление -->
+    <section class="text-block chronicles-intro">
+      <h2
+        data-ru="Что такое «Хроники Ковчега»"
+        data-en="What are the Ark Chronicles"
+      >
+        Что такое «Хроники Ковчега»
+      </h2>
+      <p
+        data-ru="Здесь собираются новости о том, как растёт вселенная «Последнего Тарианца»: прогресс по главам, новые иллюстрации, изменения на сайте и важные вехи лора."
+        data-en="Here you’ll find updates on how the world of “The Last Tarian” is growing: chapter progress, new illustrations, website changes and important lore milestones."
+      >
+        Здесь собираются новости о том, как растёт вселенная «Последнего Тарианца»: прогресс по главам,
+        новые иллюстрации, изменения на сайте и важные вехи лора.
+      </p>
+      <p
+        data-ru="Если вы хотите следить за развитием проекта, иногда заглядывайте сюда. Когда-нибудь именно в этом разделе появится запись: «Рукопись завершена»."
+        data-en="If you want to follow the project’s journey, drop by here from time to time. One day this section will show the entry: “The manuscript is finished.”"
+      >
+        Если вы хотите следить за развитием проекта, иногда заглядывайте сюда. Когда-нибудь именно в этом
+        разделе появится запись: «Рукопись завершена».
+      </p>
+    </section>
+
+    <!-- Таймер БЕЗ text-block -->
+    <section class="countdown-section">
+      <h2
+        data-ru="До завершения рукописи «Последнего Тарианца» осталось"
+        data-en="Time left until the Last Tarian manuscript is finished"
+      >
+        До завершения рукописи «Последнего Тарианца» осталось
+      </h2>
+
+      <div id="countdown" class="countdown-timer">
+        <div class="count-item">
+          <span id="countDays" class="count-number">0</span>
+          <span class="count-label" data-ru="дней" data-en="days">дней</span>
+        </div>
+        <div class="count-item">
+          <span id="countHours" class="count-number">00</span>
+          <span class="count-label" data-ru="часов" data-en="hours">часов</span>
+        </div>
+        <div class="count-item">
+          <span id="countMinutes" class="count-number">00</span>
+          <span class="count-label" data-ru="минут" data-en="minutes">минут</span>
+        </div>
+        <div class="count-item">
+          <span id="countSeconds" class="count-number">00</span>
+          <span class="count-label" data-ru="секунд" data-en="seconds">секунд</span>
+        </div>
+      </div>
+
+      <p id="countdownStatus"
+         class="countdown-status"
+         data-ru="Отсчёт идёт. Хранители дедлайна внимательно следят за автором."
+         data-en="Countdown is running. The Keepers of the deadline are watching the author carefully.">
+        Отсчёт идёт. Хранители дедлайна внимательно следят за автором.
+      </p>
+    </section>
+
+    <!-- Лента новостей -->
+    <section class="chronicles-timeline">
+      <!-- Запись 1 -->
+      <article class="chronicle-card">
+        <div class="chronicle-meta">
+          <span class="chronicle-date"
+                data-ru="15.12.2025"
+                data-en="2025-12-15">
+            15.12.2025
+          </span>
+          <span class="chronicle-tag"
+                data-ru="сайт"
+                data-en="site">
+            сайт
+          </span>
+        </div>
+        <h3 class="chronicle-title"
+            data-ru="Страница экипировки и селаритские метки"
+            data-en="Equipment page and Selarite tags">
+          Страница экипировки и селаритские метки
+        </h3>
+        <div class="chronicle-body">
+          <p
+            data-ru="На сайте появилась полноценная страница экипировки: от Стратума и гоночных костюмов «Райдориан» до Тарианских комплектов Стражей. Добавлены всплывающие досье по каждому элементу и отдельный блок с аксессуарами: селаритские метки, мини-интерфейсы и кодовые ключи."
+            data-en="The site now has a full equipment page: from Stratum and Rydorian race suits to Tarien Guardian sets. Each item has a hover dossier, plus a dedicated accessories block with Selarite tags, mini-interfaces, and code keys."
+          >
+            На сайте появилась полноценная страница экипировки: от Стратума и гоночных костюмов
+            «Райдориан» до Тарианских комплектов Стражей. Добавлены всплывающие досье по каждому элементу
+            и отдельный блок с аксессуарами: селаритские метки, мини-интерфейсы и кодовые ключи.
+          </p>
+        </div>
+      </article>
+
+      <!-- Запись 2 -->
+      <article class="chronicle-card">
+        <div class="chronicle-meta">
+          <span class="chronicle-date"
+                data-ru="10.12.2025"
+                data-en="2025-12-10">
+            10.12.2025
+          </span>
+          <span class="chronicle-tag"
+                data-ru="донаты"
+                data-en="donations">
+            донаты
+          </span>
+        </div>
+        <h3 class="chronicle-title"
+            data-ru="Официальные способы поддержки проекта"
+            data-en="Official ways to support the project">
+          Официальные способы поддержки проекта
+        </h3>
+        <div class="chronicle-body">
+          <p
+            data-ru="Запущены и оформлены страницы с официальными способами поддержки: Boosty для стран СНГ, PayPal и Ko-fi для международных читателей. Все ссылки на донаты теперь живут только на домене last-tarian.com — это ваша карта доверия к автору."
+            data-en="Pages with official support methods are now live: Boosty for CIS countries, PayPal and Ko-fi for international readers. All donation links now live only on the last-tarian.com domain—your trust map to the real author."
+          >
+            Запущены и оформлены страницы с официальными способами поддержки: Boosty для стран СНГ,
+            PayPal и Ko-fi для международных читателей. Все ссылки на донаты теперь живут только на
+            домене last-tarian.com — это ваша карта доверия к автору.
+          </p>
+        </div>
+      </article>
+
+      <!-- Запись: страницы Экипировка и Медиа -->
+      <article class="chronicle-card">
+        <div class="chronicle-meta">
+          <span class="chronicle-date"
+                data-ru="16.12.2025"
+                data-en="2025-12-16">
+            16.12.2025
+          </span>
+          <span class="chronicle-tag"
+                data-ru="сайт"
+                data-en="site">
+            сайт
+          </span>
+        </div>
+
+        <h3 class="chronicle-title"
+            data-ru="Экипировка и Медиа: страницы в режиме ожидания релиза"
+            data-en="Equipment & Media: pages in pre-release standby">
+          Экипировка и Медиа: страницы в режиме ожидания релиза
+        </h3>
+
+        <div class="chronicle-body">
+          <p
+            data-ru="Начата работа над полноформатными страницами «Экипировка» и «Медиа». Сейчас они существуют как закрытые секции Ковчега: структура, визуальная концепция и часть материалов уже готовы, но доступ будет открыт только после выхода книги, чтобы не раскрывать сюжетные детали раньше времени."
+            data-en="Work has begun on the full-format “Equipment” and “Media” pages. For now they exist as sealed Ark sections: structure, visual concepts and part of the materials are ready, but access will open only after the book’s release to avoid revealing story details too early."
+          >
+            Начата работа над полноформатными страницами «Экипировка» и «Медиа». Сейчас они существуют как закрытые секции Ковчега: структура, визуальная концепция и часть материалов уже готовы, но доступ будет открыт только после выхода книги, чтобы не раскрывать сюжетные детали раньше времени.
+          </p>
+
+          <ul>
+            <li
+              data-ru="Страница «Экипировка» наполняется досье на устройства, костюмы и технологии Ковчега."
+              data-en="The “Equipment” page is being filled with dossiers on devices, suits and Ark technologies."
+            >
+              Страница «Экипировка» наполняется досье на устройства, костюмы и технологии Ковчега.
+            </li>
+            <li
+              data-ru="Страница «Медиа» готовится как архив иллюстраций, артбука и визуальных фрагментов вселенной."
+              data-en="The “Media” page is being prepared as an archive of illustrations, artbook content and visual fragments of the universe."
+            >
+              Страница «Медиа» готовится как архив иллюстраций, артбука и визуальных фрагментов вселенной.
+            </li>
+            <li
+              data-ru="Обе страницы останутся неактивными до официального релиза книги, после чего будут полностью разблокированы для читателей."
+              data-en="Both pages will stay inactive until the official book release, after which they’ll be fully unlocked for readers."
+            >
+              Обе страницы останутся неактивными до официального релиза книги, после чего будут полностью разблокированы для читателей.
+            </li>
+          </ul>
+        </div>
+      </article>
+
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p data-ru="© 2025 «Последний тарианец» — официальный сайт по вселенной романа"
+       data-en="© 2025 “The Last Tarian” — official site to the world of the novel">
+      © 2025 «Последний тарианец» — официальный сайт по вселенной романа
+    </p>
+  </footer>
+
+  <!-- Скрипт языка -->
+  <script src="lang.js"></script>
+  <!-- Пасхалки -->
+  <script src="easter-eggs.js"></script>
+
+  <!-- Таймер -->
+  <script>
+    const BOOK_DEADLINE = "2026-03-31T23:59:59+05:00";
+
+    function getLang() {
+      const l = (localStorage.getItem("lang") || "ru").toLowerCase();
+      return (l === "en") ? "en" : "ru";
+    }
+
+    function startCountdown() {
+      const target = new Date(BOOK_DEADLINE).getTime();
+      if (isNaN(target)) return;
+
+      const daysEl    = document.getElementById("countDays");
+      const hoursEl   = document.getElementById("countHours");
+      const minutesEl = document.getElementById("countMinutes");
+      const secondsEl = document.getElementById("countSeconds");
+      const statusEl  = document.getElementById("countdownStatus");
+
+      function setFinishedText() {
+        const lang = getLang();
+        const ruText = "Запланированная дата наступила. Дальше всё зависит от автора и Хранителей дедлайна.";
+        const enText = "The target date has come. From here it’s up to the author and the Keepers of the deadline.";
+        statusEl.setAttribute("data-ru", ruText);
+        statusEl.setAttribute("data-en", enText);
+        statusEl.textContent = (lang === "ru") ? ruText : enText;
+      }
+
+      function setRunningText() {
+        const lang = getLang();
+        const ruText = "Отсчёт идёт. Хранители дедлайна внимательно следят за автором.";
+        const enText = "Countdown is running. The Keepers of the deadline are watching the author carefully.";
+        statusEl.setAttribute("data-ru", ruText);
+        statusEl.setAttribute("data-en", enText);
+        statusEl.textContent = (lang === "ru") ? ruText : enText;
+      }
+
+      function update() {
+        const now = Date.now();
+        const diff = target - now;
+
+        if (diff <= 0) {
+          daysEl.textContent = "0";
+          hoursEl.textContent = "00";
+          minutesEl.textContent = "00";
+          secondsEl.textContent = "00";
+          setFinishedText();
+          clearInterval(timerId);
+          return;
+        }
+
+        const totalSec = Math.floor(diff / 1000);
+        const days     = Math.floor(totalSec / (24 * 60 * 60));
+        const hours    = Math.floor((totalSec % (24 * 60 * 60)) / 3600);
+        const minutes  = Math.floor((totalSec % 3600) / 60);
+        const seconds  = totalSec % 60;
+
+        daysEl.textContent    = days;
+        hoursEl.textContent   = String(hours).padStart(2, "0");
+        minutesEl.textContent = String(minutes).padStart(2, "0");
+        secondsEl.textContent = String(seconds).padStart(2, "0");
+
+        setRunningText();
+      }
+
+      update();
+      const timerId = setInterval(update, 1000);
+
+      document.querySelectorAll(".lang-switch button").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const isZero =
+            daysEl.textContent === "0" &&
+            hoursEl.textContent === "00" &&
+            minutesEl.textContent === "00" &&
+            secondsEl.textContent === "00";
+
+          if (isZero) setFinishedText();
+          else setRunningText();
+        });
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", startCountdown);
+  </script>
+</body>
+</html>
